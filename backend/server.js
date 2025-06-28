@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import ordersRouter from './routes/orders.js';
 import authRouter from './routes/auth.js';
+import menuRouter from './routes/menu.js';
+import feedbackRouter from './routes/feedback.js';
 
 dotenv.config();
 
@@ -20,8 +22,14 @@ app.get('/login', (req, res) => {
   res.sendFile('login.html', { root: publicDir });
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile('admin.html', { root: publicDir });
+});
+
 app.use('/login', authRouter);
 app.use('/orders', ordersRouter);
+app.use('/menu', menuRouter);
+app.use('/feedback', feedbackRouter);
 
 // Serve frontend
 app.get('*', (req, res) => {

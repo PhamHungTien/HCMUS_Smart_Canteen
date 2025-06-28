@@ -492,6 +492,18 @@
                     showToast('Vui lòng chọn số sao để đánh giá!');
                     return;
                 }
+
+                fetch('/feedback', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: 'rating',
+                        menuItemId: parseInt(selectedMenuItem),
+                        rating,
+                        comment: reviewComment
+                    })
+                });
+
                 showToast(`Bạn đã đánh giá món "${menuItems.find(i => i.id === parseInt(selectedMenuItem)).name}" ${rating} sao. Cảm ơn!`);
                 setRating(0);
                 setSelectedMenuItem('');
@@ -519,7 +531,17 @@
                     showToast('Vui lòng kiểm tra lại thông tin góp ý.');
                     return;
                 }
-                
+
+                fetch('/feedback', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: 'comment',
+                        text: feedbackText,
+                        email: feedbackEmail
+                    })
+                });
+
                 showToast('Cảm ơn ý kiến đóng góp của bạn! Chúng tôi sẽ phản hồi qua email.');
                 setFeedbackText('');
                 setFeedbackEmail('');
