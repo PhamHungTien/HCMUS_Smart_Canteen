@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị Canteen</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .hidden { display: none; }
+        .tabs button { margin-right: 10px; }
+    </style>
+</head>
+<body>
+<div class="tabs">
+    <button onclick="showTab('orders')">Đơn hàng</button>
+    <button onclick="showTab('menu')">Menu</button>
+    <button onclick="showTab('feedback')">Góp ý</button>
+</div>
+<div id="orders" class="tab"></div>
+<div id="menu" class="tab hidden">
+    <h3>Thêm món</h3>
+    <input id="itemName" placeholder="Tên" />
+    <input id="itemCategory" placeholder="Loại" />
+    <input id="itemPrice" type="number" placeholder="Giá" />
+    <input id="itemImage" placeholder="Ảnh" />
+    <input id="itemRating" type="number" placeholder="Sao" />
+    <button onclick="addMenuItem()">Thêm</button>
+    <h3>Danh sách món</h3>
+    <div id="menuList"></div>
+</div>
+<div id="feedback" class="tab hidden"></div>
+<script>
+if(!localStorage.getItem('loggedIn')) window.location='/login';
+
+function showTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id==='orders') loadOrders();
+  if(id==='menu') loadMenu();
+  if(id==='feedback') loadFeedback();
+}
+
+async function loadOrders(){
+  const res = await fetch('/orders');
+  const data = await res.json();
+  const div=document.getElementById('orders');
+  div.innerHTML='<h3>Đơn hàng</h3>'+renderTable(data);
+}
+
+function renderTable(items){
+  if(!items.length) return '<p>Không có dữ liệu</p>';
+  const keys=Object.keys(items[0]);
+  let html='<table><thead><tr>'+keys.map(k=>`<th>${k}</th>`).join('')+'</tr></thead><tbody>';
+  html+=items.map(it=>'<tr>'+keys.map(k=>`<td>${it[k]}</td>`).join('')+'</tr>').join('');
+  html+='</tbody></table>';
+  return html;
+}
+
+async function loadMenu(){
+  const res=await fetch('/menu');
+  const menu=await res.json();
+  const list=document.getElementById('menuList');
+  list.innerHTML=renderMenuTable(menu);
+}
+
+function renderMenuTable(menu){
+  if(!menu.length) return '<p>Chưa có món</p>';
+  let html='<table><thead><tr><th>Tên</th><th>Loại</th><th>Giá</th><th>Ảnh</th><th>Sao</th><th></th></tr></thead><tbody>';
+  html+=menu.map(m=>`<tr><td>${m.name}</td><td>${m.category}</td><td>${m.price}</td><td>${m.image}</td><td>${m.rating}</td><td><button onclick="delMenuItem(${m.id})">Xóa</button></td></tr>`).join('');
+  html+='</tbody></table>';
+  return html;
+}
+
+async function addMenuItem(){
+  const item={
+    name:document.getElementById('itemName').value,
+    category:document.getElementById('itemCategory').value,
+    price:parseInt(document.getElementById('itemPrice').value||0),
+    image:document.getElementById('itemImage').value,
+    rating:parseInt(document.getElementById('itemRating').value||0)
+  };
+  await fetch('/menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+  loadMenu();
+}
+
+async function delMenuItem(id){
+  await fetch('/menu/'+id,{method:'DELETE'});
+  loadMenu();
+}
+
+async function loadFeedback(){
+  const res=await fetch('/feedback');
+  const data=await res.json();
+  const div=document.getElementById('feedback');
+  div.innerHTML='<h3>Góp ý</h3>'+renderTable(data);
+}
+
+showTab('orders');
+</script>
+</body>
+</html>

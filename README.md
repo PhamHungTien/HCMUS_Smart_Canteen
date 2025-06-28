@@ -1,11 +1,12 @@
 # HCMUS Smart Canteen
 
-Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Phiên bản này bổ sung trang đăng nhập đơn giản.
+Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Phiên bản này có trang đăng nhập và trang quản trị đơn hàng.
 
 ## Cài đặt
 
 1. Cài đặt Node.js >= 18.
-2. Cài đặt các gói phụ thuộc (Express và Cors):
+2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần.
+3. Cài đặt các gói phụ thuộc:
 
 ```bash
 npm install
@@ -19,22 +20,33 @@ Khởi động server Express:
 npm start
 ```
 
-Server chạy mặc định tại `http://localhost:3001`.
+Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
+Sau khi đăng nhập, truy cập `/admin` để xem trang quản trị.
 
 ## Cấu trúc
 
 - `public/` chứa giao diện người dùng (HTML, CSS, ảnh).
-- `public/login.html` trang đăng nhập trước khi vào hệ thống.
+- `public/login.html` trang đăng nhập.
+- `public/admin.html` trang quản lý đơn hàng, menu và góp ý.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
-  - `orders.js`: các hàm thao tác với dữ liệu đơn hàng.
-- `data/orders.json`: file lưu trữ tạm thời đơn hàng.
+  - `routes/` chứa các router Express (`auth.js`, `orders.js`, `menu.js`, `feedback.js`).
+  - `orders.js`: thao tác với dữ liệu đơn hàng.
+  - `menu.js`: lưu trữ danh sách món ăn.
+  - `feedback.js`: ghi nhận đánh giá/góp ý từ khách hàng.
+  - `data/` chứa các file JSON lưu tạm thời (được bỏ qua trong git).
 
 ## API
 
 - `POST /orders` – tạo đơn hàng mới.
 - `GET /orders` – lấy danh sách đơn hàng.
-- `POST /login` – xác thực đơn giản (user mặc định: admin/123456).
+- `GET /menu` – lấy danh sách món ăn.
+- `POST /menu` – thêm món mới.
+- `PUT /menu/:id` – cập nhật món.
+- `DELETE /menu/:id` – xóa món.
+- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu trong file `.env`.
+- `POST /feedback` – gửi đánh giá hoặc góp ý.
+- `GET /feedback` – lấy danh sách phản hồi của khách hàng.
 
 ## Đóng góp
 
