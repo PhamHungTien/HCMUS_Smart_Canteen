@@ -5,9 +5,8 @@
 ## Cài đặt
 
 1. Cài đặt Node.js >= 18.
-2. Tạo thư mục `data/` ở gốc dự án để lưu các file JSON tạm thời.
-3. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
-4. Cài đặt các gói phụ thuộc:
+2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
+3. Cài đặt các gói phụ thuộc (cần `sqlite3`):
 
 ```bash
 npm install
@@ -28,7 +27,7 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 
 - Đặt món và thanh toán trực tuyến (Momo, VietQR) hoặc khi nhận hàng.
 - Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
-- Tất cả dữ liệu được lưu tạm thời dưới dạng file JSON trong thư mục `data/`.
+- Dữ liệu được lưu trong file SQLite tại thư mục `data/`.
 - Người dùng có thể đăng ký tài khoản và đăng nhập.
 - Quản trị viên có thể quản lý danh sách người dùng.
 
@@ -45,7 +44,7 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
   - `orders.js`: thao tác với dữ liệu đơn hàng.
   - `menu.js`: lưu trữ danh sách món ăn.
   - `feedback.js`: ghi nhận đánh giá/góp ý từ khách hàng.
-  - `data/` chứa các file JSON lưu tạm thời (được bỏ qua trong git).
+  - `data/` chứa cơ sở dữ liệu SQLite (được bỏ qua trong git).
 
 ## API
 
@@ -55,7 +54,7 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 - `POST /menu` – thêm món mới.
 - `PUT /menu/:id` – cập nhật món.
 - `DELETE /menu/:id` – xóa món.
-- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng lưu trong `data/users.json`).
+- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng trong database).
 - `POST /users` – đăng ký người dùng mới.
 - `GET /users` – lấy danh sách người dùng (dành cho admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.

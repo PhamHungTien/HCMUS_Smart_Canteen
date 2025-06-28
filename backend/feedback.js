@@ -1,11 +1,16 @@
-import { promises as fs } from 'fs';
+import fs from 'fs';
+import { promises as fsp } from 'fs';
 import path from 'path';
 
-const FEEDBACK_FILE = path.join(process.cwd(), 'data', 'feedback.json');
+const DATA_DIR = path.join(process.cwd(), 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+const FEEDBACK_FILE = path.join(DATA_DIR, 'feedback.json');
 
 export async function readFeedback() {
   try {
-    const data = await fs.readFile(FEEDBACK_FILE, 'utf8');
+    const data = await fsp.readFile(FEEDBACK_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
     if (err.code === 'ENOENT') return [];
@@ -16,5 +21,5 @@ export async function readFeedback() {
 export async function addFeedback(feedback) {
   const list = await readFeedback();
   list.push({ ...feedback, createdAt: new Date().toISOString() });
-  await fs.writeFile(FEEDBACK_FILE, JSON.stringify(list, null, 2), 'utf8');
+  await fsp.writeFile(FEEDBACK_FILE, JSON.stringify(list, null, 2), 'utf8');
 }

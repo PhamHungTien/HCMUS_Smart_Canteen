@@ -8,6 +8,7 @@ import authRouter from './routes/auth.js';
 import menuRouter from './routes/menu.js';
 import feedbackRouter from './routes/feedback.js';
 import usersRouter from './routes/users.js';
+import { getDb } from './db.js';
 
 dotenv.config();
 
@@ -35,6 +36,8 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`✅ Server chạy trên http://localhost:${PORT}`);
+getDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`✅ Server chạy trên http://localhost:${PORT}`);
+  });
 });
