@@ -26,8 +26,9 @@ Sau khi đăng nhập, truy cập `/admin` để xem trang quản trị.
 ## Cấu trúc
 
 - `public/` chứa giao diện người dùng (HTML, CSS, ảnh).
-- `public/login.html` trang đăng nhập.
-- `public/admin.html` trang quản lý đơn hàng, menu và góp ý.
+  - `index.html` (truy cập `/`) trang đặt món chính, nạp mã React từ `app.jsx`.
+  - `login.html` (truy cập `/login`) trang đăng nhập.
+  - `admin.html` (truy cập `/admin`) trang quản lý đơn hàng, menu và góp ý.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
   - `routes/` chứa các router Express (`auth.js`, `orders.js`, `menu.js`, `feedback.js`).

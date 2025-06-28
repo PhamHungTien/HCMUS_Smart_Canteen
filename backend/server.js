@@ -18,6 +18,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
 app.use(express.static(publicDir));
 
+// Redirect requests with .html extension to clean URLs
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html')) {
+    const clean = req.path.slice(0, -5) || '/';
+    return res.redirect(301, clean);
+  }
+  next();
+});
+
 app.get('/login', (req, res) => {
   res.sendFile('login.html', { root: publicDir });
 });
