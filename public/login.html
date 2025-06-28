@@ -86,6 +86,9 @@
                     window.location.href='admin.html';
                 }else{
                     localStorage.removeItem('admin');
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('code', data.code);
+                    localStorage.setItem('fullName', data.fullName);
                     window.location.href='index.html';
                 }
             } else {
