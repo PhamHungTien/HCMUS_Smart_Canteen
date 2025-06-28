@@ -74,10 +74,14 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && pathname === '/login') {
       const { username, password } = await body(req);
       if (!username || !password) return send(res, 400, { error: 'Thiếu tên hoặc mật khẩu' });
-      if (username === ADMIN_USER && password === ADMIN_PASS) return send(res, 200, { role: 'admin' });
+      if (username === ADMIN_USER && password === ADMIN_PASS) {
+        return send(res, 200, { role: 'admin' });
+      }
       const users = await readUsers();
       const found = users.find(u => u.username.trim() === username.trim() && u.password.trim() === password.trim());
-      if (found) return send(res, 200, { role: 'user' });
+      if (found) {
+        return send(res, 200, { role: 'user', username: found.username, code: found.code });
+      }
       return send(res, 401, { error: 'Sai thông tin đăng nhập' });
     }
     // Users list

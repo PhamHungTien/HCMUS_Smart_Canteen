@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản trị Canteen</title>
+    <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css">
     <style>
-        body { padding: 20px; }
+        body { padding-top: var(--navbar-height); }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         .hidden { display: none; }
@@ -14,12 +17,27 @@
     </style>
 </head>
 <body>
-<div class="tabs">
-    <button onclick="showTab('orders')">Đơn hàng</button>
-    <button onclick="showTab('menu')">Menu</button>
-    <button onclick="showTab('feedback')">Góp ý</button>
-    <button onclick="showTab('users')">Người dùng</button>
-</div>
+<nav class="top-navbar">
+    <div class="top-navbar-inner" style="display:flex;gap:10px">
+        <div class="tab-button" onclick="showTab('orders')">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Đơn hàng</span>
+        </div>
+        <div class="tab-button" onclick="showTab('menu')">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Menu</span>
+        </div>
+        <div class="tab-button" onclick="showTab('feedback')">
+            <i class="fa-solid fa-comments"></i>
+            <span>Góp ý</span>
+        </div>
+        <div class="tab-button" onclick="showTab('users')">
+            <i class="fa-solid fa-user"></i>
+            <span>Người dùng</span>
+        </div>
+    </div>
+</nav>
+<div class="container">
 <div id="orders" class="tab"></div>
 <div id="menu" class="tab hidden">
     <h3>Thêm món</h3>
@@ -34,6 +52,7 @@
 </div>
 <div id="feedback" class="tab hidden"></div>
 <div id="users" class="tab hidden"></div>
+</div>
 <script>
 if(!localStorage.getItem('loggedIn')) window.location='login.html';
 
@@ -72,7 +91,7 @@ async function loadMenu(){
 function renderMenuTable(menu){
   if(!menu.length) return '<p>Chưa có món</p>';
   let html='<table><thead><tr><th>Tên</th><th>Loại</th><th>Giá</th><th>Ảnh</th><th>Sao</th><th></th></tr></thead><tbody>';
-  html+=menu.map(m=>`<tr><td>${m.name}</td><td>${m.category}</td><td>${m.price}</td><td>${m.image}</td><td>${m.rating}</td><td><button onclick="delMenuItem(${m.id})">Xóa</button></td></tr>`).join('');
+  html+=menu.map(m=>`<tr><td>${m.name}</td><td>${m.category}</td><td>${m.price.toLocaleString()}</td><td><img src="${m.image}" style="height:40px"/></td><td>${m.rating}</td><td><button onclick="delMenuItem(${m.id})">Xóa</button></td></tr>`).join('');
   html+='</tbody></table>';
   return html;
 }
@@ -85,6 +104,9 @@ async function addMenuItem(){
     image:document.getElementById('itemImage').value,
     rating:parseInt(document.getElementById('itemRating').value||0)
   };
+  if(item.image && !item.image.startsWith('http') && !item.image.startsWith('menu/')){
+    item.image = 'menu/' + item.image.replace(/^\/+/, '');
+  }
   await fetch('menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
   loadMenu();
 }

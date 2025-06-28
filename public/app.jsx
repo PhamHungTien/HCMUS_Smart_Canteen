@@ -443,7 +443,9 @@
                         specialRequest: special,
                         items: cart,
                         total: calculateCartTotal,
-                        paymentMethod: paymentMethod
+                        paymentMethod: paymentMethod,
+                        accountUsername: localStorage.getItem('username') || '',
+                        accountCode: localStorage.getItem('code') || ''
                     })
                     })
                     .then(res => res.json())
@@ -480,7 +482,9 @@
                         type: 'rating',
                         menuItemId: parseInt(selectedMenuItem),
                         rating,
-                        comment: reviewComment
+                        comment: reviewComment,
+                        username: localStorage.getItem('username') || '',
+                        code: localStorage.getItem('code') || ''
                     })
                 });
 
@@ -518,7 +522,9 @@
                     body: JSON.stringify({
                         type: 'comment',
                         text: feedbackText,
-                        email: feedbackEmail
+                        email: feedbackEmail,
+                        username: localStorage.getItem('username') || '',
+                        code: localStorage.getItem('code') || ''
                     })
                 });
 
