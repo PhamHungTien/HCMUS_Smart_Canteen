@@ -38,7 +38,9 @@ app.get('/:page', (req, res, next) => {
   next();
 });
 
-app.use('/login', authRouter);
+// Login API chỉ xử lý phương thức POST, cần đặt riêng để truy cập GET /login
+// vẫn phục vụ trang login.html (route /:page ở trên)
+app.post('/login', authRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 app.use('/menu', menuRouter);
