@@ -18,9 +18,9 @@ app.use(express.json());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
-app.use(express.static(publicDir));
 
-// Redirect requests with .html extension to clean URLs
+// Redirect requests like "/login.html" to "/login" so that
+// users can omit the extension when browsing the frontend.
 app.use((req, res, next) => {
   if (req.path.endsWith('.html')) {
     const clean = req.path.slice(0, -5) || '/';
@@ -28,6 +28,9 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// Serve static assets from the public directory
+app.use(express.static(publicDir));
 
 // Serve "page" URLs without the .html extension
 app.get('/:page', (req, res, next) => {
