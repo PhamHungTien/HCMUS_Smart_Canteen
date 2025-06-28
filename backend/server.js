@@ -7,6 +7,7 @@ import ordersRouter from './routes/orders.js';
 import authRouter from './routes/auth.js';
 import menuRouter from './routes/menu.js';
 import feedbackRouter from './routes/feedback.js';
+import usersRouter from './routes/users.js';
 
 dotenv.config();
 
@@ -16,26 +17,14 @@ app.use(express.json());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
+
+// Serve tệp tĩnh trong thư mục public
 app.use(express.static(publicDir));
 
-// Redirect requests with .html extension to clean URLs
-app.use((req, res, next) => {
-  if (req.path.endsWith('.html')) {
-    const clean = req.path.slice(0, -5) || '/';
-    return res.redirect(301, clean);
-  }
-  next();
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile('login.html', { root: publicDir });
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile('admin.html', { root: publicDir });
-});
-
-app.use('/login', authRouter);
+// Login API chỉ xử lý phương thức POST, cần đặt riêng để truy cập GET /login
+// vẫn phục vụ login.html thông qua express.static ở trên
+app.post('/login', authRouter);
+app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 app.use('/menu', menuRouter);
 app.use('/feedback', feedbackRouter);

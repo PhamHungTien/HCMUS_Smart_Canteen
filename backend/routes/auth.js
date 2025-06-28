@@ -1,14 +1,20 @@
 import express from 'express';
+import { readUsers } from '../users.js';
 
 const router = express.Router();
 
-const USERNAME = process.env.APP_USER || 'admin';
-const PASSWORD = process.env.APP_PASS || '123456';
+const ADMIN_USER = process.env.APP_USER || 'admin';
+const ADMIN_PASS = process.env.APP_PASS || 'admin@123';
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { username, password } = req.body;
-  if (username === USERNAME && password === PASSWORD) {
-    return res.json({ message: 'Đăng nhập thành công' });
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    return res.json({ role: 'admin' });
+  }
+  const users = await readUsers();
+  const found = users.find(u => u.username === username && u.password === password);
+  if (found) {
+    return res.json({ role: 'user' });
   }
   res.status(401).json({ error: 'Sai thông tin đăng nhập' });
 });
