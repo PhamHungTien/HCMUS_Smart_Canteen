@@ -1,64 +1,82 @@
 # HCMUS Smart Canteen
 
-Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Backend viết hoàn toàn bằng Node.js thuần (không dùng thư viện ngoài) và giao diện frontend dùng React, cho phép khách đặt món và quản lý đơn hàng.
+Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên (HCMUS). Toàn bộ phần backend được xây dựng bằng Node.js thuần mà không sử dụng framework ngoài; giao diện viết bằng React chạy trực tiếp trên trình duyệt thông qua Babel.
+
+## Công cụ và thư viện sử dụng
+
+- **Node.js** (>= 18) cung cấp HTTP server và thao tác với hệ thống file.
+- **React 18** kèm **Babel Standalone** để biên dịch JSX ngay trên trình duyệt, không cần bước build.
+- **Font Awesome** dùng các biểu tượng cho UI.
+- **JSBarcode** tạo mã vạch khi xác nhận đơn hàng.
+- Ảnh QR thanh toán Momo/VietQR đặt trong `public/qr/`.
+
+Backend hoạt động mà không cần cài thêm gói npm nào. Tất cả dữ liệu đều lưu vào các file JSON trong thư mục `data/` (đã được `.gitignore`).
 
 ## Cài đặt
 
-1. Cài đặt Node.js >= 18.
-2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
-3. Không cần cài thêm gói phụ thuộc nào.
+1. Cài Node.js phiên bản 18 trở lên.
+2. Tạo file `.env` dựa trên `.env.example` và chỉnh lại tài khoản quản trị hoặc cổng nếu muốn.
+3. Không có phụ thuộc ngoài, do đó không cần chạy `npm install`.
 
 ## Chạy ứng dụng
 
-Khởi động server Node.js:
+Khởi động máy chủ bằng lệnh:
 
 ```bash
 npm start
 ```
 
-Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
-Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http://localhost:3001/register.html` và đăng nhập ở `http://localhost:3001/login.html`. Sau khi đăng nhập bằng tài khoản quản trị bạn sẽ vào `http://localhost:3001/admin.html`.
+Server mặc định lắng nghe tại `http://localhost:3001` (có thể thay đổi trong `.env`). Truy cập các đường dẫn:
 
-## Tính năng chính
+- `http://localhost:3001/` – trang đặt món chính (React).
+- `http://localhost:3001/login.html` – trang đăng nhập.
+- `http://localhost:3001/register.html` – trang đăng ký tài khoản.
+- `http://localhost:3001/admin.html` – trang quản trị (đăng nhập bằng tài khoản admin).
 
-- Đặt món và thanh toán trực tuyến (Momo, VietQR) hoặc khi nhận hàng.
-- Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
-- Dữ liệu được lưu trong các file JSON tại thư mục `data/`.
-- Người dùng có thể đăng ký tài khoản và đăng nhập.
-- Mỗi tài khoản lưu thêm mã số sinh viên hoặc cán bộ.
-- Quản trị viên có thể quản lý danh sách người dùng.
+Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh.
 
-## Cấu trúc
+## Cấu trúc thư mục và chức năng từng file
 
-- `public/` chứa giao diện người dùng (HTML, CSS, ảnh).
-  - `index.html` (truy cập `/`) trang đặt món chính, nạp mã React từ `app.jsx`.
-  - `login.html` (truy cập `/login.html`) trang đăng nhập.
-  - `register.html` (truy cập `/register.html`) trang tạo tài khoản người dùng.
-  - `admin.html` (truy cập `/admin.html`) trang quản lý đơn hàng, menu, góp ý và người dùng.
-- `backend/` chứa mã nguồn Node.js.
-  - `server.js`: điểm khởi đầu của backend.
-  - `orders.js`: thao tác với dữ liệu đơn hàng.
-  - `menu.js`: lưu trữ danh sách món ăn.
-  - `feedback.js`: ghi nhận đánh giá/góp ý từ khách hàng.
-  - `users.js`: quản lý người dùng.
-  - `data/` chứa các file JSON lưu trữ dữ liệu (được bỏ qua trong git).
+```
+HCMUS_Smart_Canteen/
+├── backend/            # Mã nguồn Node.js
+│   ├── server.js       # Tạo HTTP server, định nghĩa toàn bộ API và phục vụ file tĩnh
+│   ├── orders.js       # Đọc/ghi dữ liệu đơn hàng (data/orders.json)
+│   ├── menu.js         # Lưu trữ và cập nhật danh sách món ăn (data/menu.json)
+│   ├── feedback.js     # Lưu góp ý, đánh giá của khách (data/feedback.json)
+│   └── users.js        # Quản lý tài khoản người dùng (data/users.json)
+├── public/             # Giao diện người dùng và tài nguyên tĩnh
+│   ├── index.html      # Trang React chính hiển thị menu và giỏ hàng
+│   ├── login.html      # Mẫu đăng nhập, gọi API /login
+│   ├── register.html   # Mẫu đăng ký tài khoản, gọi API /users
+│   ├── admin.html      # Trang quản trị đơn hàng/menu/feedback/người dùng
+│   ├── app.jsx         # Toàn bộ mã React cho trang đặt món và xử lý giỏ hàng
+│   ├── styles.css      # Tập tin CSS dùng chung
+│   ├── img/            # Logo và hình ảnh giao diện
+│   ├── menu/           # Hình ảnh các món ăn hiển thị trên trang
+│   └── qr/             # Ảnh QR thanh toán Momo và VietQR
+├── package.json        # Khai báo dự án Node.js và script `npm start`
+├── .env.example        # Mẫu cấu hình môi trường (user, password, PORT)
+└── README.md           # Tài liệu này
+```
 
-## API
+## API cơ bản
 
-- `POST /orders` – tạo đơn hàng mới.
-- `GET /orders` – lấy danh sách đơn hàng.
+- `POST /orders` – tạo đơn hàng.
+- `GET /orders` – trả về danh sách đơn hàng.
 - `GET /menu` – lấy danh sách món ăn.
-- `POST /menu` – thêm món mới.
-- `PUT /menu/:id` – cập nhật món.
-- `DELETE /menu/:id` – xóa món.
-- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng trong database).
-- `POST /users` – đăng ký người dùng mới (cần `username`, `password`, `code`).
-- `GET /users` – lấy danh sách người dùng (dành cho admin).
-- `POST /feedback` – gửi đánh giá hoặc góp ý.
-- `GET /feedback` – lấy danh sách phản hồi của khách hàng.
+- `POST /menu` – thêm món mới (admin).
+- `PUT /menu/:id` – cập nhật món ăn theo ID.
+- `DELETE /menu/:id` – xóa món ăn.
+- `POST /login` – đăng nhập (admin hoặc người dùng).
+- `POST /users` – đăng ký tài khoản người dùng.
+- `GET /users` – danh sách người dùng (admin).
+- `DELETE /users/:name` – xóa tài khoản (admin).
+- `POST /feedback` – gửi góp ý.
+- `GET /feedback` – xem toàn bộ góp ý (admin).
 
 ## Đóng góp
 
-Mọi đóng góp, ý kiến xin gửi về nhóm phát triển.
+Mọi ý kiến đóng góp xin gửi về nhóm phát triển. Đây là dự án học tập nên rất hoan nghênh phản hồi và đề xuất tính năng.
 
-_Frontend React sử dụng Babel chạy trực tiếp trên trình duyệt nên không cần bước build._
+_Frontend React dùng Babel hoạt động trực tiếp trên trình duyệt nên chỉ cần chạy `npm start` là có thể thử ngay._
