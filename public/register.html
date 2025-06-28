@@ -28,10 +28,10 @@
     document.getElementById('regBtn').addEventListener('click', async () => {
         const username=document.getElementById('username').value.trim();
         const password=document.getElementById('password').value.trim();
-        const res=await fetch('/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+        const res=await fetch('users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
         if(res.ok){
             alert('Đăng ký thành công');
-            window.location='/login';
+            window.location='login';
         }else{
             const d=await res.json();
             const e=document.getElementById('regErr');

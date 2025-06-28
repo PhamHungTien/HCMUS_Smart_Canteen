@@ -1,5 +1,5 @@
         if (!localStorage.getItem('loggedIn')) {
-            window.location.href = '/login';
+            window.location.href = 'login';
         }
 
         const { useState, useEffect, useRef } = React;
@@ -429,7 +429,7 @@
                     setPaymentMethod('cod'); // Reset payment method
                 }, 1000);
                 // Bằng thêm
-                fetch('/orders', {
+                fetch('orders', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -473,7 +473,7 @@
                     return;
                 }
 
-                fetch('/feedback', {
+                fetch('feedback', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -512,7 +512,7 @@
                     return;
                 }
 
-                fetch('/feedback', {
+                fetch('feedback', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({

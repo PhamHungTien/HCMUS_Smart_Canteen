@@ -35,7 +35,7 @@
 <div id="feedback" class="tab hidden"></div>
 <div id="users" class="tab hidden"></div>
 <script>
-if(!localStorage.getItem('loggedIn')) window.location='/login';
+if(!localStorage.getItem('loggedIn')) window.location='login';
 
 function showTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.add('hidden'));
@@ -47,7 +47,7 @@ function showTab(id){
 }
 
 async function loadOrders(){
-  const res = await fetch('/orders');
+  const res = await fetch('orders');
   const data = await res.json();
   const div=document.getElementById('orders');
   div.innerHTML='<h3>Đơn hàng</h3>'+renderTable(data);
@@ -63,7 +63,7 @@ function renderTable(items){
 }
 
 async function loadMenu(){
-  const res=await fetch('/menu');
+  const res=await fetch('menu');
   const menu=await res.json();
   const list=document.getElementById('menuList');
   list.innerHTML=renderMenuTable(menu);
@@ -85,24 +85,24 @@ async function addMenuItem(){
     image:document.getElementById('itemImage').value,
     rating:parseInt(document.getElementById('itemRating').value||0)
   };
-  await fetch('/menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+  await fetch('menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
   loadMenu();
 }
 
 async function delMenuItem(id){
-  await fetch('/menu/'+id,{method:'DELETE'});
+  await fetch('menu/'+id,{method:'DELETE'});
   loadMenu();
 }
 
 async function loadFeedback(){
-  const res=await fetch('/feedback');
+  const res=await fetch('feedback');
   const data=await res.json();
   const div=document.getElementById('feedback');
   div.innerHTML='<h3>Góp ý</h3>'+renderTable(data);
 }
 
 async function loadUsers(){
-  const res=await fetch('/users');
+  const res=await fetch('users');
   const list=await res.json();
   const div=document.getElementById('users');
   div.innerHTML='<h3>Người dùng</h3>'+renderUserTable(list);
@@ -117,7 +117,7 @@ function renderUserTable(users){
 }
 
 async function delUser(name){
-  await fetch('/users/'+name,{method:'DELETE'});
+  await fetch('users/'+name,{method:'DELETE'});
   loadUsers();
 }
 
