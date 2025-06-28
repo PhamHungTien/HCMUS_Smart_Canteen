@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .login-container {
+            max-width: 360px;
+            margin: 80px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .login-error {
+            color: var(--danger-color);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Đăng nhập</h2>
+    <div class="login-error" id="loginError" style="display:none"></div>
+    <label for="username">Tên người dùng</label>
+    <input type="text" id="username" placeholder="Username" />
+    <label for="password">Mật khẩu</label>
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Đăng nhập</button>
+</div>
+<script>
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const res = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+            localStorage.setItem('loggedIn', 'true');
+            window.location.href = '/';
+        } else {
+            const data = await res.json();
+            const err = document.getElementById('loginError');
+            err.style.display = 'block';
+            err.textContent = data.error || 'Đăng nhập thất bại';
+        }
+    });
+</script>
+</body>
+</html>
