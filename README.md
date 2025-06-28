@@ -33,7 +33,7 @@ Server mặc định lắng nghe tại `http://localhost:3001` (có thể thay �
 - `http://localhost:3001/register.html` – trang đăng ký tài khoản.
 - `http://localhost:3001/admin.html` – trang quản trị (đăng nhập bằng tài khoản admin).
 
-Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh.
+Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh. Phần menu được tải động từ API `/menu` để quản trị có thể cập nhật dễ dàng.
 
 ## Cấu trúc thư mục và chức năng từng file
 
@@ -43,6 +43,7 @@ HCMUS_Smart_Canteen/
 │   ├── server.js       # Tạo HTTP server, định nghĩa toàn bộ API và phục vụ file tĩnh
 │   ├── orders.js       # Đọc/ghi dữ liệu đơn hàng (data/orders.json)
 │   ├── menu.js         # Lưu trữ và cập nhật danh sách món ăn (data/menu.json)
+│   │                     (tự tạo từ `defaultMenu.json` nếu chưa có dữ liệu)
 │   ├── feedback.js     # Lưu góp ý, đánh giá của khách (data/feedback.json)
 │   └── users.js        # Quản lý tài khoản người dùng (data/users.json)
 ├── public/             # Giao diện người dùng và tài nguyên tĩnh
