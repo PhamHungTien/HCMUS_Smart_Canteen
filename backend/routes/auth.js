@@ -8,6 +8,9 @@ const ADMIN_PASS = process.env.APP_PASS || 'admin@123';
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body;
+  if(!username || !password){
+    return res.status(400).json({ error: 'Thiếu tên hoặc mật khẩu' });
+  }
   if (username === ADMIN_USER && password === ADMIN_PASS) {
     return res.json({ role: 'admin' });
   }

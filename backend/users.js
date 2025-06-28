@@ -19,12 +19,14 @@ export async function writeUsers(users) {
 
 export async function addUser(user) {
   const users = await readUsers();
-  if (users.find(u => u.username === user.username)) {
+  const username = String(user.username).trim();
+  const password = String(user.password).trim();
+  if (users.find(u => u.username === username)) {
     return null;
   }
-  users.push(user);
+  users.push({ username, password });
   await writeUsers(users);
-  return user;
+  return { username };
 }
 
 export async function deleteUser(username) {

@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
   if (!user) {
     return res.status(409).json({ error: 'Người dùng đã tồn tại' });
   }
-  res.json(user);
+  res.json({ username: user.username });
 });
 
 router.delete('/:username', async (req, res) => {
