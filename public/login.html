@@ -59,6 +59,7 @@
     <label for="password">Mật khẩu</label>
     <input type="password" id="password" placeholder="Password" />
     <button id="loginBtn">Đăng nhập</button>
+    <p style="text-align:center;margin-top:10px">Chưa có tài khoản? <a href="/register">Đăng ký</a></p>
 </div>
 <script>
     document.getElementById('loginBtn').addEventListener('click', async () => {
@@ -70,8 +71,15 @@
             body: JSON.stringify({ username, password })
         });
         if (res.ok) {
+            const data = await res.json();
             localStorage.setItem('loggedIn', 'true');
-            window.location.href = '/';
+            if(data.role==='admin'){
+                localStorage.setItem('admin','true');
+                window.location.href='/admin';
+            }else{
+                localStorage.removeItem('admin');
+                window.location.href='/';
+            }
         } else {
             const data = await res.json();
             const err = document.getElementById('loginError');

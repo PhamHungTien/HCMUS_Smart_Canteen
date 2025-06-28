@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .reg-container{max-width:360px;margin:80px auto;background:#fff;padding:40px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+        .reg-container h2{text-align:center;margin-bottom:24px;}
+        .reg-container label{display:block;margin-bottom:8px;font-weight:600;}
+        .reg-container input{width:100%;padding:8px 12px;margin-bottom:16px;border:1px solid #ccc;border-radius:4px;font-size:16px;}
+        .reg-container button{width:100%;padding:10px 16px;background:var(--primary-color);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:16px;}
+        .error{color:var(--danger-color);margin-bottom:12px;text-align:center;}
+    </style>
+</head>
+<body>
+<div class="reg-container">
+    <h2>Tạo tài khoản</h2>
+    <div class="error" id="regErr" style="display:none"></div>
+    <label for="username">Tên người dùng</label>
+    <input id="username" type="text" />
+    <label for="password">Mật khẩu</label>
+    <input id="password" type="password" />
+    <button id="regBtn">Đăng ký</button>
+</div>
+<script>
+    document.getElementById('regBtn').addEventListener('click', async () => {
+        const username=document.getElementById('username').value.trim();
+        const password=document.getElementById('password').value.trim();
+        const res=await fetch('/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+        if(res.ok){
+            alert('Đăng ký thành công');
+            window.location='/login';
+        }else{
+            const d=await res.json();
+            const e=document.getElementById('regErr');
+            e.style.display='block';
+            e.textContent=d.error||'Lỗi';
+        }
+    });
+</script>
+</body>
+</html>

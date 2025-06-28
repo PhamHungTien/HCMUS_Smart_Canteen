@@ -7,6 +7,7 @@ import ordersRouter from './routes/orders.js';
 import authRouter from './routes/auth.js';
 import menuRouter from './routes/menu.js';
 import feedbackRouter from './routes/feedback.js';
+import usersRouter from './routes/users.js';
 import fs from 'fs';
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.get('/:page', (req, res, next) => {
 });
 
 app.use('/login', authRouter);
+app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 app.use('/menu', menuRouter);
 app.use('/feedback', feedbackRouter);

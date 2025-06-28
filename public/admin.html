@@ -18,6 +18,7 @@
     <button onclick="showTab('orders')">Đơn hàng</button>
     <button onclick="showTab('menu')">Menu</button>
     <button onclick="showTab('feedback')">Góp ý</button>
+    <button onclick="showTab('users')">Người dùng</button>
 </div>
 <div id="orders" class="tab"></div>
 <div id="menu" class="tab hidden">
@@ -32,6 +33,7 @@
     <div id="menuList"></div>
 </div>
 <div id="feedback" class="tab hidden"></div>
+<div id="users" class="tab hidden"></div>
 <script>
 if(!localStorage.getItem('loggedIn')) window.location='/login';
 
@@ -41,6 +43,7 @@ function showTab(id){
   if(id==='orders') loadOrders();
   if(id==='menu') loadMenu();
   if(id==='feedback') loadFeedback();
+  if(id==='users') loadUsers();
 }
 
 async function loadOrders(){
@@ -96,6 +99,26 @@ async function loadFeedback(){
   const data=await res.json();
   const div=document.getElementById('feedback');
   div.innerHTML='<h3>Góp ý</h3>'+renderTable(data);
+}
+
+async function loadUsers(){
+  const res=await fetch('/users');
+  const list=await res.json();
+  const div=document.getElementById('users');
+  div.innerHTML='<h3>Người dùng</h3>'+renderUserTable(list);
+}
+
+function renderUserTable(users){
+  if(!users.length) return '<p>Không có người dùng</p>';
+  let html='<table><thead><tr><th>Username</th><th></th></tr></thead><tbody>';
+  html+=users.map(u=>`<tr><td>${u.username}</td><td><button onclick="delUser('${u.username}')">Xóa</button></td></tr>`).join('');
+  html+='</tbody></table>';
+  return html;
+}
+
+async function delUser(name){
+  await fetch('/users/'+name,{method:'DELETE'});
+  loadUsers();
 }
 
 showTab('orders');

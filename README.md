@@ -6,7 +6,7 @@
 
 1. Cài đặt Node.js >= 18.
 2. Tạo thư mục `data/` ở gốc dự án để lưu các file JSON tạm thời.
-3. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/123456`.
+3. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
 4. Cài đặt các gói phụ thuộc:
 
 ```bash
@@ -22,7 +22,7 @@ npm start
 ```
 
 Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
-Truy cập `http://localhost:3001` để đặt món. Trang đăng nhập quản trị ở `http://localhost:3001/login` và sau khi đăng nhập sẽ truy cập `http://localhost:3001/admin`.
+Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http://localhost:3001/register` và đăng nhập ở `http://localhost:3001/login`. Sau khi đăng nhập bằng tài khoản quản trị bạn sẽ vào `http://localhost:3001/admin`.
 Bạn có thể bỏ đuôi `.html` khi truy cập các trang tĩnh. Server sẽ tự chuyển hướng từ `/ten.html` sang `/ten`.
 
 ## Tính năng chính
@@ -30,13 +30,16 @@ Bạn có thể bỏ đuôi `.html` khi truy cập các trang tĩnh. Server sẽ
 - Đặt món và thanh toán trực tuyến (Momo, VietQR) hoặc khi nhận hàng.
 - Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
 - Tất cả dữ liệu được lưu tạm thời dưới dạng file JSON trong thư mục `data/`.
+- Người dùng có thể đăng ký tài khoản và đăng nhập.
+- Quản trị viên có thể quản lý danh sách người dùng.
 
 ## Cấu trúc
 
 - `public/` chứa giao diện người dùng (HTML, CSS, ảnh).
   - `index.html` (truy cập `/`) trang đặt món chính, nạp mã React từ `app.jsx`.
   - `login.html` (truy cập `/login`) trang đăng nhập.
-  - `admin.html` (truy cập `/admin`) trang quản lý đơn hàng, menu và góp ý.
+  - `register.html` (truy cập `/register`) trang tạo tài khoản người dùng.
+  - `admin.html` (truy cập `/admin`) trang quản lý đơn hàng, menu, góp ý và người dùng.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
   - `routes/` chứa các router Express (`auth.js`, `orders.js`, `menu.js`, `feedback.js`).
@@ -53,7 +56,9 @@ Bạn có thể bỏ đuôi `.html` khi truy cập các trang tĩnh. Server sẽ
 - `POST /menu` – thêm món mới.
 - `PUT /menu/:id` – cập nhật món.
 - `DELETE /menu/:id` – xóa món.
-- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu trong file `.env`.
+- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng lưu trong `data/users.json`).
+- `POST /users` – đăng ký người dùng mới.
+- `GET /users` – lấy danh sách người dùng (dành cho admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách phản hồi của khách hàng.
 
