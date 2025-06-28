@@ -31,7 +31,7 @@
         const res=await fetch('users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
         if(res.ok){
             alert('Đăng ký thành công');
-            window.location='login';
+            window.location='login.html';
         }else{
             const d=await res.json();
             const e=document.getElementById('regErr');

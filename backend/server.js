@@ -18,21 +18,8 @@ app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
 
-// Redirect requests like "/login.html" to "/login" to avoid duplicate URLs
-// and keep links shorter. This runs before the static middleware so that
-// visiting "/page.html" always redirects to "/page".
-app.use((req, res, next) => {
-  if (req.path.endsWith('.html')) {
-    const clean = req.path.slice(0, -5) || '/';
-    return res.redirect(301, clean);
-  }
-  next();
-});
-
-// Serve static assets and automatically look for the .html extension when the
-// requested path has no file extension. This makes URLs like "/login" load
-// "login.html" transparently without extra routing logic.
-app.use(express.static(publicDir, { extensions: ['html'] }));
+// Serve tệp tĩnh trong thư mục public
+app.use(express.static(publicDir));
 
 // Login API chỉ xử lý phương thức POST, cần đặt riêng để truy cập GET /login
 // vẫn phục vụ login.html thông qua express.static ở trên

@@ -1,5 +1,5 @@
         if (!localStorage.getItem('loggedIn')) {
-            window.location.href = 'login';
+            window.location.href = 'login.html';
         }
 
         const { useState, useEffect, useRef } = React;

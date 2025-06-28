@@ -22,8 +22,7 @@ npm start
 ```
 
 Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
-Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http://localhost:3001/register` và đăng nhập ở `http://localhost:3001/login`. Sau khi đăng nhập bằng tài khoản quản trị bạn sẽ vào `http://localhost:3001/admin`.
-Các đường dẫn tĩnh hoạt động mà không cần `.html`. Nhờ tùy chọn `extensions` của Express nên `/login` sẽ tự nạp `login.html`, đồng thời các yêu cầu như `/login.html` sẽ được chuyển hướng về phiên bản rút gọn.
+Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http://localhost:3001/register.html` và đăng nhập ở `http://localhost:3001/login.html`. Sau khi đăng nhập bằng tài khoản quản trị bạn sẽ vào `http://localhost:3001/admin.html`.
 
 ## Tính năng chính
 
@@ -37,9 +36,9 @@ Các đường dẫn tĩnh hoạt động mà không cần `.html`. Nhờ tùy c
 
 - `public/` chứa giao diện người dùng (HTML, CSS, ảnh).
   - `index.html` (truy cập `/`) trang đặt món chính, nạp mã React từ `app.jsx`.
-  - `login.html` (truy cập `/login`) trang đăng nhập.
-  - `register.html` (truy cập `/register`) trang tạo tài khoản người dùng.
-  - `admin.html` (truy cập `/admin`) trang quản lý đơn hàng, menu, góp ý và người dùng.
+  - `login.html` (truy cập `/login.html`) trang đăng nhập.
+  - `register.html` (truy cập `/register.html`) trang tạo tài khoản người dùng.
+  - `admin.html` (truy cập `/admin.html`) trang quản lý đơn hàng, menu, góp ý và người dùng.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
   - `routes/` chứa các router Express (`auth.js`, `orders.js`, `menu.js`, `feedback.js`).
