@@ -1,12 +1,13 @@
 # HCMUS Smart Canteen
 
-Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Phiên bản này có trang đăng nhập và trang quản trị đơn hàng.
+Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Đây là dự án mẫu gồm phần backend (Express) và giao diện frontend dùng React, cho phép khách đặt món và quản lý đơn hàng.
 
 ## Cài đặt
 
 1. Cài đặt Node.js >= 18.
-2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần.
-3. Cài đặt các gói phụ thuộc:
+2. Tạo thư mục `data/` ở gốc dự án để lưu các file JSON tạm thời.
+3. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/123456`.
+4. Cài đặt các gói phụ thuộc:
 
 ```bash
 npm install
@@ -21,7 +22,13 @@ npm start
 ```
 
 Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
-Sau khi đăng nhập, truy cập `/admin` để xem trang quản trị.
+Truy cập `http://localhost:3001` để đặt món. Trang đăng nhập quản trị ở `http://localhost:3001/login` và sau khi đăng nhập sẽ truy cập `http://localhost:3001/admin`.
+
+## Tính năng chính
+
+- Đặt món và thanh toán trực tuyến (Momo, VietQR) hoặc khi nhận hàng.
+- Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
+- Tất cả dữ liệu được lưu tạm thời dưới dạng file JSON trong thư mục `data/`.
 
 ## Cấu trúc
 
@@ -52,3 +59,5 @@ Sau khi đăng nhập, truy cập `/admin` để xem trang quản trị.
 ## Đóng góp
 
 Mọi đóng góp, ý kiến xin gửi về nhóm phát triển.
+
+_Frontend React sử dụng Babel chạy trực tiếp trên trình duyệt nên không cần bước build._
