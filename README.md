@@ -23,7 +23,7 @@ npm start
 
 Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
 Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http://localhost:3001/register` và đăng nhập ở `http://localhost:3001/login`. Sau khi đăng nhập bằng tài khoản quản trị bạn sẽ vào `http://localhost:3001/admin`.
-Bạn có thể bỏ đuôi `.html` khi truy cập các trang tĩnh. Server sẽ tự chuyển hướng từ `/ten.html` sang `/ten`.
+Các đường dẫn tĩnh hoạt động mà không cần `.html`. Nhờ tùy chọn `extensions` của Express nên `/login` sẽ tự nạp `login.html`, đồng thời các yêu cầu như `/login.html` sẽ được chuyển hướng về phiên bản rút gọn.
 
 ## Tính năng chính
 
