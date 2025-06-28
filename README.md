@@ -30,10 +30,11 @@ Server mặc định lắng nghe tại `http://localhost:3001` (có thể thay �
 
 - `http://localhost:3001/` – trang đặt món chính (React).
 - `http://localhost:3001/login.html` – trang đăng nhập.
-- `http://localhost:3001/register.html` – trang đăng ký tài khoản.
+- `http://localhost:3001/register.html` – trang đăng ký tài khoản (yêu cầu cả họ tên).
 - `http://localhost:3001/admin.html` – trang quản trị (đăng nhập bằng tài khoản admin).
 
 Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh. Phần menu được tải động từ API `/menu` để quản trị có thể cập nhật dễ dàng.
+Thông tin họ tên và mã số người đặt được lấy trực tiếp từ tài khoản sau khi đăng nhập nên không cần nhập lại ở bước thanh toán.
 
 ## Cấu trúc thư mục và chức năng từng file
 
@@ -70,7 +71,7 @@ HCMUS_Smart_Canteen/
 - `PUT /menu/:id` – cập nhật món ăn theo ID.
 - `DELETE /menu/:id` – xóa món ăn.
 - `POST /login` – đăng nhập (admin hoặc người dùng).
-- `POST /users` – đăng ký tài khoản người dùng.
+- `POST /users` – đăng ký tài khoản người dùng (gồm username, mật khẩu, mã số và họ tên).
 - `GET /users` – danh sách người dùng (admin).
 - `DELETE /users/:name` – xóa tài khoản (admin).
 - `POST /feedback` – gửi góp ý.

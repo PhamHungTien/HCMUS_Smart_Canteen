@@ -21,7 +21,12 @@ async function writeUsers(users) {
 export async function addUser(user) {
   const users = await readUsers();
   if (users.find(u => u.username === user.username)) return null;
-  users.push(user);
+  users.push({
+    username: user.username,
+    password: user.password,
+    code: user.code,
+    fullName: user.fullName || ''
+  });
   await writeUsers(users);
   return user;
 }
