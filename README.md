@@ -29,6 +29,7 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 - Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
 - Dữ liệu được lưu trong file SQLite tại thư mục `data/`.
 - Người dùng có thể đăng ký tài khoản và đăng nhập.
+- Mỗi tài khoản lưu thêm mã số sinh viên hoặc cán bộ.
 - Quản trị viên có thể quản lý danh sách người dùng.
 
 ## Cấu trúc
@@ -55,7 +56,7 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 - `PUT /menu/:id` – cập nhật món.
 - `DELETE /menu/:id` – xóa món.
 - `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng trong database).
-- `POST /users` – đăng ký người dùng mới.
+- `POST /users` – đăng ký người dùng mới (cần `username`, `password`, `code`).
 - `GET /users` – lấy danh sách người dùng (dành cho admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách phản hồi của khách hàng.

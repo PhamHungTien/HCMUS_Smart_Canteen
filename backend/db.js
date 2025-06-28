@@ -36,8 +36,13 @@ export async function getDb() {
   await run(db, `CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    code TEXT
   )`);
+  const columns = await all(db, 'PRAGMA table_info(users)');
+  if (!columns.some(c => c.name === 'code')) {
+    await run(db, 'ALTER TABLE users ADD COLUMN code TEXT');
+  }
   return db;
 }
 
