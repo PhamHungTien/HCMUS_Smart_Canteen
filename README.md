@@ -1,21 +1,16 @@
 # HCMUS Smart Canteen
 
-Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Đây là dự án mẫu gồm phần backend (Express) và giao diện frontend dùng React, cho phép khách đặt món và quản lý đơn hàng.
+Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên. Backend viết hoàn toàn bằng Node.js thuần (không dùng thư viện ngoài) và giao diện frontend dùng React, cho phép khách đặt món và quản lý đơn hàng.
 
 ## Cài đặt
 
 1. Cài đặt Node.js >= 18.
-2. Tạo thư mục `data/` ở gốc dự án để lưu các file JSON tạm thời.
-3. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
-4. Cài đặt các gói phụ thuộc:
-
-```bash
-npm install
-```
+2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần. Mặc định tài khoản quản trị là `admin/admin@123`.
+3. Không cần cài thêm gói phụ thuộc nào.
 
 ## Chạy ứng dụng
 
-Khởi động server Express:
+Khởi động server Node.js:
 
 ```bash
 npm start
@@ -28,8 +23,9 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 
 - Đặt món và thanh toán trực tuyến (Momo, VietQR) hoặc khi nhận hàng.
 - Trang quản trị cho phép xem đơn hàng, chỉnh sửa menu và xem góp ý từ khách.
-- Tất cả dữ liệu được lưu tạm thời dưới dạng file JSON trong thư mục `data/`.
+- Dữ liệu được lưu trong các file JSON tại thư mục `data/`.
 - Người dùng có thể đăng ký tài khoản và đăng nhập.
+- Mỗi tài khoản lưu thêm mã số sinh viên hoặc cán bộ.
 - Quản trị viên có thể quản lý danh sách người dùng.
 
 ## Cấu trúc
@@ -41,11 +37,11 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
   - `admin.html` (truy cập `/admin.html`) trang quản lý đơn hàng, menu, góp ý và người dùng.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
-  - `routes/` chứa các router Express (`auth.js`, `orders.js`, `menu.js`, `feedback.js`).
   - `orders.js`: thao tác với dữ liệu đơn hàng.
   - `menu.js`: lưu trữ danh sách món ăn.
   - `feedback.js`: ghi nhận đánh giá/góp ý từ khách hàng.
-  - `data/` chứa các file JSON lưu tạm thời (được bỏ qua trong git).
+  - `users.js`: quản lý người dùng.
+  - `data/` chứa các file JSON lưu trữ dữ liệu (được bỏ qua trong git).
 
 ## API
 
@@ -55,8 +51,8 @@ Truy cập `http://localhost:3001` để đặt món. Trang đăng ký ở `http
 - `POST /menu` – thêm món mới.
 - `PUT /menu/:id` – cập nhật món.
 - `DELETE /menu/:id` – xóa món.
-- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng lưu trong `data/users.json`).
-- `POST /users` – đăng ký người dùng mới.
+- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu (admin trong `.env` hoặc người dùng trong database).
+- `POST /users` – đăng ký người dùng mới (cần `username`, `password`, `code`).
 - `GET /users` – lấy danh sách người dùng (dành cho admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách phản hồi của khách hàng.

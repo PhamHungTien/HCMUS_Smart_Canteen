@@ -1,11 +1,16 @@
-import { promises as fs } from 'fs';
+import fs from 'fs';
+import { promises as fsp } from 'fs';
 import path from 'path';
 
-const MENU_FILE = path.join(process.cwd(), 'data', 'menu.json');
+const DATA_DIR = path.join(process.cwd(), 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+const MENU_FILE = path.join(DATA_DIR, 'menu.json');
 
 export async function readMenu() {
   try {
-    const data = await fs.readFile(MENU_FILE, 'utf8');
+    const data = await fsp.readFile(MENU_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
     if (err.code === 'ENOENT') return [];
@@ -14,7 +19,7 @@ export async function readMenu() {
 }
 
 export async function writeMenu(menu) {
-  await fs.writeFile(MENU_FILE, JSON.stringify(menu, null, 2), 'utf8');
+  await fsp.writeFile(MENU_FILE, JSON.stringify(menu, null, 2), 'utf8');
 }
 
 export async function addMenuItem(item) {

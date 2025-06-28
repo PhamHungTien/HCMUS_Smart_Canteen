@@ -110,8 +110,8 @@ async function loadUsers(){
 
 function renderUserTable(users){
   if(!users.length) return '<p>Không có người dùng</p>';
-  let html='<table><thead><tr><th>Username</th><th></th></tr></thead><tbody>';
-  html+=users.map(u=>`<tr><td>${u.username}</td><td><button onclick="delUser('${u.username}')">Xóa</button></td></tr>`).join('');
+  let html='<table><thead><tr><th>Username</th><th>Mã số</th><th></th></tr></thead><tbody>';
+  html+=users.map(u=>`<tr><td>${u.username}</td><td>${u.code||''}</td><td><button onclick="delUser('${u.username}')">Xóa</button></td></tr>`).join('');
   html+='</tbody></table>';
   return html;
 }
