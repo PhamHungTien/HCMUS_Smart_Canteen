@@ -31,7 +31,8 @@ const mime = {
   '.css': 'text/css',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml'
+  '.svg': 'image/svg+xml',
+  '.jsx': 'text/javascript'
 };
 
 function send(res, status, data, type = 'application/json') {
