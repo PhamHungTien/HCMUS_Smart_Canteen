@@ -5,7 +5,8 @@
 ## Cài đặt
 
 1. Cài đặt Node.js >= 18.
-2. Cài đặt các gói phụ thuộc (Express và Cors):
+2. Tạo file `.env` từ mẫu `.env.example` và điều chỉnh thông tin đăng nhập nếu cần.
+3. Cài đặt các gói phụ thuộc:
 
 ```bash
 npm install
@@ -19,7 +20,7 @@ Khởi động server Express:
 npm start
 ```
 
-Server chạy mặc định tại `http://localhost:3001`.
+Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
 
 ## Cấu trúc
 
@@ -27,14 +28,15 @@ Server chạy mặc định tại `http://localhost:3001`.
 - `public/login.html` trang đăng nhập trước khi vào hệ thống.
 - `backend/` chứa mã nguồn Node.js.
   - `server.js`: điểm khởi đầu của backend.
+  - `routes/` chứa các router Express (`auth.js`, `orders.js`).
   - `orders.js`: các hàm thao tác với dữ liệu đơn hàng.
-- `data/orders.json`: file lưu trữ tạm thời đơn hàng.
+  - `data/orders.json`: file lưu trữ tạm thời đơn hàng (được bỏ qua trong git).
 
 ## API
 
 - `POST /orders` – tạo đơn hàng mới.
 - `GET /orders` – lấy danh sách đơn hàng.
-- `POST /login` – xác thực đơn giản (user mặc định: admin/123456).
+- `POST /login` – xác thực dựa trên tên đăng nhập/mật khẩu trong file `.env`.
 
 ## Đóng góp
 

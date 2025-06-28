@@ -2,7 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { addOrder, readOrders } from './orders.js';
+import dotenv from 'dotenv';
+import ordersRouter from './routes/orders.js';
+import authRouter from './routes/auth.js';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -12,36 +16,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
 app.use(express.static(publicDir));
 
-const USERS = [
-  { username: 'admin', password: '123456' }
-];
-
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = USERS.find(u => u.username === username && u.password === password);
-  if (user) {
-    return res.json({ message: 'Đăng nhập thành công' });
-  }
-  res.status(401).json({ error: 'Sai thông tin đăng nhập' });
-});
-
 app.get('/login', (req, res) => {
   res.sendFile('login.html', { root: publicDir });
 });
 
-app.post('/orders', async (req, res) => {
-  const order = req.body;
-  if (!order.customerName || !order.customerPhone || !order.customerStaffId || !order.items) {
-    return res.status(400).json({ error: 'Thiếu thông tin bắt buộc' });
-  }
-  await addOrder(order);
-  res.json({ message: 'Đơn hàng được ghi nhận thành công' });
-});
-
-app.get('/orders', async (req, res) => {
-  const orders = await readOrders();
-  res.json(orders);
-});
+app.use('/login', authRouter);
+app.use('/orders', ordersRouter);
 
 // Serve frontend
 app.get('*', (req, res) => {
