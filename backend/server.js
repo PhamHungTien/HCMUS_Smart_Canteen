@@ -7,6 +7,7 @@ import ordersRouter from './routes/orders.js';
 import authRouter from './routes/auth.js';
 import menuRouter from './routes/menu.js';
 import feedbackRouter from './routes/feedback.js';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -27,12 +28,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/login', (req, res) => {
-  res.sendFile('login.html', { root: publicDir });
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile('admin.html', { root: publicDir });
+// Serve "page" URLs without the .html extension
+app.get('/:page', (req, res, next) => {
+  const file = path.join(publicDir, `${req.params.page}.html`);
+  if (fs.existsSync(file)) {
+    return res.sendFile(file);
+  }
+  next();
 });
 
 app.use('/login', authRouter);

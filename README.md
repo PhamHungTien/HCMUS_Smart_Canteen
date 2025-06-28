@@ -23,6 +23,7 @@ npm start
 
 Server chạy tại cổng được cấu hình trong `.env` (mặc định `http://localhost:3001`).
 Truy cập `http://localhost:3001` để đặt món. Trang đăng nhập quản trị ở `http://localhost:3001/login` và sau khi đăng nhập sẽ truy cập `http://localhost:3001/admin`.
+Bạn có thể bỏ đuôi `.html` khi truy cập các trang tĩnh. Server sẽ tự chuyển hướng từ `/ten.html` sang `/ten`.
 
 ## Tính năng chính
 
