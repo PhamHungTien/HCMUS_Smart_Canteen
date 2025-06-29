@@ -252,13 +252,13 @@ function AdminApp() {
       <h2>{t('orders')}</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Thời gian</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>{t('pickup_time')}</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
             <tr key={o.id}>
               <td>{o.id}</td>
-              <td>{new Date(o.createdAt).toLocaleString('vi-VN')}</td>
+              <td>{new Date(o.time).toLocaleString('vi-VN')}</td>
               <td>{o.customerName}</td>
               <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
               <td>{o.specialRequest}</td>
