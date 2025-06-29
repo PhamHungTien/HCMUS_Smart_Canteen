@@ -580,10 +580,10 @@
             cursor: not-allowed;
         }
 
-        .logout-btn {
+.logout-btn {
             position: fixed;
             top: 10px;
-            right: 10px;
+            right: 12px;
             z-index: 1100;
             padding: 8px 10px;
             width: 40px;
@@ -591,6 +591,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+.logout-btn i {
+            color: var(--danger-color);
         }
 
         .payment-btn {

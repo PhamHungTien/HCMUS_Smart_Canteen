@@ -281,7 +281,7 @@ return (
     <>
         {/* Navbar KHÔNG còn logo */}
         <nav className="top-navbar">
-            <div className="top-navbar-inner" style={{display: 'flex', alignItems: 'center', width: '90%'}}>
+            <div className="top-navbar-inner" style={{display: 'flex', alignItems: 'center', width: 'calc(100% - 60px)'}}>
                 <div style={{flex: 1, display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
                     <div 
                         className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`} 
