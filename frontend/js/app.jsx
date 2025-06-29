@@ -21,9 +21,6 @@ const [menuItems, setMenuItems] = useState(defaultMenu);
 const [cart, setCart] = useState([]);
 const [addingId, setAddingId] = useState(null);
 const [pickup, setPickup] = useState('');
-const [name, setName] = useState('');
-const [phone, setPhone] = useState('');
-const [staff, setStaff] = useState('');
 const [special, setSpecial] = useState('');
 const [loading, setLoading] = useState(false);
 const [selectedMenuItem, setSelectedMenuItem] = useState('');
@@ -32,9 +29,6 @@ const [reviewComment, setReviewComment] = useState('');
 const [feedbackText, setFeedbackText] = useState('');
 const [feedbackEmail, setFeedbackEmail] = useState('');
 
-const [nameError, setNameError] = useState('');
-const [phoneError, setPhoneError] = useState('');
-const [staffError, setStaffError] = useState('');
 const [feedbackTextError, setFeedbackTextError] = useState('');
 const [feedbackEmailError, setFeedbackEmailError] = useState('');
 
@@ -44,6 +38,12 @@ const [selectedCategory, setSelectedCategory] = useState('Tất cả');
 const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 const [orderDetails, setOrderDetails] = useState(null);
 const [paymentMethod, setPaymentMethod] = useState('cod');
+
+useEffect(() => {
+    if (!localStorage.getItem('auth')) {
+        window.location.href = '/login.html';
+    }
+}, []);
 
 useEffect(() => {
     fetch('/menu')
@@ -128,9 +128,6 @@ const updateItemQuantity = (index, delta) => setCart(prev =>
 
 const calculateCartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-const isValidPhone = (ph) => /^[0-9]{9,11}$/.test(ph);
-const isValidName = (nm) => /^[\p{L}\s]+$/u.test(nm.trim()) && nm.trim().length >= 2; 
-const isValidStaff = (st) => st.trim().length > 0 && st.trim().length <= 20;
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const generateOrderId = () => 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -141,25 +138,16 @@ const handleCheckout = () => {
     const now = new Date();
     const maxAllowedDate = new Date(now.getTime() + 30 * 24 * 60 * 60000);
 
-    setNameError('');
-    setPhoneError('');
-    setStaffError('');
-
     if (pickupDate < now) { showToast('Không thể đặt món vào thời gian trong quá khứ!'); isValid = false; }
     if (pickupDate > maxAllowedDate) { showToast('Chỉ được đặt món trong vòng 30 ngày tới!'); isValid = false; }
     const pickupHour = pickupDate.getHours();
     if (pickupHour < 6 || pickupHour >= 18) { showToast('Chỉ đặt món trong khung giờ 6:00 – 18:00!'); isValid = false; }
     if (!cart.length) { showToast('Giỏ hàng của bạn đang trống!'); isValid = false; }
 
-    if (!isValidName(name)) { setNameError('Họ tên không hợp lệ (ít nhất 2 chữ, chỉ chữ và dấu cách)!'); isValid = false; }
-    if (!isValidPhone(phone)) { setPhoneError('Số điện thoại không hợp lệ (9-11 chữ số)!'); isValid = false; }
-    if (!isValidStaff(staff)) { setStaffError('Vui lòng nhập mã CB/SV (tối đa 20 ký tự)!'); isValid = false; }
-
     if (!isValid) {
-        // Cuộn lên phần thông tin nếu có lỗi
         handleTabClick('checkout', infoSectionRef);
         return;
-    };
+    }
 
     setLoading(true);
     setTimeout(() => {
@@ -171,9 +159,6 @@ const handleCheckout = () => {
                 weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric',
                 hour: '2-digit', minute: '2-digit', hour12: false
             }),
-            customerName: name,
-            customerPhone: phone, 
-            customerStaffId: staff,
             items: cart,
             total: calculateCartTotal,
             paymentMethod: paymentMethod
@@ -183,9 +168,6 @@ const handleCheckout = () => {
         
         // Clear cart and form fields after successful order
         setCart([]);
-        setName('');
-        setPhone('');
-        setStaff('');
         setSpecial('');
         // Reset pickup time to 15 mins from now
         const nowReset = new Date();
@@ -193,18 +175,14 @@ const handleCheckout = () => {
         setPickup(nowReset.toISOString().slice(0,16));
         setPaymentMethod('cod'); // Reset payment method
     }, 1000);
-    // Bằng thêm
-    fetch('http://localhost:3001/orders', {
+    fetch('/orders', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + localStorage.getItem('auth')
         },
         body: JSON.stringify({
-            id: orderId,
-            time: new Date(pickup).toLocaleString(),
-            customerName: name,
-            customerPhone: phone,
-            customerStaffId: staff,
+            time: new Date(pickup).toISOString(),
             specialRequest: special,
             items: cart,
             total: calculateCartTotal,
@@ -484,22 +462,10 @@ return (
                     </div>
                 </div>
 
-                {/* Thông tin liên hệ */}
-                <div className="card form-card relative">
-                    {loading && <div className="form-overlay"><span className="spinner"></span></div>}
-                    <h3><i className="fa-solid fa-user"></i>Thông tin liên hệ</h3>
-                    <div className="form-group">
-                        <input placeholder="Họ và tên" value={name} onChange={e=>{setName(e.target.value); setNameError('');}}/>
-                        {nameError && <span className="error-message">{nameError}</span>}
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Số điện thoại" value={phone} onChange={e=>{setPhone(e.target.value); setPhoneError('');}}/>
-                        {phoneError && <span className="error-message">{phoneError}</span>}
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Mã số cán bộ/sinh viên" value={staff} onChange={e=>{setStaff(e.target.value); setStaffError('');}}/>
-                        {staffError && <span className="error-message">{staffError}</span>}
-                    </div>
+                {/* Thông tin người đặt */}
+                <div className="card form-card">
+                    <h3><i className="fa-solid fa-user"></i>Người đặt</h3>
+                    <p>{localStorage.getItem('fullName')}</p>
                 </div>
 
                 {/* Yêu cầu đặc biệt */}

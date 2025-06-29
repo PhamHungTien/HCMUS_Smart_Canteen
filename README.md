@@ -24,7 +24,10 @@ node backend/index.js
 ```
 Server sẽ khởi động tại http://localhost:3001, tự tạo các file dữ liệu JSON nếu chưa tồn tại và phục vụ giao diện web.
 Mở trình duyệt tới địa chỉ trên để xem trang chủ.
-Bạn có thể đăng ký người dùng mới qua `/signup` (cần `username`, `password`, `fullName`, `staffId`) hoặc đăng nhập qua `/login`.
+Giao diện đăng nhập nằm ở `/login` (có liên kết tới tạo tài khoản và quên mật khẩu).
+Người dùng phải đăng nhập (hoặc đăng ký tại `/signup`) mới có thể đặt món.
+Thông tin đăng ký yêu cầu đủ họ tên và mã số cán bộ/sinh viên để quản lý.
+Nếu quên mật khẩu hãy dùng `/forgot` để đặt lại.
 Tài khoản quản trị mặc định:
 ```
 user: admin
@@ -39,13 +42,14 @@ pass: admin@123
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách góp ý (admin).
 - `POST /change-password` – đổi mật khẩu (yêu cầu Basic Auth và `newPassword`).
+- `POST /reset-password` – đặt lại mật khẩu khi quên (cần `username`, `staffId`, `newPassword`).
 - `GET /users` – lấy danh sách tài khoản (admin).
 - `PUT /users/:id` – cập nhật thông tin hoặc đổi mật khẩu (admin).
 - `DELETE /users/:id` – xoá tài khoản (admin).
 
 ### Quản lý đơn hàng
 - `GET /orders` – lấy danh sách đơn hàng (cần quyền admin).
-- `POST /orders` – người dùng tạo đơn mới.
+- `POST /orders` – tạo đơn mới (người dùng gửi kèm header `Authorization: Basic base64(user:pass)`).
 - `PUT /orders/:id` – cập nhật trạng thái đơn (admin).
 - `DELETE /orders/:id` – xoá đơn (admin).
 - `GET /revenue?from=YYYY-MM-DD&to=YYYY-MM-DD` – tổng doanh thu trong khoảng ngày (admin).

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập</title>
+  <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="card form-card" style="max-width:400px;margin:40px auto">
+    <h3>Đăng nhập</h3>
+    <form id="login-form">
+      <input name="username" placeholder="Tên đăng nhập" required />
+      <input type="password" name="password" placeholder="Mật khẩu" required />
+      <select name="role">
+        <option value="user">Người dùng</option>
+        <option value="admin">Quản trị</option>
+      </select>
+      <button class="btn" type="submit">Đăng nhập</button>
+    </form>
+    <p style="text-align:center;margin-top:10px">
+      <a href="signup.html">Tạo tài khoản</a> |
+      <a href="forgot.html">Quên mật khẩu?</a>
+    </p>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/utils.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: form.username.value, password: form.password.value })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const token = btoa(`${form.username.value}:${form.password.value}`);
+        localStorage.setItem('auth', token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('fullName', data.fullName);
+        localStorage.setItem('role', data.role);
+        showToast('Đăng nhập thành công');
+        if (form.role.value === 'admin') location.href = '/admin.html';
+        else location.href = '/index.html';
+      } else {
+        showToast(data.error || 'Đăng nhập thất bại');
+      }
+    });
+  </script>
+</body>
+</html>
