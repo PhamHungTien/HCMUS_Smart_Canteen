@@ -14,7 +14,7 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 
 ## Cấu trúc thư mục
 - `backend/` – mã nguồn API Node và máy chủ tĩnh (tiện ích nằm trong `backend/lib`, dữ liệu mẫu ở `backend/data`).
-- `frontend/` – giao diện React và toàn bộ tài nguyên tĩnh (`img/`, `menu/`, `qr/`, `js/`, `styles.css`).
+- `frontend/` – giao diện React và các tài nguyên (`img/`, `menu/`, `qr/`, `js/`, `styles.css`, `admin.html`).
 - `data/` – nơi lưu các file JSON tạo ra khi chạy server.
 
 ## Hướng dẫn chạy nhanh
@@ -38,6 +38,17 @@ pass: admin@123
 - `PUT /menu/:id` và `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (cần quyền admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách góp ý (admin).
+
+### Quản lý đơn hàng
+- `GET /orders` – lấy danh sách đơn hàng (cần quyền admin).
+- `POST /orders` – người dùng tạo đơn mới.
+- `PUT /orders/:id` – cập nhật trạng thái đơn (admin).
+- `DELETE /orders/:id` – xoá đơn (admin).
+
+### Giao diện quản trị
+Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng trực tiếp trên trình
+duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API
+trên.
 
 Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
 

@@ -183,7 +183,7 @@ async function handler(req, res) {
     }
     const orders = await readJson(ORDERS_FILE);
     orders.push({
-      id: order.id,
+      id: order.id || orders.length + 1,
       time: order.time,
       customerName: order.customerName,
       customerPhone: order.customerPhone,
@@ -193,6 +193,7 @@ async function handler(req, res) {
       total: order.total,
       paymentMethod: order.paymentMethod,
       createdAt: new Date().toISOString(),
+      status: 'pending'
     });
     await writeJson(ORDERS_FILE, orders);
     send(res, 200, { message: 'Đơn hàng được ghi nhận thành công' });
@@ -202,6 +203,31 @@ async function handler(req, res) {
   if (req.method === 'GET' && url.pathname === '/orders') {
     const orders = await readJson(ORDERS_FILE);
     send(res, 200, orders);
+    return;
+  }
+
+  if (req.method === 'PUT' && url.pathname.startsWith('/orders/')) {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const id = url.pathname.split('/')[2];
+    const updates = await parseBody(req);
+    const orders = await readJson(ORDERS_FILE);
+    const idx = orders.findIndex(o => String(o.id) === id);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    orders[idx] = { ...orders[idx], ...updates };
+    await writeJson(ORDERS_FILE, orders);
+    send(res, 200, { message: 'Đã cập nhật' });
+    return;
+  }
+
+  if (req.method === 'DELETE' && url.pathname.startsWith('/orders/')) {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const id = url.pathname.split('/')[2];
+    let orders = await readJson(ORDERS_FILE);
+    const len = orders.length;
+    orders = orders.filter(o => String(o.id) !== id);
+    if (orders.length === len) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    await writeJson(ORDERS_FILE, orders);
+    send(res, 200, { message: 'Đã xoá' });
     return;
   }
 
