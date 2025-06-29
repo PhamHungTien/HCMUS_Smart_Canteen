@@ -12,12 +12,12 @@
             --navbar-height: 60px; /* Chiều cao của thanh tab */
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f9fafb;
-            color: #333;
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    color: #333;
             scroll-behavior: smooth; /* Cuộn mượt khi click Floating Cart */
             padding-top: var(--navbar-height); /* Đảm bảo nội dung không bị che bởi navbar */
         }
@@ -128,6 +128,17 @@
     max-width: 800px;
     margin: 20px auto;
     padding: 0 24px;
+}
+
+body.dark-mode {
+    --border-color: #555;
+    --light-bg: #2c2c2c;
+    --white-bg: #333;
+    --shadow-light: rgba(255,255,255,0.08);
+    --shadow-medium: rgba(255,255,255,0.12);
+    --shadow-hover: rgba(255,255,255,0.15);
+    background: #121212;
+    color: #f1f1f1;
 }
 
 .admin-page {
@@ -558,22 +569,31 @@
             max-height: 200px;
         }
 
-        .btn {
-            padding: 12px 20px; /* larger padding for main button */
-            border: none;
-            background: var(--primary-color);
-            color: var(--white-bg);
+.btn {
+    padding: 12px 20px; /* larger padding for main button */
+    border: none;
+    background: var(--primary-color);
+    color: var(--white-bg);
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
             font-size: 16px;
             font-weight: 600;
-        }
+}
 
-        .btn:hover:not(:disabled) {
-            background: #084298; /* darker primary color on hover */
-            transform: translateY(-1px);
-        }
+.btn:hover:not(:disabled) {
+    background: #084298; /* darker primary color on hover */
+    transform: translateY(-1px);
+}
+
+.danger-btn {
+    background: var(--danger-color);
+    color: var(--white-bg);
+}
+
+.danger-btn:hover:not(:disabled) {
+    background: var(--danger-hover-color);
+}
 
         .btn:disabled {
             background: #ccc;

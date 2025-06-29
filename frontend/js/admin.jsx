@@ -166,7 +166,7 @@ function AdminApp() {
         <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
           <h3>Cài đặt</h3>
           <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>Đổi mật khẩu</button>
-          <button className="btn" onClick={logout}>Đăng xuất</button>
+          <button className="btn danger-btn" onClick={logout}>Đăng xuất</button>
         </div>
       )}
 

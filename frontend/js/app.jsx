@@ -29,6 +29,8 @@ const [reviewComment, setReviewComment] = useState('');
 const [feedbackText, setFeedbackText] = useState('');
 const [feedbackEmail, setFeedbackEmail] = useState('');
 
+const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
+
 const [feedbackTextError, setFeedbackTextError] = useState('');
 const [feedbackEmailError, setFeedbackEmailError] = useState('');
 
@@ -108,6 +110,11 @@ useEffect(() => {
         document.body.classList.remove('modal-open');
     };
 }, [showConfirmationModal]);
+
+useEffect(() => {
+    document.body.classList.toggle('dark-mode', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+}, [darkMode]);
 
 
 const addItemToCart = (item) => {
@@ -579,10 +586,14 @@ return (
         {currentPage === 'settings' && (
             <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
                 <h3>Cài đặt tài khoản</h3>
+                <label style={{display:'flex',alignItems:'center',marginBottom:12}}>
+                    <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} style={{marginRight:8}} />
+                    Sử dụng Dark Mode
+                </label>
                 <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
                     Đổi mật khẩu
                 </button>
-                <button className="btn" onClick={handleLogout}>Đăng xuất</button>
+                <button className="btn danger-btn" onClick={handleLogout}>Đăng xuất</button>
             </div>
         )}
 
