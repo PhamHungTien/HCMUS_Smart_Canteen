@@ -1,9 +1,10 @@
 import http from 'http';
 import { promises as fs, existsSync } from 'fs';
-import { join } from 'path';
+import { extname, join, normalize } from 'path';
 import { URL } from 'url';
 
 const PORT = process.env.PORT || 3001;
+const PUBLIC_DIR = '.';
 const DATA_DIR = join('.', 'data');
 const ORDERS_FILE = join(DATA_DIR, 'orders.json');
 const USERS_FILE = join(DATA_DIR, 'users.json');
@@ -18,6 +19,30 @@ async function readJson(file, fallback = []) {
 
 async function writeJson(file, data) {
   await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
+}
+
+function contentType(file) {
+  switch (extname(file)) {
+    case '.html': return 'text/html';
+    case '.css': return 'text/css';
+    case '.js': return 'text/javascript';
+    case '.png': return 'image/png';
+    case '.jpg':
+    case '.jpeg': return 'image/jpeg';
+    default: return 'application/octet-stream';
+  }
+}
+
+async function serveStatic(pathname, res) {
+  const filePath = join(PUBLIC_DIR, pathname === '/' ? 'index.html' : normalize(pathname).replace(/^\/+/, ''));
+  try {
+    const data = await fs.readFile(filePath);
+    res.writeHead(200, { 'Content-Type': contentType(filePath) });
+    res.end(data);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function ensureAdmin() {
@@ -53,6 +78,11 @@ async function parseBody(req) {
 
 async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
+
+  if (req.method === 'GET') {
+    const served = await serveStatic(url.pathname, res);
+    if (served) return;
+  }
 
   if (req.method === 'OPTIONS') {
     res.writeHead(200, {

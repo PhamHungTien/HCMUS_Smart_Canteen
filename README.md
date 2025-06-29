@@ -13,17 +13,17 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 - Backend: [Node.js](https://nodejs.org/) thuần, lưu trữ dữ liệu ở các file JSON.
 
 ## Cấu trúc thư mục
-- `server/` – mã nguồn API Node.
+- `server/` – mã nguồn API Node và máy chủ tĩnh.
 - `data/` – nơi lưu các file JSON tạo ra khi chạy server.
-- `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo.
+- `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo và được phục vụ công khai.
 
 ## Hướng dẫn chạy nhanh
 Chỉ cần Node.js 18 trở lên, chạy:
 ```bash
 node server/index.js
 ```
-
-Server sẽ khởi động tại http://localhost:3001 và tự tạo các file dữ liệu JSON nếu chưa tồn tại.
+Server sẽ khởi động tại http://localhost:3001, tự tạo các file dữ liệu JSON nếu chưa tồn tại và phục vụ giao diện web.
+Mở trình duyệt tới địa chỉ trên để xem trang chủ.
 Bạn có thể đăng ký người dùng mới qua `/signup` hoặc đăng nhập qua `/login`.
 Tài khoản quản trị mặc định:
 ```
@@ -32,3 +32,4 @@ pass: admin@123
 ```
 
 Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
+
