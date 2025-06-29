@@ -171,6 +171,20 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === 'PUT' && url.pathname === '/me') {
+    const user = await authenticate(req);
+    if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
+    const body = await parseBody(req);
+    if (!body) { send(res, 400, { error: 'Thiếu thông tin' }); return; }
+    const users = await readJson(USERS_FILE);
+    const idx = users.findIndex(u => u.username === user.username);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    users[idx] = { ...users[idx], ...body };
+    await writeJson(USERS_FILE, users);
+    send(res, 200, { message: 'Đã cập nhật' });
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/menu') {
     const menu = await readJson(MENU_FILE);
     send(res, 200, menu);
@@ -189,6 +203,18 @@ async function handler(req, res) {
     menu.push({ id, ...item });
     await writeJson(MENU_FILE, menu);
     send(res, 200, { message: 'Đã thêm món' });
+    return;
+  }
+
+  if (req.method === 'POST' && url.pathname === '/upload') {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const body = await parseBody(req);
+    if (!body || !body.filename || !body.data) { send(res, 400, { error: 'Thiếu dữ liệu' }); return; }
+    const ext = extname(body.filename) || '.jpg';
+    const fname = `item_${Date.now()}${ext}`;
+    const base64 = body.data.split(',').pop();
+    await fs.writeFile(join(PUBLIC_DIR, 'menu', fname), Buffer.from(base64, 'base64'));
+    send(res, 200, { path: `menu/${fname}` });
     return;
   }
 
