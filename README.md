@@ -31,5 +31,13 @@ user: admin
 pass: admin@123
 ```
 
+### API mới
+
+- `GET /menu` – lấy danh sách món ăn.
+- `POST /menu` – thêm món (cần header `Authorization: Basic base64(admin:pass)`).
+- `PUT /menu/:id` và `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (cần quyền admin).
+- `POST /feedback` – gửi đánh giá hoặc góp ý.
+- `GET /feedback` – lấy danh sách góp ý (admin).
+
 Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
 

@@ -20,7 +20,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const menuItems = [
+        const defaultMenu = [
             {id:1,category:'Món ăn',name:'Cơm phần thịt kho',price:25000,originalPrice:30000,image:'menu/com_thit_kho.jpg',rating:4},
             {id:2,category:'Món ăn',name:'Bánh mì ốp la',price:20000,originalPrice:25000,image:'menu/banh_mi_op_la.jpg',rating:3}, // Tăng giá gốc
             {id:3,category:'Món ăn',name:'Salad healthy',price:30000,originalPrice:35000,image:'menu/salad_healthy.jpg',rating:5}, // Tăng giá gốc
@@ -276,6 +276,7 @@
         }
 
         function App() {
+            const [menuItems, setMenuItems] = useState(defaultMenu);
             const [cart, setCart] = useState([]);
             const [addingId, setAddingId] = useState(null);
             const [pickup, setPickup] = useState('');
@@ -302,6 +303,13 @@
             const [showConfirmationModal, setShowConfirmationModal] = useState(false);
             const [orderDetails, setOrderDetails] = useState(null);
             const [paymentMethod, setPaymentMethod] = useState('cod');
+
+            useEffect(() => {
+                fetch('/menu')
+                    .then(res => res.json())
+                    .then(data => setMenuItems(data))
+                    .catch(() => {});
+            }, []);
 
             // Refs for scrolling to sections
             const menuSectionRef = useRef(null);
@@ -488,7 +496,13 @@
                     showToast('Vui lòng chọn số sao để đánh giá!');
                     return;
                 }
-                showToast(`Bạn đã đánh giá món "${menuItems.find(i => i.id === parseInt(selectedMenuItem)).name}" ${rating} sao. Cảm ơn!`);
+                fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'rating', itemId: parseInt(selectedMenuItem), rating, comment: reviewComment })
+                }).then(() => {
+                    showToast(`Bạn đã đánh giá món "${menuItems.find(i => i.id === parseInt(selectedMenuItem)).name}" ${rating} sao. Cảm ơn!`);
+                }).catch(() => showToast('Có lỗi khi gửi đánh giá'));
                 setRating(0);
                 setSelectedMenuItem('');
                 setReviewComment('');
@@ -515,8 +529,13 @@
                     showToast('Vui lòng kiểm tra lại thông tin góp ý.');
                     return;
                 }
-                
-                showToast('Cảm ơn ý kiến đóng góp của bạn! Chúng tôi sẽ phản hồi qua email.');
+                fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'feedback', text: feedbackText, email: feedbackEmail })
+                }).then(() => {
+                    showToast('Cảm ơn ý kiến đóng góp của bạn! Chúng tôi sẽ phản hồi qua email.');
+                }).catch(() => showToast('Không gửi được góp ý!'));
                 setFeedbackText('');
                 setFeedbackEmail('');
             };
