@@ -7,6 +7,7 @@ function AdminApp() {
   const [menu, setMenu] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
   const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '' });
   const [pwMap, setPwMap] = useState({});
@@ -38,6 +39,15 @@ function AdminApp() {
       });
   }
 
+  function logout() {
+    localStorage.removeItem('auth');
+    localStorage.removeItem('username');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('role');
+    setAuth('');
+    window.location.href = '/login.html';
+  }
+
   function refreshData() {
     fetch('/menu').then(r => r.json()).then(setMenu);
     fetch('/orders', { headers: { Authorization: 'Basic ' + auth } })
@@ -46,6 +56,9 @@ function AdminApp() {
     fetch('/users', { headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json())
       .then(setUsers);
+    fetch('/feedback', { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(setFeedbacks);
     fetchRevenue();
   }
 
@@ -133,6 +146,7 @@ function AdminApp() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <button className="btn logout-btn" onClick={logout}>Đăng xuất</button>
       <h2>Quản lý Menu</h2>
       <table className="admin-table">
         <thead>
@@ -161,13 +175,14 @@ function AdminApp() {
       <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Khách</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
             <tr key={o.id}>
               <td>{o.id}</td>
               <td>{o.customerName}</td>
+              <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
               <td>{o.total.toLocaleString()}đ</td>
               <td>
                 <select value={o.status} onChange={e => updateOrder(o.id, e.target.value)}>
@@ -188,6 +203,26 @@ function AdminApp() {
         <button className="btn" onClick={() => fetchRevenue()}>Tính</button>
         {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
       </div>
+
+      <h2 style={{ marginTop: '40px' }}>Đánh giá & Góp ý</h2>
+      <table className="admin-table">
+        <thead>
+          <tr><th>Loại</th><th>Nội dung</th><th>Thời gian</th></tr>
+        </thead>
+        <tbody>
+          {feedbacks.map((f, idx) => (
+            <tr key={idx}>
+              <td>{f.type === 'rating' ? 'Đánh giá' : 'Góp ý'}</td>
+              <td>
+                {f.type === 'rating'
+                  ? `${menu.find(i => i.id === f.itemId)?.name || ''} - ${f.rating}★ ${f.comment || ''}`
+                  : `${f.text} (${f.email})`}
+              </td>
+              <td>{new Date(f.createdAt).toLocaleString('vi-VN')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
       <table className="admin-table">

@@ -39,6 +39,14 @@ const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 const [orderDetails, setOrderDetails] = useState(null);
 const [paymentMethod, setPaymentMethod] = useState('cod');
 
+const handleLogout = () => {
+    localStorage.removeItem('auth');
+    localStorage.removeItem('username');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('role');
+    window.location.href = '/login.html';
+};
+
 useEffect(() => {
     if (!localStorage.getItem('auth')) {
         window.location.href = '/login.html';
@@ -303,6 +311,7 @@ return (
                 </div>
             </div>
         </nav>
+        <button className="btn logout-btn" onClick={handleLogout}>Đăng xuất</button>
 
         {/* Floating Cart Icon */}
         {cart.length > 0 && activeTab !== 'cart' && (
