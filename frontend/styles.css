@@ -5,6 +5,7 @@
             --border-color: #ddd;
             --light-bg: #f8f9fa;
             --white-bg: #fff;
+            --text-light: #fff;
             --text-color: #333;
             --switch-bg: #ccc;
             --shadow-light: rgba(0,0,0,0.08);
@@ -170,7 +171,7 @@ body.dark-mode {
             width: 100vw;
             min-width: 0;
             background-color: var(--primary-color); /* Màu nền của thanh tab */
-            color: var(--white-bg);
+            color: var(--text-light);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             z-index: 1000;
             height: var(--navbar-height);
@@ -217,7 +218,7 @@ body.dark-mode {
 
         .tab-button.active {
             background-color: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             box-shadow: 0 2px 10px rgba(10, 88, 202, 0.3);
             /* transform: translateY(-2px); */ /* Đã bỏ hiệu ứng nảy lên */
         }
@@ -379,7 +380,7 @@ body.dark-mode {
 
         .discount-percentage {
             background-color: var(--danger-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             font-size: 11px;
             font-weight: bold;
             padding: 2px 6px;
@@ -410,7 +411,7 @@ body.dark-mode {
         .add-icon:hover {
             transform: translateY(-2px) scale(1.05);
             background-color: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             border-color: var(--primary-color);
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
@@ -486,7 +487,7 @@ body.dark-mode {
             border-radius: 4px;
             font-size: 16px;
             background: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             border: none;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
@@ -497,7 +498,7 @@ body.dark-mode {
         }
         .quantity-control button.remove-item-btn {
             background: var(--danger-color);
-            color: var(--white-bg);
+            color: var(--text-light);
         }
         .quantity-control button.remove-item-btn:hover {
             background: var(--danger-hover-color);
@@ -586,7 +587,7 @@ textarea {
     padding: 12px 20px; /* larger padding for main button */
     border: none;
     background: var(--primary-color);
-    color: var(--white-bg);
+    color: var(--text-light);
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
@@ -601,7 +602,7 @@ textarea {
 
 .danger-btn {
     background: var(--danger-color);
-    color: var(--white-bg);
+    color: var(--text-light);
 }
 
 .danger-btn:hover:not(:disabled) {
@@ -659,7 +660,7 @@ textarea {
             align-items: center;
             justify-content: center;
             background: var(--danger-color);
-            color: var(--white-bg);
+            color: var(--text-light);
         }
 
 .logout-btn:hover {
@@ -667,7 +668,7 @@ textarea {
         }
 
 .logout-btn i {
-            color: var(--white-bg);
+            color: var(--text-light);
         }
 
 .top-navbar + .logout-btn {
@@ -686,7 +687,7 @@ textarea {
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8); /* Slightly darker background */
-            color: var(--white-bg);
+            color: var(--text-light);
             padding: 14px 22px; /* Larger padding */
             border-radius: 6px;
             opacity: 0;
@@ -785,7 +786,7 @@ textarea {
             bottom: 25px;
             right: 25px;
             background: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             border-radius: 50%;
             width: 55px; /* slightly larger */
             height: 55px; /* slightly larger */
@@ -807,7 +808,7 @@ textarea {
             top: -5px;
             right: -5px;
             background: var(--danger-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             border-radius: 50%;
             padding: 4px; /* Đã thay đổi */
             width: 20px;  /* Đã thêm */
@@ -872,7 +873,7 @@ textarea {
         }
         .category-buttons .btn.active {
             background: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
             font-weight: 600;
         }
         .category-buttons .btn:hover:not(.active) {
@@ -1294,7 +1295,7 @@ textarea {
             align-items: center;
             justify-content: center;
             background: var(--primary-color);
-            color: var(--white-bg);
+            color: var(--text-light);
         }
 
 .change-pw-btn:hover {
@@ -1302,7 +1303,7 @@ textarea {
         }
 
 .change-pw-btn i {
-            color: var(--white-bg);
+            color: var(--text-light);
         }
 
 .top-navbar + .change-pw-btn {
