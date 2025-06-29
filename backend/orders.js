@@ -7,11 +7,14 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+let ordersCache = null;
 
 export async function readOrders() {
+  if (ordersCache) return ordersCache;
   try {
     const data = await fsp.readFile(ORDERS_FILE, 'utf8');
-    return JSON.parse(data);
+    ordersCache = JSON.parse(data);
+    return ordersCache;
   } catch (err) {
     if (err.code === 'ENOENT') return [];
     throw err;
@@ -20,6 +23,7 @@ export async function readOrders() {
 
 export async function writeOrders(orders) {
   await fsp.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2), 'utf8');
+  ordersCache = orders;
 }
 
 export async function addOrder(order) {

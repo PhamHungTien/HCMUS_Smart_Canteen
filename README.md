@@ -9,6 +9,8 @@
 - **Font Awesome** dùng các biểu tượng cho UI.
 - **JSBarcode** tạo mã vạch khi xác nhận đơn hàng.
 - Ảnh QR thanh toán Momo/VietQR đặt trong `public/qr/`.
+- **Service Worker** đơn giản để cache các tệp tĩnh và cho phép truy cập khi
+  mất mạng.
 
 Backend hoạt động mà không cần cài thêm gói npm nào. Tất cả dữ liệu đều lưu vào các file JSON trong thư mục `data/` (đã được `.gitignore`).
 

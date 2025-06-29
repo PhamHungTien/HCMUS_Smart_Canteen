@@ -11,18 +11,25 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 const MENU_FILE = path.join(DATA_DIR, 'menu.json');
+let menuCache = null;
 
 export async function readMenu() {
+  if (menuCache) return menuCache;
   try {
     const data = await fsp.readFile(MENU_FILE, 'utf8');
     const menu = JSON.parse(data);
-    if (Array.isArray(menu) && menu.length > 0) return menu;
+    if (Array.isArray(menu) && menu.length > 0) {
+      menuCache = menu;
+      return menu;
+    }
     await writeMenu(defaultMenu);
+    menuCache = defaultMenu;
     return defaultMenu;
   } catch (err) {
     if (err.code === 'ENOENT') {
       await fsp.mkdir(DATA_DIR, { recursive: true });
       await writeMenu(defaultMenu);
+      menuCache = defaultMenu;
       return defaultMenu;
     }
     throw err;
@@ -31,6 +38,7 @@ export async function readMenu() {
 
 export async function writeMenu(menu) {
   await fsp.writeFile(MENU_FILE, JSON.stringify(menu, null, 2), 'utf8');
+  menuCache = menu;
 }
 
 export async function addMenuItem(item) {

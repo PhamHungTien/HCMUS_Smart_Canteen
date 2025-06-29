@@ -453,6 +453,18 @@
     max-width: 1200px;
 }
 
+/* Utility classes for admin page */
+.admin-section {
+    margin-bottom: 20px;
+}
+.hidden {
+    display: none;
+}
+.thumb {
+    height: 40px;
+    object-fit: cover;
+}
+
 /* Phần quản trị */
 .admin-section input {
     max-width: 100%;
