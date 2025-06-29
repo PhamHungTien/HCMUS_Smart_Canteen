@@ -10,8 +10,18 @@ function AdminApp() {
   const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
   const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '' });
   const [pwMap, setPwMap] = useState({});
+  const [revFrom, setRevFrom] = useState('');
+  const [revTo, setRevTo] = useState('');
+  const [revenue, setRevenue] = useState(null);
 
-  useEffect(() => { if (auth) refreshData(); }, [auth]);
+  useEffect(() => {
+    if (auth) {
+      const now = new Date();
+      setRevTo(now.toISOString().slice(0,10));
+      setRevFrom(new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10));
+      refreshData();
+    }
+  }, [auth]);
 
   function login(e) {
     e.preventDefault();
@@ -36,6 +46,16 @@ function AdminApp() {
     fetch('/users', { headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json())
       .then(setUsers);
+    fetchRevenue();
+  }
+
+  function fetchRevenue(from = revFrom, to = revTo) {
+    const params = new URLSearchParams();
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+    fetch('/revenue?' + params.toString(), { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(data => setRevenue(data.total));
   }
 
   function addItem() {
@@ -160,6 +180,14 @@ function AdminApp() {
           ))}
         </tbody>
       </table>
+
+      <h2 style={{ marginTop: '40px' }}>Báo cáo doanh thu</h2>
+      <div className="report-inputs">
+        <input type="date" value={revFrom} onChange={e => setRevFrom(e.target.value)} />
+        <input type="date" value={revTo} onChange={e => setRevTo(e.target.value)} />
+        <button className="btn" onClick={() => fetchRevenue()}>Tính</button>
+        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
+      </div>
 
       <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
       <table className="admin-table">

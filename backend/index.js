@@ -228,6 +228,23 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/revenue') {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const orders = await readJson(ORDERS_FILE);
+    let from = url.searchParams.get('from');
+    let to = url.searchParams.get('to');
+    const total = orders
+      .filter(o => {
+        const t = new Date(o.createdAt);
+        if (from && t < new Date(from)) return false;
+        if (to && t > new Date(to)) return false;
+        return true;
+      })
+      .reduce((s, o) => s + (o.total || 0), 0);
+    send(res, 200, { total });
+    return;
+  }
+
   if (req.method === 'PUT' && url.pathname.startsWith('/orders/')) {
     if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const id = url.pathname.split('/')[2];

@@ -6,7 +6,7 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 
 ## Chức năng chính
 - **Người dùng** có thể tạo tài khoản, đăng nhập, xem thực đơn, đặt món và gửi góp ý.
-- **Quản trị viên** quản lí các món ăn, theo dõi đơn đặt hàng và xem phản hồi của người dùng.
+- **Quản trị viên** quản lí các món ăn, theo dõi đơn đặt hàng, xem báo cáo doanh thu và xử lý phản hồi của người dùng.
 
 ## Công nghệ sử dụng
 - Frontend: [React](https://react.dev/) tải trực tiếp qua CDN.
@@ -48,9 +48,10 @@ pass: admin@123
 - `POST /orders` – người dùng tạo đơn mới.
 - `PUT /orders/:id` – cập nhật trạng thái đơn (admin).
 - `DELETE /orders/:id` – xoá đơn (admin).
+- `GET /revenue?from=YYYY-MM-DD&to=YYYY-MM-DD` – tổng doanh thu trong khoảng ngày (admin).
 
 ### Giao diện quản trị
-Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng và tài khoản người dùng trực tiếp trên trình duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API trên.
+Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng, tài khoản cũng như xem báo cáo doanh thu trực tiếp trên trình duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API trên.
 
-Dự án đã bao gồm đầy đủ các tính năng cơ bản như quản lý tài khoản, thực đơn và đơn hàng. Bạn có thể tiếp tục mở rộng thêm các chức năng nâng cao (ví dụ báo cáo doanh thu) tùy ý.
+Dự án đã bao gồm đầy đủ các tính năng cơ bản và có thêm báo cáo doanh thu. Bạn vẫn có thể mở rộng thêm các chức năng nâng cao khác tùy ý.
 

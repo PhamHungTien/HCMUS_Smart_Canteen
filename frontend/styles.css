@@ -1174,3 +1174,10 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+.report-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
