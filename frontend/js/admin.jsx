@@ -14,7 +14,7 @@ function AdminApp() {
   const [revFrom, setRevFrom] = useState('');
   const [revTo, setRevTo] = useState('');
   const [revenue, setRevenue] = useState(null);
-  const [activeTab, setActiveTab] = useState('manage');
+  const [activeTab, setActiveTab] = useState('menu');
 
   useEffect(() => {
     const isDark = localStorage.getItem('darkMode') === 'true';
@@ -177,13 +177,29 @@ function AdminApp() {
       <nav className="top-navbar">
         <div className="top-navbar-inner" style={{display:'flex', alignItems:'center', width:'calc(100% - 60px)'}}>
           <div style={{flex:1, display:'flex', justifyContent:'flex-end', gap:'10px'}}>
-            <div className={`tab-button ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>
-              <i className="fa-solid fa-list"></i>
-              <span>Quản lý</span>
+            <div className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => setActiveTab('menu')}>
+              <i className="fa-solid fa-utensils"></i>
+              <span>{t('menu')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
+              <i className="fa-solid fa-receipt"></i>
+              <span>{t('orders')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'revenue' ? 'active' : ''}`} onClick={() => setActiveTab('revenue')}>
+              <i className="fa-solid fa-chart-line"></i>
+              <span>{t('revenue')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
+              <i className="fa-solid fa-comments"></i>
+              <span>{t('reviews')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}>
+              <i className="fa-solid fa-user"></i>
+              <span>{t('users')}</span>
             </div>
             <div className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
               <i className="fa-solid fa-gear"></i>
-              <span>Cài đặt</span>
+              <span>{t('settings')}</span>
             </div>
           </div>
         </div>
@@ -191,19 +207,19 @@ function AdminApp() {
 
       {activeTab === 'settings' && (
         <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
-          <h3>Cài đặt</h3>
-          <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>Đổi mật khẩu</button>
-          <button className="btn danger-btn" onClick={logout}>Đăng xuất</button>
+          <h3>{t('settings')}</h3>
+          <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>{t('change_password')}</button>
+          <button className="btn danger-btn" onClick={logout}>{t('logout')}</button>
         </div>
       )}
 
-      {activeTab === 'manage' && (
+      {activeTab === 'menu' && (
         <div style={{ padding: '20px' }}>
-          <h2>Quản lý Menu</h2>
-      <table className="admin-table">
-        <thead>
-          <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
-        </thead>
+          <h2>{t('menu_management')}</h2>
+          <table className="admin-table">
+            <thead>
+              <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
+            </thead>
         <tbody>
           {menu.map(item => (
             <tr key={item.id}>
@@ -228,8 +244,12 @@ function AdminApp() {
           </tr>
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
+      {activeTab === 'orders' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('orders')}</h2>
       <table className="admin-table">
         <thead>
           <tr><th>Mã</th><th>Thời gian</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
@@ -254,16 +274,24 @@ function AdminApp() {
           ))}
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Báo cáo doanh thu</h2>
+      {activeTab === 'revenue' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('revenue')}</h2>
       <div className="report-inputs">
         <input type="date" value={revFrom} onChange={e => setRevFrom(e.target.value)} />
         <input type="date" value={revTo} onChange={e => setRevTo(e.target.value)} />
         <button className="btn" onClick={() => fetchRevenue()}>Tính</button>
-        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
+        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>{t('total')}: {revenue.toLocaleString()}đ</span>}
       </div>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Đánh giá & Góp ý</h2>
+      {activeTab === 'feedback' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('reviews')}</h2>
       <table className="admin-table">
         <thead>
           <tr><th>Loại</th><th>Nội dung</th><th>Thời gian</th></tr>
@@ -282,8 +310,12 @@ function AdminApp() {
           ))}
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
+      {activeTab === 'users' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('users')}</h2>
       <table className="admin-table">
         <thead>
           <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Điện thoại</th><th>Email</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
