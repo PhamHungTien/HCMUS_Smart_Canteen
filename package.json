@@ -5,7 +5,8 @@
   "main": "backend/server.ts",
   "type": "module",
   "dependencies": {
-    "express": "^4.19.0"
+    "express": "^4.19.0",
+    "better-sqlite3": "^9.0.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2",

@@ -1,64 +1,40 @@
-import fs from 'fs';
-import { promises as fsp } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import db from './db.ts';
 import defaultMenu from './defaultMenu.json' assert { type: 'json' };
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-const MENU_FILE = path.join(DATA_DIR, 'menu.json');
-let menuCache = null;
-
-export async function readMenu() {
-  if (menuCache) return menuCache;
-  try {
-    const data = await fsp.readFile(MENU_FILE, 'utf8');
-    const menu = JSON.parse(data);
-    if (Array.isArray(menu) && menu.length > 0) {
-      menuCache = menu;
-      return menu;
-    }
-    await writeMenu(defaultMenu);
-    menuCache = defaultMenu;
-    return defaultMenu;
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      await fsp.mkdir(DATA_DIR, { recursive: true });
-      await writeMenu(defaultMenu);
-      menuCache = defaultMenu;
-      return defaultMenu;
-    }
-    throw err;
+function seedMenu() {
+  const count = db.prepare('SELECT COUNT(*) as c FROM menu').get().c;
+  if (count === 0) {
+    const insert = db.prepare('INSERT INTO menu (id, name, category, price, image, rating, originalPrice) VALUES (@id, @name, @category, @price, @image, @rating, @originalPrice)');
+    const tx = db.transaction((items) => {
+      for (const it of items) insert.run(it);
+    });
+    tx(defaultMenu);
   }
 }
 
-export async function writeMenu(menu) {
-  await fsp.writeFile(MENU_FILE, JSON.stringify(menu, null, 2), 'utf8');
-  menuCache = menu;
+export async function readMenu() {
+  seedMenu();
+  return db.prepare('SELECT * FROM menu').all();
 }
 
 export async function addMenuItem(item) {
-  const menu = await readMenu();
-  menu.push({ id: Date.now(), ...item });
-  await writeMenu(menu);
-  return menu[menu.length - 1];
+  const stmt = db.prepare('INSERT INTO menu (name, category, price, image, rating, originalPrice) VALUES (?, ?, ?, ?, ?, ?)');
+  const res = stmt.run(item.name, item.category, item.price, item.image, item.rating, item.originalPrice || item.price);
+  return { id: Number(res.lastInsertRowid), ...item };
 }
 
 export async function updateMenuItem(id, data) {
-  const menu = await readMenu();
-  const idx = menu.findIndex(i => i.id === id);
-  if (idx === -1) return null;
-  menu[idx] = { ...menu[idx], ...data };
-  await writeMenu(menu);
-  return menu[idx];
+  const keys = [];
+  const params = [];
+  for (const [k, v] of Object.entries(data)) {
+    keys.push(`${k}=?`);
+    params.push(v);
+  }
+  params.push(id);
+  db.prepare(`UPDATE menu SET ${keys.join(', ')} WHERE id=?`).run(...params);
+  return db.prepare('SELECT * FROM menu WHERE id=?').get(id);
 }
 
 export async function deleteMenuItem(id) {
-  const menu = await readMenu();
-  const newMenu = menu.filter(i => i.id !== id);
-  await writeMenu(newMenu);
+  db.prepare('DELETE FROM menu WHERE id=?').run(id);
 }

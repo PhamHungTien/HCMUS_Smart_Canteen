@@ -12,13 +12,13 @@
 - **Service Worker** đơn giản để cache các tệp tĩnh và cho phép truy cập khi
   mất mạng.
 
-Tất cả dữ liệu được lưu vào các file JSON trong thư mục `data/` (đã được `.gitignore`).
+Dữ liệu hiện được lưu trong cơ sở dữ liệu **SQLite** (`data/canteen.db`), giúp truy vấn và mở rộng dễ dàng hơn.
 
 ## Cài đặt
 
 1. Cài Node.js phiên bản 18 trở lên.
 2. Tạo file `.env` dựa trên `.env.example` và chỉnh lại tài khoản quản trị hoặc cổng nếu muốn.
-3. Chạy `npm install` để cài các phụ thuộc (bao gồm TypeScript và ts-node).
+3. Chạy `npm install` để cài các phụ thuộc (Express, TypeScript, ts-node và trình điều khiển SQLite).
 ## Chạy ứng dụng
 
 Khởi động máy chủ (dùng ts-node để chạy TypeScript) bằng lệnh:
@@ -43,11 +43,11 @@ Thông tin họ tên và mã số người đặt được lấy trực tiếp t
 HCMUS_Smart_Canteen/
 ├── backend/            # Mã nguồn Node.js
 │   ├── server.ts       # Tạo HTTP server, định nghĩa toàn bộ API và phục vụ file tĩnh
-│   ├── orders.ts       # Đọc/ghi dữ liệu đơn hàng (data/orders.json)
-│   ├── menu.ts         # Lưu trữ và cập nhật danh sách món ăn (data/menu.json)
-│   │                     (tự tạo từ `defaultMenu.json` nếu chưa có dữ liệu)
-│   ├── feedback.ts     # Lưu góp ý, đánh giá của khách (data/feedback.json)
-│   └── users.ts        # Quản lý tài khoản người dùng (data/users.json)
+│   ├── db.ts           # Khởi tạo kết nối SQLite và tạo bảng
+│   ├── orders.ts       # Lưu đơn hàng vào SQLite
+│   ├── menu.ts         # Quản lý danh sách món ăn (seed từ `defaultMenu.json`)
+│   ├── feedback.ts     # Lưu góp ý, đánh giá của khách
+│   └── users.ts        # Quản lý tài khoản người dùng
 ├── public/             # Giao diện người dùng và tài nguyên tĩnh
 │   ├── index.html      # Trang React chính hiển thị menu và giỏ hàng
 │   ├── login.html      # Mẫu đăng nhập, gọi API /login

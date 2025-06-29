@@ -1,29 +1,22 @@
-import fs from 'fs';
-import { promises as fsp } from 'fs';
-import path from 'path';
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-const FEEDBACK_FILE = path.join(DATA_DIR, 'feedback.json');
-let feedbackCache = null;
+import db from './db.ts';
 
 export async function readFeedback() {
-  if (feedbackCache) return feedbackCache;
-  try {
-    const data = await fsp.readFile(FEEDBACK_FILE, 'utf8');
-    feedbackCache = JSON.parse(data);
-    return feedbackCache;
-  } catch (err) {
-    if (err.code === 'ENOENT') return [];
-    throw err;
-  }
+  return db.prepare('SELECT * FROM feedback ORDER BY createdAt DESC').all();
 }
 
 export async function addFeedback(feedback) {
-  const list = await readFeedback();
-  list.push({ ...feedback, createdAt: new Date().toISOString() });
-  await fsp.writeFile(FEEDBACK_FILE, JSON.stringify(list, null, 2), 'utf8');
-  feedbackCache = list;
+  const stmt = db.prepare(`INSERT INTO feedback (
+    type, menuItemId, rating, comment, text, email, username, code, createdAt
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+  stmt.run(
+    feedback.type,
+    feedback.menuItemId || null,
+    feedback.rating || null,
+    feedback.comment || null,
+    feedback.text || null,
+    feedback.email || null,
+    feedback.username || '',
+    feedback.code || '',
+    new Date().toISOString()
+  );
 }

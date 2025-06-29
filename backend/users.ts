@@ -1,44 +1,20 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import db from './db.ts';
 
-const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
-let usersCache = null;
+export async function readUsers() {
+  return db.prepare('SELECT username, password, code, fullName FROM users').all();
+}
 
-async function readUsers() {
-  if (usersCache) return usersCache;
+export async function addUser(user) {
+  const stmt = db.prepare('INSERT INTO users (username, password, code, fullName) VALUES (?, ?, ?, ?)');
   try {
-    const data = await fs.readFile(USERS_FILE, 'utf8');
-    usersCache = JSON.parse(data);
-    return usersCache;
+    stmt.run(user.username, user.password, user.code, user.fullName || '');
+    return user;
   } catch (e) {
-    if (e.code === 'ENOENT') return [];
+    if (e.code === 'SQLITE_CONSTRAINT_PRIMARYKEY') return null;
     throw e;
   }
 }
 
-async function writeUsers(users) {
-  await fs.mkdir(path.dirname(USERS_FILE), { recursive: true });
-  await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
-  usersCache = users;
-}
-
-export async function addUser(user) {
-  const users = await readUsers();
-  if (users.find(u => u.username === user.username)) return null;
-  users.push({
-    username: user.username,
-    password: user.password,
-    code: user.code,
-    fullName: user.fullName || ''
-  });
-  await writeUsers(users);
-  return user;
-}
-
 export async function deleteUser(username) {
-  const users = await readUsers();
-  const newUsers = users.filter(u => u.username !== username);
-  await writeUsers(newUsers);
+  db.prepare('DELETE FROM users WHERE username=?').run(username);
 }
-
-export { readUsers };

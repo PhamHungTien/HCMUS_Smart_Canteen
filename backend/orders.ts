@@ -1,36 +1,24 @@
-import fs from 'fs';
-import { promises as fsp } from 'fs';
-import path from 'path';
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
-let ordersCache = null;
+import db from './db.ts';
 
 export async function readOrders() {
-  if (ordersCache) return ordersCache;
-  try {
-    const data = await fsp.readFile(ORDERS_FILE, 'utf8');
-    ordersCache = JSON.parse(data);
-    return ordersCache;
-  } catch (err) {
-    if (err.code === 'ENOENT') return [];
-    throw err;
-  }
-}
-
-export async function writeOrders(orders) {
-  await fsp.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2), 'utf8');
-  ordersCache = orders;
+  const rows = db.prepare('SELECT * FROM orders ORDER BY createdAt DESC').all();
+  return rows.map(r => ({ ...r, items: JSON.parse(r.items) }));
 }
 
 export async function addOrder(order) {
-  const orders = await readOrders();
-  orders.push({
-    ...order,
-    createdAt: new Date().toISOString()
-  });
-  await writeOrders(orders);
+  const stmt = db.prepare(`INSERT INTO orders (
+    id, items, time, total, paymentMethod, specialRequest,
+    accountUsername, accountCode, createdAt
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+  stmt.run(
+    order.id,
+    JSON.stringify(order.items || []),
+    order.time,
+    order.total,
+    order.paymentMethod || '',
+    order.specialRequest || '',
+    order.accountUsername || '',
+    order.accountCode || '',
+    new Date().toISOString()
+  );
 }
