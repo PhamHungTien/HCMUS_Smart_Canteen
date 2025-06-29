@@ -2,10 +2,10 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { promises as fs } from 'fs';
-import { readOrders, addOrder } from './orders.js';
-import { readMenu, addMenuItem, updateMenuItem, deleteMenuItem } from './menu.js';
-import { readFeedback, addFeedback } from './feedback.js';
-import { readUsers, addUser, deleteUser } from './users.js';
+import { readOrders, addOrder } from './orders.ts';
+import { readMenu, addMenuItem, updateMenuItem, deleteMenuItem } from './menu.ts';
+import { readFeedback, addFeedback } from './feedback.ts';
+import { readUsers, addUser, deleteUser } from './users.ts';
 
 // Load environment variables from .env if present
 try {
@@ -28,7 +28,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(publicDir, {
   setHeaders(res, filePath) {
-    if (filePath.endsWith('.jsx')) {
+    if (filePath.endsWith('.tsx') || filePath.endsWith('.ts') || filePath.endsWith('.jsx')) {
       res.type('application/javascript');
     }
   }
