@@ -124,11 +124,17 @@
             color: #222;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 24px;
-        }
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 24px;
+}
+
+.admin-page {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 24px;
+}
 
         /* Khi màn hình lớn hơn 1200px, container rộng hơn */
 @media (min-width: 1200px) {
@@ -579,7 +585,12 @@
             top: 10px;
             right: 10px;
             z-index: 1100;
-            padding: 8px 12px;
+            padding: 8px 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .payment-btn {
@@ -1181,7 +1192,8 @@
 .admin-table td {
     border: 1px solid var(--border-color);
     padding: 8px;
-    text-align: left;
+    text-align: center;
+    vertical-align: middle;
 }
 .admin-table input,
 .admin-table select {

@@ -146,7 +146,9 @@ function AdminApp() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <button className="btn logout-btn" onClick={logout}>Đăng xuất</button>
+      <button className="btn logout-btn" onClick={logout}>
+        <i className="fa-solid fa-right-from-bracket"></i>
+      </button>
       <h2>Quản lý Menu</h2>
       <table className="admin-table">
         <thead>
@@ -175,7 +177,7 @@ function AdminApp() {
       <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
@@ -183,6 +185,7 @@ function AdminApp() {
               <td>{o.id}</td>
               <td>{o.customerName}</td>
               <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
+              <td>{o.specialRequest}</td>
               <td>{o.total.toLocaleString()}đ</td>
               <td>
                 <select value={o.status} onChange={e => updateOrder(o.id, e.target.value)}>

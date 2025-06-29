@@ -311,7 +311,9 @@ return (
                 </div>
             </div>
         </nav>
-        <button className="btn logout-btn" onClick={handleLogout}>Đăng xuất</button>
+        <button className="btn logout-btn" onClick={handleLogout}>
+            <i className="fa-solid fa-right-from-bracket"></i>
+        </button>
 
         {/* Floating Cart Icon */}
         {cart.length > 0 && activeTab !== 'cart' && (
