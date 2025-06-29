@@ -144,6 +144,8 @@ body.dark-mode {
     --shadow-hover: rgba(255,255,255,0.15);
     background: #121212;
     color: var(--text-color);
+    /* Brighten key accents in dark mode */
+    --price-accent: #64a8ff; /* lighter blue for prices and cart icon */
 }
 
 .admin-page {
@@ -376,6 +378,10 @@ body.dark-mode {
             font-size: 17px;
             color: var(--primary-color);
             margin-bottom: 2px; /* Khoảng cách với phần trăm giảm giá */
+        }
+
+        body.dark-mode .price {
+            color: var(--price-accent);
         }
 
         .discount-percentage {
@@ -799,9 +805,15 @@ textarea {
             z-index: 999;
             transition: transform 0.2s, background 0.2s;
         }
+        body.dark-mode .floating-cart-icon {
+            background: var(--price-accent);
+        }
         .floating-cart-icon:hover {
             transform: scale(1.05);
             background: #084298;
+        }
+        body.dark-mode .floating-cart-icon:hover {
+            background: #1e6bd6;
         }
         .floating-cart-count {
             position: absolute;
@@ -967,6 +979,10 @@ textarea {
             margin-top: 20px;
             border-top: 1px solid var(--border-color);
             padding-top: 15px;
+        }
+
+        body.dark-mode .modal-content .total-price {
+            color: var(--price-accent);
         }
         .modal-button-group {
             display: flex;

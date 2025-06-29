@@ -50,12 +50,12 @@ const handleLogout = () => {
     localStorage.removeItem('fullName');
     localStorage.removeItem('staffId');
     localStorage.removeItem('role');
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 };
 
 useEffect(() => {
     if (!localStorage.getItem('auth')) {
-        window.location.href = '/login.html';
+        window.location.href = '/login';
     }
 }, []);
 
@@ -638,7 +638,7 @@ return (
                         <input value={staffId} onChange={e => setStaffId(e.target.value)} />
                     </div>
                     <button className="btn" onClick={handleUpdateInfo} style={{marginBottom:12}}>{t('update_info')}</button>
-                    <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
+                    <button className="btn" onClick={() => window.location.href='/change'} style={{marginBottom:12}}>
                         {t('change_password')}
                     </button>
                     <button className="btn danger-btn" onClick={handleLogout}>{t('logout')}</button>
