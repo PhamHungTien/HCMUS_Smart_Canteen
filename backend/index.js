@@ -22,7 +22,14 @@ function contentType(file) {
 }
 
 async function serveStatic(pathname, res) {
-  const filePath = join(PUBLIC_DIR, pathname === '/' ? 'index.html' : normalize(pathname).replace(/^\/+/, ''));
+  const routes = {
+    '/admin': '/admin.html',
+    '/login': '/login.html',
+    '/signup': '/signup.html',
+    '/forgot': '/forgot.html'
+  };
+  const resolved = routes[pathname] || pathname;
+  const filePath = join(PUBLIC_DIR, pathname === '/' ? 'index.html' : normalize(resolved).replace(/^\/+/, ''));
   try {
     const data = await fs.readFile(filePath);
     res.writeHead(200, { 'Content-Type': contentType(filePath) });
@@ -43,13 +50,17 @@ function send(res, status, data) {
   res.end(body);
 }
 
-async function isAdmin(req) {
+async function authenticate(req) {
   const auth = req.headers['authorization'];
-  if (!auth || !auth.startsWith('Basic ')) return false;
+  if (!auth || !auth.startsWith('Basic ')) return null;
   const [user, pass] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
   const users = await readJson(USERS_FILE);
-  const found = users.find(u => u.username === user && u.password === pass);
-  return found && found.role === 'admin';
+  return users.find(u => u.username === user && u.password === pass) || null;
+}
+
+async function isAdmin(req) {
+  const user = await authenticate(req);
+  return user && user.role === 'admin';
 }
 
 async function parseBody(req) {
@@ -114,7 +125,13 @@ async function handler(req, res) {
     if (!found) {
       send(res, 401, { error: 'Sai thông tin đăng nhập' });
     } else {
-      send(res, 200, { id: found.id, username: found.username, role: found.role });
+      send(res, 200, {
+        id: found.id,
+        username: found.username,
+        fullName: found.fullName,
+        staffId: found.staffId,
+        role: found.role
+      });
     }
     return;
   }
@@ -131,6 +148,21 @@ async function handler(req, res) {
     users[idx].password = body.newPassword;
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã đổi mật khẩu' });
+    return;
+  }
+
+  if (req.method === 'POST' && url.pathname === '/reset-password') {
+    const body = await parseBody(req);
+    if (!body || !body.username || !body.staffId || !body.newPassword) {
+      send(res, 400, { error: 'Thiếu thông tin' });
+      return;
+    }
+    const users = await readJson(USERS_FILE);
+    const idx = users.findIndex(u => u.username === body.username && u.staffId === body.staffId);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy người dùng' }); return; }
+    users[idx].password = body.newPassword;
+    await writeJson(USERS_FILE, users);
+    send(res, 200, { message: 'Đã đặt lại mật khẩu' });
     return;
   }
 
@@ -198,8 +230,10 @@ async function handler(req, res) {
   }
 
   if (req.method === 'POST' && url.pathname === '/orders') {
+    const user = await authenticate(req);
+    if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
     const order = await parseBody(req);
-    if (!order || !order.customerName || !order.customerPhone || !order.customerStaffId || !order.items) {
+    if (!order || !order.items) {
       send(res, 400, { error: 'Thiếu thông tin bắt buộc' });
       return;
     }
@@ -207,9 +241,9 @@ async function handler(req, res) {
     orders.push({
       id: order.id || orders.length + 1,
       time: order.time,
-      customerName: order.customerName,
-      customerPhone: order.customerPhone,
-      customerStaffId: order.customerStaffId,
+      customerName: user.fullName,
+      customerUsername: user.username,
+      staffId: user.staffId,
       specialRequest: order.specialRequest || '',
       items: order.items,
       total: order.total,
@@ -223,6 +257,7 @@ async function handler(req, res) {
   }
 
   if (req.method === 'GET' && url.pathname === '/orders') {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const orders = await readJson(ORDERS_FILE);
     send(res, 200, orders);
     return;

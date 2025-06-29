@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký tài khoản</title>
+  <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="card form-card" style="max-width:400px;margin:40px auto">
+    <h3>Tạo tài khoản</h3>
+    <form id="signup-form">
+      <input name="username" placeholder="Tên đăng nhập" required />
+      <input type="password" name="password" placeholder="Mật khẩu" required />
+      <input name="fullName" placeholder="Họ và tên" required />
+      <input name="staffId" placeholder="Mã số CB/SV" required />
+      <button class="btn" type="submit">Đăng ký</button>
+    </form>
+    <p style="text-align:center;margin-top:10px">
+      <a href="login.html">Quay lại đăng nhập</a>
+    </p>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/utils.js"></script>
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: f.username.value,
+          password: f.password.value,
+          fullName: f.fullName.value,
+          staffId: f.staffId.value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast('Đăng ký thành công');
+        setTimeout(() => location.href = 'login.html', 1000);
+      } else {
+        showToast(data.error || 'Lỗi đăng ký');
+      }
+    });
+  </script>
+</body>
+</html>
