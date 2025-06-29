@@ -5,8 +5,8 @@ Server nay được viết theo chuẩn ES module của Node 18+, không cần c
 Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 
 ## Chức năng chính
-- **Người dùng** có thể tạo tài khoản, đăng nhập, xem thực đơn, đặt món và gửi góp ý.
-- **Quản trị viên** quản lí các món ăn, theo dõi đơn đặt hàng, xem báo cáo doanh thu và xử lý phản hồi của người dùng.
+- **Người dùng** có thể tạo tài khoản, đăng nhập, xem thực đơn, đặt món và gửi góp ý. Khi xem trên thiết bị di động có thể trải nghiệm AR cho món ăn (nếu quản trị viên đã tải lên mô hình `.glb`).
+- **Quản trị viên** quản lí các món ăn (bao gồm hình ảnh và file mô hình 3D), theo dõi đơn đặt hàng, xem báo cáo doanh thu và xử lý phản hồi của người dùng.
 
 ## Công nghệ sử dụng
 - Frontend: [React](https://react.dev/) tải trực tiếp qua CDN.
