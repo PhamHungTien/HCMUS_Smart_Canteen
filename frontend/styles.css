@@ -5,6 +5,8 @@
             --border-color: #ddd;
             --light-bg: #f8f9fa;
             --white-bg: #fff;
+            --text-color: #333;
+            --switch-bg: #ccc;
             --shadow-light: rgba(0,0,0,0.08);
             --shadow-medium: rgba(0,0,0,0.12);
             --shadow-hover: rgba(0,0,0,0.15);
@@ -17,10 +19,10 @@ body {
     margin: 0;
     padding: 0;
     background: #f9fafb;
-    color: #333;
-            scroll-behavior: smooth; /* Cuộn mượt khi click Floating Cart */
-            padding-top: var(--navbar-height); /* Đảm bảo nội dung không bị che bởi navbar */
-        }
+    color: var(--text-color);
+    scroll-behavior: smooth; /* Cuộn mượt khi click Floating Cart */
+    padding-top: var(--navbar-height); /* Đảm bảo nội dung không bị che bởi navbar */
+}
 
         /* CSS mới để ngăn cuộn trang chính khi modal mở */
         body.modal-open {
@@ -41,7 +43,7 @@ body {
     height: 40px;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(10,88,202,0.10);
-    background: #fff;
+    background: var(--white-bg);
     object-fit: contain;
 }
 
@@ -52,7 +54,7 @@ body {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-    background: #fff;
+    background: var(--white-bg);
 }
 .canteen-img {
     width: 100%;
@@ -121,7 +123,7 @@ body {
             margin: 0;
             font-size: 26px; /* slightly larger */
             line-height: 1.3;
-            color: #222;
+            color: var(--text-color);
         }
 
 .container {
@@ -134,11 +136,13 @@ body.dark-mode {
     --border-color: #555;
     --light-bg: #2c2c2c;
     --white-bg: #333;
+    --text-color: #f1f1f1;
+    --switch-bg: #555;
     --shadow-light: rgba(255,255,255,0.08);
     --shadow-medium: rgba(255,255,255,0.12);
     --shadow-hover: rgba(255,255,255,0.15);
     background: #121212;
-    color: #f1f1f1;
+    color: var(--text-color);
 }
 
 .admin-page {
@@ -330,7 +334,7 @@ body.dark-mode {
         .card-content h3 {
             margin: 0 0 8px;
             font-size: 18px;
-            color: #333;
+            color: var(--text-color);
         }
 
         .card-footer {
@@ -437,7 +441,7 @@ body.dark-mode {
             gap: 10px; /* Khoảng cách giữa icon và chữ */
             margin-top: 0;
             margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-            color: #333;
+            color: var(--text-color);
             font-size: 22px; /* Kích thước tiêu đề */
         }
 
@@ -593,6 +597,40 @@ body.dark-mode {
 
 .danger-btn:hover:not(:disabled) {
     background: var(--danger-hover-color);
+}
+
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+.toggle-switch input {
+    display: none;
+}
+.toggle-switch .slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: var(--switch-bg);
+    border-radius: 20px;
+    transition: background 0.2s;
+}
+.toggle-switch .slider::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--white-bg);
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+.toggle-switch input:checked + .slider {
+    background: var(--primary-color);
+}
+.toggle-switch input:checked + .slider::before {
+    transform: translateX(20px);
 }
 
         .btn:disabled {
@@ -816,8 +854,8 @@ body.dark-mode {
             gap: 10px;
         }
         .category-buttons .btn {
-            background: #e0e0e0;
-            color: #333;
+            background: var(--light-bg);
+            color: var(--text-color);
             font-weight: normal;
             padding: 8px 15px;
             flex-grow: 1; /* allow buttons to grow */
@@ -829,7 +867,7 @@ body.dark-mode {
             font-weight: 600;
         }
         .category-buttons .btn:hover:not(.active) {
-            background: #d0d0d0;
+            background: var(--border-color);
         }
 
         /* Order Confirmation Modal */
@@ -965,7 +1003,7 @@ body.dark-mode {
             border: 1px solid #91d5ff; /* Blue border */
             border-radius: 5px;
             font-size: 14px;
-            color: #333;
+            color: var(--text-color);
             text-align: left; /* Để thông báo căn trái */
             font-style: italic; /* Kiểu chữ nghiêng */
         }
@@ -1080,7 +1118,7 @@ body.dark-mode {
         .copy-button:hover {
             background-color: #e0e0e0;
             border-color: #a0a0a0;
-            color: #333;
+            color: var(--text-color);
         }
         .copy-button i {
             font-size: 13px;
@@ -1140,7 +1178,7 @@ body.dark-mode {
     height: 54px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(10,88,202,0.10);
-    background: #fff;
+    background: var(--white-bg);
     object-fit: contain;
     padding: 4px 12px;
     max-width: 180px;
@@ -1185,7 +1223,7 @@ body.dark-mode {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 18px rgba(10,88,202,0.10);
-    background: #fff;
+    background: var(--white-bg);
 }
 .feedback-map-container iframe {
     width: 100%;

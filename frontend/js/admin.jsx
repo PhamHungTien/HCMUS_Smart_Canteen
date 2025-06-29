@@ -17,6 +17,11 @@ function AdminApp() {
   const [activeTab, setActiveTab] = useState('manage');
 
   useEffect(() => {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    document.body.classList.toggle('dark-mode', isDark);
+  }, []);
+
+  useEffect(() => {
     if (auth) {
       const now = new Date();
       setRevTo(now.toISOString().slice(0,10));

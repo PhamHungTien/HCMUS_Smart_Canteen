@@ -586,9 +586,10 @@ return (
         {currentPage === 'settings' && (
             <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
                 <h3>Cài đặt tài khoản</h3>
-                <label style={{display:'flex',alignItems:'center',marginBottom:12}}>
-                    <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} style={{marginRight:8}} />
-                    Sử dụng Dark Mode
+                <label className="toggle-switch" style={{marginBottom:12}}>
+                    <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} />
+                    <span className="slider"></span>
+                    <span style={{marginLeft:8}}>Dark Mode</span>
                 </label>
                 <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
                     Đổi mật khẩu
