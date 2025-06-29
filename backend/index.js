@@ -77,6 +77,13 @@ async function parseBody(req) {
 
 async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
+  if (req.method === "GET" && url.pathname.endsWith(".html")) {
+    const base = url.pathname.slice(0, -5);
+    const target = base === "/index" ? "/" : base;
+    res.writeHead(301, { Location: target + url.search });
+    res.end();
+    return;
+  }
 
   if (req.method === 'GET') {
     const served = await serveStatic(url.pathname, res);

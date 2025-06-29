@@ -22,7 +22,7 @@
       <button class="btn" type="submit">Đăng ký</button>
     </form>
     <p style="text-align:center;margin-top:10px">
-      <a href="login.html">Quay lại đăng nhập</a>
+      <a href="/login">Quay lại đăng nhập</a>
     </p>
   </div>
   <div id="toast" class="toast"></div>
@@ -50,7 +50,7 @@
       const data = await res.json();
       if (res.ok) {
         showToast('Đăng ký thành công');
-        setTimeout(() => location.href = 'login.html', 1000);
+        setTimeout(() => location.href = '/login', 1000);
       } else {
         showToast(data.error || 'Lỗi đăng ký');
       }

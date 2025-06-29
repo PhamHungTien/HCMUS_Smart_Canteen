@@ -18,14 +18,14 @@
       <button class="btn" type="submit">Cập nhật</button>
     </form>
     <p style="text-align:center;margin-top:10px">
-      <a href="index.html" class="link-btn" data-i18n="home">Trang chủ</a>
+      <a href="/" class="link-btn" data-i18n="home">Trang chủ</a>
     </p>
   </div>
   <div id="toast" class="toast"></div>
   <script src="js/utils.js"></script>
   <script>
     if (!localStorage.getItem('auth')) {
-      location.href = 'login.html';
+      location.href = '/login';
     }
     document.getElementById('change-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -44,7 +44,7 @@
       if (res.ok) {
         showToast('Đã đổi mật khẩu');
         localStorage.setItem('auth', btoa(`${localStorage.getItem('username')}:${f.newPassword.value}`));
-        setTimeout(() => location.href = 'index.html', 1000);
+        setTimeout(() => location.href = '/', 1000);
       } else {
         showToast(data.error || 'Lỗi');
       }

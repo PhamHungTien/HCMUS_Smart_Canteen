@@ -21,8 +21,8 @@
       <button class="btn" type="submit" data-i18n="login_button">Đăng nhập</button>
     </form>
     <p style="text-align:center;margin-top:10px">
-      <a href="signup.html" class="link-btn" data-i18n="create_account">Tạo tài khoản</a> |
-      <a href="forgot.html" class="link-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
+      <a href="signup" class="link-btn" data-i18n="create_account">Tạo tài khoản</a> |
+      <a href="forgot" class="link-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
     </p>
   </div>
   <div id="toast" class="toast"></div>
@@ -45,8 +45,8 @@
         localStorage.setItem('staffId', data.staffId);
         localStorage.setItem('role', data.role);
         showToast('Đăng nhập thành công');
-        if (form.role.value === 'admin') location.href = '/admin.html';
-        else location.href = '/index.html';
+        if (form.role.value === 'admin') location.href = '/admin';
+        else location.href = '/';
       } else {
         showToast(data.error || 'Đăng nhập thất bại');
       }
