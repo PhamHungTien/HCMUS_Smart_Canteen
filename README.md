@@ -1,6 +1,8 @@
 # Smart Canteen
 
-Đây là mô hình mẫu cho hệ thống căng tin thông minh với giao diện React và máy chủ Node.js. Phiên bản này dùng một server nhỏ không phụ thuộc gói ngoài nên có thể chạy ngay bằng lệnh `node`.
+Đây là mô hình mẫu cho hệ thống căng tin thông minh với giao diện React và máy chủ Node.js.
+Server nay được viết theo chuẩn ES module của Node 18+, không cần cài gói phụ thuộc.
+Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 
 ## Chức năng chính
 - **Người dùng** có thể tạo tài khoản, đăng nhập, xem thực đơn, đặt món và gửi góp ý.
@@ -16,7 +18,7 @@
 - `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo.
 
 ## Hướng dẫn chạy nhanh
-Chỉ cần Node.js có sẵn, chạy:
+Chỉ cần Node.js 18 trở lên, chạy:
 ```bash
 node server.js
 ```
