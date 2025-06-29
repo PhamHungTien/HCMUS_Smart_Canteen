@@ -24,7 +24,7 @@ node backend/index.js
 ```
 Server sẽ khởi động tại http://localhost:3001, tự tạo các file dữ liệu JSON nếu chưa tồn tại và phục vụ giao diện web.
 Mở trình duyệt tới địa chỉ trên để xem trang chủ.
-Bạn có thể đăng ký người dùng mới qua `/signup` hoặc đăng nhập qua `/login`.
+Bạn có thể đăng ký người dùng mới qua `/signup` (cần `username`, `password`, `fullName`, `staffId`) hoặc đăng nhập qua `/login`.
 Tài khoản quản trị mặc định:
 ```
 user: admin
@@ -38,6 +38,10 @@ pass: admin@123
 - `PUT /menu/:id` và `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (cần quyền admin).
 - `POST /feedback` – gửi đánh giá hoặc góp ý.
 - `GET /feedback` – lấy danh sách góp ý (admin).
+- `POST /change-password` – đổi mật khẩu (yêu cầu Basic Auth và `newPassword`).
+- `GET /users` – lấy danh sách tài khoản (admin).
+- `PUT /users/:id` – cập nhật thông tin hoặc đổi mật khẩu (admin).
+- `DELETE /users/:id` – xoá tài khoản (admin).
 
 ### Quản lý đơn hàng
 - `GET /orders` – lấy danh sách đơn hàng (cần quyền admin).
@@ -46,9 +50,7 @@ pass: admin@123
 - `DELETE /orders/:id` – xoá đơn (admin).
 
 ### Giao diện quản trị
-Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng trực tiếp trên trình
-duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API
-trên.
+Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng và tài khoản người dùng trực tiếp trên trình duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API trên.
 
 Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
 

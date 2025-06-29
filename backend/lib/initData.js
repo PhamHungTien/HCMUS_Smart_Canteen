@@ -13,7 +13,14 @@ export async function initData(fsPromises = fsp) {
   await fsPromises.mkdir(DATA_DIR, { recursive: true });
   const users = await readJson(USERS_FILE);
   if (!users.find(u => u.username === 'admin')) {
-    users.push({ id: 1, username: 'admin', password: 'admin@123', role: 'admin' });
+    users.push({
+      id: 1,
+      username: 'admin',
+      password: 'admin@123',
+      fullName: 'Administrator',
+      staffId: 'ADMIN',
+      role: 'admin'
+    });
     await writeJson(USERS_FILE, users);
   }
   if (!existsSync(ORDERS_FILE)) await writeJson(ORDERS_FILE, []);

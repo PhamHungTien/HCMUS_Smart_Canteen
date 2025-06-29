@@ -83,7 +83,7 @@ async function handler(req, res) {
 
   if (req.method === 'POST' && url.pathname === '/signup') {
     const user = await parseBody(req);
-    if (!user || !user.username || !user.password) {
+    if (!user || !user.username || !user.password || !user.fullName || !user.staffId) {
       send(res, 400, { error: 'Thiếu thông tin' });
       return;
     }
@@ -93,7 +93,14 @@ async function handler(req, res) {
       return;
     }
     const id = users.reduce((m, u) => Math.max(m, u.id || 0), 0) + 1;
-    users.push({ id, username: user.username, password: user.password, role: 'user' });
+    users.push({
+      id,
+      username: user.username,
+      password: user.password,
+      fullName: user.fullName,
+      staffId: user.staffId,
+      role: user.role || 'user'
+    });
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đăng ký thành công' });
     return;
@@ -109,6 +116,21 @@ async function handler(req, res) {
     } else {
       send(res, 200, { id: found.id, username: found.username, role: found.role });
     }
+    return;
+  }
+
+  if (req.method === 'POST' && url.pathname === '/change-password') {
+    const auth = req.headers['authorization'];
+    if (!auth || !auth.startsWith('Basic ')) { send(res, 401, { error: 'Unauthorized' }); return; }
+    const [username, password] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
+    const body = await parseBody(req);
+    if (!body || !body.newPassword) { send(res, 400, { error: 'Thiếu mật khẩu mới' }); return; }
+    const users = await readJson(USERS_FILE);
+    const idx = users.findIndex(u => u.username === username && u.password === password);
+    if (idx === -1) { send(res, 401, { error: 'Sai thông tin' }); return; }
+    users[idx].password = body.newPassword;
+    await writeJson(USERS_FILE, users);
+    send(res, 200, { message: 'Đã đổi mật khẩu' });
     return;
   }
 
@@ -227,6 +249,38 @@ async function handler(req, res) {
     orders = orders.filter(o => String(o.id) !== id);
     if (orders.length === len) { send(res, 404, { error: 'Không tìm thấy' }); return; }
     await writeJson(ORDERS_FILE, orders);
+    send(res, 200, { message: 'Đã xoá' });
+    return;
+  }
+
+  if (req.method === 'GET' && url.pathname === '/users') {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const users = await readJson(USERS_FILE);
+    send(res, 200, users.map(u => ({ id: u.id, username: u.username, fullName: u.fullName, staffId: u.staffId, role: u.role })));
+    return;
+  }
+
+  if (req.method === 'PUT' && url.pathname.startsWith('/users/')) {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const id = parseInt(url.pathname.split('/')[2]);
+    const updates = await parseBody(req);
+    const users = await readJson(USERS_FILE);
+    const idx = users.findIndex(u => u.id === id);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    users[idx] = { ...users[idx], ...updates, id };
+    await writeJson(USERS_FILE, users);
+    send(res, 200, { message: 'Đã cập nhật' });
+    return;
+  }
+
+  if (req.method === 'DELETE' && url.pathname.startsWith('/users/')) {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const id = parseInt(url.pathname.split('/')[2]);
+    let users = await readJson(USERS_FILE);
+    const len = users.length;
+    users = users.filter(u => u.id !== id);
+    if (users.length === len) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã xoá' });
     return;
   }
