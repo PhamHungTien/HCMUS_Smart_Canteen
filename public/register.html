@@ -29,6 +29,7 @@
     <button id="regBtn">Đăng ký</button>
 </div>
 <script>
+    const apiBase = window.location.origin;
     document.getElementById('regBtn').addEventListener('click', async () => {
         const fullName=document.getElementById('fullName').value.trim();
         const username=document.getElementById('username').value.trim();
@@ -42,7 +43,7 @@
             return;
         }
         try{
-            const res=await fetch('/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,code,fullName})});
+            const res=await fetch(`${apiBase}/users`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,code,fullName})});
             if(res.ok){
                 alert('Đăng ký thành công');
                 window.location='login.html';

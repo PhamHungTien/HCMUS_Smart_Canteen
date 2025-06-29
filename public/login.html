@@ -62,6 +62,7 @@
     <p style="text-align:center;margin-top:10px">Chưa có tài khoản? <a href="register.html">Đăng ký</a></p>
 </div>
 <script>
+    const apiBase = window.location.origin;
     document.getElementById('loginBtn').addEventListener('click', async () => {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
@@ -73,7 +74,7 @@
             return;
         }
         try {
-            const res = await fetch('/login', {
+            const res = await fetch(`${apiBase}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
