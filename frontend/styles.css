@@ -1156,3 +1156,28 @@
     padding: 4px 12px;
     max-width: 160px;
 }
+
+/* Bảng quản trị */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.admin-table th,
+.admin-table td {
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    text-align: left;
+}
+.admin-table input,
+.admin-table select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.report-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}

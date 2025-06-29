@@ -1,0 +1,230 @@
+const { useState, useEffect } = React;
+
+function AdminApp() {
+  const [auth, setAuth] = useState(localStorage.getItem('auth') || '');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [menu, setMenu] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
+  const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '' });
+  const [pwMap, setPwMap] = useState({});
+  const [revFrom, setRevFrom] = useState('');
+  const [revTo, setRevTo] = useState('');
+  const [revenue, setRevenue] = useState(null);
+
+  useEffect(() => {
+    if (auth) {
+      const now = new Date();
+      setRevTo(now.toISOString().slice(0,10));
+      setRevFrom(new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10));
+      refreshData();
+    }
+  }, [auth]);
+
+  function login(e) {
+    e.preventDefault();
+    const token = btoa(`${username}:${password}`);
+    fetch('/menu', { headers: { Authorization: 'Basic ' + token } })
+      .then(res => {
+        if (res.status === 200) {
+          localStorage.setItem('auth', token);
+          setAuth(token);
+          showToast('Đăng nhập thành công');
+        } else {
+          showToast('Sai thông tin đăng nhập');
+        }
+      });
+  }
+
+  function refreshData() {
+    fetch('/menu').then(r => r.json()).then(setMenu);
+    fetch('/orders', { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(setOrders);
+    fetch('/users', { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(setUsers);
+    fetchRevenue();
+  }
+
+  function fetchRevenue(from = revFrom, to = revTo) {
+    const params = new URLSearchParams();
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+    fetch('/revenue?' + params.toString(), { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(data => setRevenue(data.total));
+  }
+
+  function addItem() {
+    if (!newItem.name || !newItem.price) { showToast('Thiếu thông tin'); return; }
+    fetch('/menu', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+      body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn' })
+    }).then(r => r.json()).then(() => {
+      setNewItem({ name: '', price: '', category: '' });
+      refreshData();
+    });
+  }
+
+  function updateItem(id, updates) {
+    fetch(`/menu/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+      body: JSON.stringify(updates)
+    }).then(r => r.json()).then(refreshData);
+  }
+
+  function deleteItem(id) {
+    fetch(`/menu/${id}`, { method: 'DELETE', headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json()).then(refreshData);
+  }
+
+  function addUser() {
+    if (!newUser.username || !newUser.password || !newUser.fullName || !newUser.staffId) { showToast('Thiếu thông tin'); return; }
+    fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newUser)
+    }).then(r => r.json()).then(() => { setNewUser({ username: '', password: '', fullName: '', staffId: '' }); refreshData(); });
+  }
+
+  function updateUser(id, updates) {
+    fetch(`/users/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+      body: JSON.stringify(updates)
+    }).then(r => r.json()).then(refreshData);
+  }
+
+  function deleteUser(id) {
+    fetch(`/users/${id}`, { method: 'DELETE', headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json()).then(refreshData);
+  }
+
+  function updateOrder(id, status) {
+    fetch(`/orders/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+      body: JSON.stringify({ status })
+    }).then(r => r.json()).then(refreshData);
+  }
+
+  function deleteOrder(id) {
+    fetch(`/orders/${id}`, { method: 'DELETE', headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json()).then(refreshData);
+  }
+
+  if (!auth) {
+    return (
+      <div className="card form-card" style={{ maxWidth: 400, margin: '40px auto' }}>
+        <h2>Đăng nhập Admin</h2>
+        <form onSubmit={login}>
+          <input placeholder="Tên đăng nhập" value={username} onChange={e => setUsername(e.target.value)} />
+          <input type="password" placeholder="Mật khẩu" value={password} onChange={e => setPassword(e.target.value)} />
+          <button className="btn" type="submit">Đăng nhập</button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Quản lý Menu</h2>
+      <table className="admin-table">
+        <thead>
+          <tr><th>ID</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
+        </thead>
+        <tbody>
+          {menu.map(item => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td><input value={item.name} onChange={e => updateItem(item.id, { name: e.target.value })} /></td>
+              <td><input type="number" value={item.price} onChange={e => updateItem(item.id, { price: parseInt(e.target.value, 10) })} /></td>
+              <td><input value={item.category} onChange={e => updateItem(item.id, { category: e.target.value })} /></td>
+              <td><button className="btn" onClick={() => deleteItem(item.id)}>Xóa</button></td>
+            </tr>
+          ))}
+          <tr>
+            <td>mới</td>
+            <td><input value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} /></td>
+            <td><input type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} /></td>
+            <td><input value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })} /></td>
+            <td><button className="btn" onClick={addItem}>Thêm</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
+      <table className="admin-table">
+        <thead>
+          <tr><th>Mã</th><th>Khách</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+        </thead>
+        <tbody>
+          {orders.map(o => (
+            <tr key={o.id}>
+              <td>{o.id}</td>
+              <td>{o.customerName}</td>
+              <td>{o.total.toLocaleString()}đ</td>
+              <td>
+                <select value={o.status} onChange={e => updateOrder(o.id, e.target.value)}>
+                  <option value="pending">Chờ</option>
+                  <option value="done">Hoàn tất</option>
+                </select>
+              </td>
+              <td><button className="btn" onClick={() => deleteOrder(o.id)}>Xóa</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2 style={{ marginTop: '40px' }}>Báo cáo doanh thu</h2>
+      <div className="report-inputs">
+        <input type="date" value={revFrom} onChange={e => setRevFrom(e.target.value)} />
+        <input type="date" value={revTo} onChange={e => setRevTo(e.target.value)} />
+        <button className="btn" onClick={() => fetchRevenue()}>Tính</button>
+        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
+      </div>
+
+      <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
+      <table className="admin-table">
+        <thead>
+          <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
+        </thead>
+        <tbody>
+          {users.map(u => (
+            <tr key={u.id}>
+              <td>{u.id}</td>
+              <td>{u.username}</td>
+              <td><input value={u.fullName} onChange={e => updateUser(u.id, { fullName: e.target.value })} /></td>
+              <td><input value={u.staffId} onChange={e => updateUser(u.id, { staffId: e.target.value })} /></td>
+              <td>{u.role}</td>
+              <td>
+                <input type="password" value={pwMap[u.id] || ''} onChange={e => setPwMap({ ...pwMap, [u.id]: e.target.value })} />
+              </td>
+              <td>
+                <button className="btn" onClick={() => { updateUser(u.id, { password: pwMap[u.id] }); setPwMap({ ...pwMap, [u.id]: '' }); }}>Đổi</button>
+                <button className="btn" onClick={() => deleteUser(u.id)}>Xóa</button>
+              </td>
+            </tr>
+          ))}
+          <tr>
+            <td>mới</td>
+            <td><input value={newUser.username} onChange={e => setNewUser({ ...newUser, username: e.target.value })} /></td>
+            <td><input value={newUser.fullName} onChange={e => setNewUser({ ...newUser, fullName: e.target.value })} /></td>
+            <td><input value={newUser.staffId} onChange={e => setNewUser({ ...newUser, staffId: e.target.value })} /></td>
+            <td>user</td>
+            <td><input type="password" value={newUser.password} onChange={e => setNewUser({ ...newUser, password: e.target.value })} /></td>
+            <td><button className="btn" onClick={addUser}>Thêm</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('admin-root')).render(<AdminApp />);
+
