@@ -16,6 +16,7 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 - `server/` – mã nguồn API Node và máy chủ tĩnh.
 - `data/` – nơi lưu các file JSON tạo ra khi chạy server.
 - `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo và được phục vụ công khai.
+- `js/` – mã nguồn React tách thành nhiều file JSX nhỏ.
 
 ## Hướng dẫn chạy nhanh
 Chỉ cần Node.js 18 trở lên, chạy:
