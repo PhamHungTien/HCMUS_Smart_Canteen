@@ -1,5 +1,8 @@
 {
   "name": "smart-canteen",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js"
+  }
 }

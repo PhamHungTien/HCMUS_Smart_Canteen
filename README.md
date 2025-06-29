@@ -13,14 +13,14 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 - Backend: [Node.js](https://nodejs.org/) thuần, lưu trữ dữ liệu ở các file JSON.
 
 ## Cấu trúc thư mục
-- `frontend/` – mã nguồn giao diện người dùng (yêu cầu cài đặt phụ thuộc nếu muốn build).
-- `backend/` – mã nguồn server cũ dùng Express (tùy chọn).
+- `server/` – mã nguồn API Node.
+- `data/` – nơi lưu các file JSON tạo ra khi chạy server.
 - `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo.
 
 ## Hướng dẫn chạy nhanh
 Chỉ cần Node.js 18 trở lên, chạy:
 ```bash
-node server.js
+node server/index.js
 ```
 
 Server sẽ khởi động tại http://localhost:3001 và tự tạo các file dữ liệu JSON nếu chưa tồn tại.

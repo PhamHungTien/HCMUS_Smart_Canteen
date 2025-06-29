@@ -4,7 +4,7 @@ import { join } from 'path';
 import { URL } from 'url';
 
 const PORT = process.env.PORT || 3001;
-const DATA_DIR = '.';
+const DATA_DIR = join('.', 'data');
 const ORDERS_FILE = join(DATA_DIR, 'orders.json');
 const USERS_FILE = join(DATA_DIR, 'users.json');
 
