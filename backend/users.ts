@@ -4,6 +4,12 @@ export async function readUsers() {
   return db.prepare('SELECT username, password, code, fullName FROM users').all();
 }
 
+export async function findUser(username: string, password: string) {
+  return db.prepare(
+    'SELECT username, code, fullName FROM users WHERE username=? AND password=?'
+  ).get(username, password) as { username: string; code: string; fullName: string } | undefined;
+}
+
 export async function addUser(user) {
   const stmt = db.prepare('INSERT INTO users (username, password, code, fullName) VALUES (?, ?, ?, ?)');
   try {

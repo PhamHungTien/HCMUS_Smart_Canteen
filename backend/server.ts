@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 import { readOrders, addOrder } from './orders.ts';
 import { readMenu, addMenuItem, updateMenuItem, deleteMenuItem } from './menu.ts';
 import { readFeedback, addFeedback } from './feedback.ts';
-import { readUsers, addUser, deleteUser } from './users.ts';
+import { readUsers, addUser, deleteUser, findUser } from './users.ts';
 
 // Load environment variables from .env if present
 try {
@@ -41,8 +41,7 @@ app.post('/login', async (req, res) => {
   if (username === ADMIN_USER && password === ADMIN_PASS) {
     return res.json({ role: 'admin' });
   }
-  const users = await readUsers();
-  const found = users.find(u => u.username.trim() === username.trim() && u.password.trim() === password.trim());
+  const found = await findUser(username.trim(), password.trim());
   if (found) {
     return res.json({ role: 'user', username: found.username, code: found.code, fullName: found.fullName });
   }
