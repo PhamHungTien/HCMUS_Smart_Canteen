@@ -424,9 +424,28 @@
             font-size: 22px; /* Kích thước tiêu đề */
         }
 
-        .form-card h3 i {
+       .form-card h3 i {
             font-size: 24px; /* Kích thước icon */
             color: var(--primary-color);
+       }
+
+        /* Bảng trong trang quản trị */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        .styled-table th {
+            background: var(--light-bg);
+        }
+        .styled-table tbody tr:nth-child(even) {
+            background: #f9f9f9;
         }
 
         .cart-list {

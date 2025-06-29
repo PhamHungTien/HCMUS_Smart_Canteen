@@ -74,24 +74,28 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && pathname === '/login') {
       const { username, password } = await body(req);
       if (!username || !password) return send(res, 400, { error: 'Thiếu tên hoặc mật khẩu' });
-      if (username === ADMIN_USER && password === ADMIN_PASS) return send(res, 200, { role: 'admin' });
+      if (username === ADMIN_USER && password === ADMIN_PASS) {
+        return send(res, 200, { role: 'admin' });
+      }
       const users = await readUsers();
       const found = users.find(u => u.username.trim() === username.trim() && u.password.trim() === password.trim());
-      if (found) return send(res, 200, { role: 'user' });
+      if (found) {
+        return send(res, 200, { role: 'user', username: found.username, code: found.code, fullName: found.fullName });
+      }
       return send(res, 401, { error: 'Sai thông tin đăng nhập' });
     }
     // Users list
     if (req.method === 'GET' && pathname === '/users') {
       const users = await readUsers();
-      return send(res, 200, users.map(u => ({ username: u.username, code: u.code })));
+      return send(res, 200, users.map(u => ({ username: u.username, code: u.code, fullName: u.fullName }))); 
     }
     // Register
     if (req.method === 'POST' && pathname === '/users') {
-      const { username, password, code } = await body(req);
-      if (!username || !password || !code) return send(res, 400, { error: 'Thiếu thông tin' });
-      const user = await addUser({ username: username.trim(), password: password.trim(), code: code.trim() });
+      const { username, password, code, fullName } = await body(req);
+      if (!username || !password || !code || !fullName) return send(res, 400, { error: 'Thiếu thông tin' });
+      const user = await addUser({ username: username.trim(), password: password.trim(), code: code.trim(), fullName: fullName.trim() });
       if (!user) return send(res, 409, { error: 'Người dùng đã tồn tại' });
-      return send(res, 200, { username: user.username, code: user.code });
+      return send(res, 200, { username: user.username, code: user.code, fullName: user.fullName });
     }
     if (req.method === 'DELETE' && pathname.startsWith('/users/')) {
       const name = decodeURIComponent(pathname.split('/')[2]);
@@ -105,7 +109,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === 'POST' && pathname === '/orders') {
       const order = await body(req);
-      if (!order.customerName || !order.customerPhone || !order.customerStaffId || !order.items)
+      if (!order.items)
         return send(res, 400, { error: 'Thiếu thông tin bắt buộc' });
       await addOrder(order);
       return send(res, 200, { message: 'Đơn hàng được ghi nhận thành công' });

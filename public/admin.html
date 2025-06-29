@@ -4,42 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản trị Canteen</title>
+    <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css">
     <style>
-        body { padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        body { padding-top: var(--navbar-height); }
         .hidden { display: none; }
-        .tabs button { margin-right: 10px; }
+        .admin-section { margin-bottom: 20px; }
     </style>
 </head>
 <body>
-<div class="tabs">
-    <button onclick="showTab('orders')">Đơn hàng</button>
-    <button onclick="showTab('menu')">Menu</button>
-    <button onclick="showTab('feedback')">Góp ý</button>
-    <button onclick="showTab('users')">Người dùng</button>
-</div>
+<nav class="top-navbar">
+    <div class="top-navbar-inner" style="display:flex;gap:10px">
+        <div class="tab-button" data-tab="orders" onclick="showTab('orders')">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Đơn hàng</span>
+        </div>
+        <div class="tab-button" data-tab="menu" onclick="showTab('menu')">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Menu</span>
+        </div>
+        <div class="tab-button" data-tab="feedback" onclick="showTab('feedback')">
+            <i class="fa-solid fa-comments"></i>
+            <span>Góp ý</span>
+        </div>
+        <div class="tab-button" data-tab="users" onclick="showTab('users')">
+            <i class="fa-solid fa-user"></i>
+            <span>Người dùng</span>
+        </div>
+    </div>
+</nav>
+<div class="container">
 <div id="orders" class="tab"></div>
 <div id="menu" class="tab hidden">
-    <h3>Thêm món</h3>
-    <input id="itemName" placeholder="Tên" />
-    <input id="itemCategory" placeholder="Loại" />
-    <input id="itemPrice" type="number" placeholder="Giá" />
-    <input id="itemImage" placeholder="Ảnh" />
-    <input id="itemRating" type="number" placeholder="Sao" />
-    <button onclick="addMenuItem()">Thêm</button>
-    <h3>Danh sách món</h3>
-    <div id="menuList"></div>
+    <div class="card admin-section">
+        <h3>Thêm món</h3>
+        <input id="itemName" placeholder="Tên" />
+        <input id="itemCategory" placeholder="Loại" />
+        <input id="itemPrice" type="number" placeholder="Giá" />
+        <input id="itemImage" placeholder="Ảnh" />
+        <input id="itemRating" type="number" placeholder="Sao" />
+        <button class="btn" onclick="addMenuItem()">Thêm</button>
+    </div>
+    <div class="card admin-section">
+        <h3>Danh sách món</h3>
+        <div id="menuList"></div>
+    </div>
 </div>
 <div id="feedback" class="tab hidden"></div>
 <div id="users" class="tab hidden"></div>
+</div>
 <script>
 if(!localStorage.getItem('loggedIn')) window.location='login.html';
 
 function showTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`.tab-button[data-tab="${id}"]`);
+  if(btn) btn.classList.add('active');
   if(id==='orders') loadOrders();
   if(id==='menu') loadMenu();
   if(id==='feedback') loadFeedback();
@@ -50,13 +74,13 @@ async function loadOrders(){
   const res = await fetch('orders');
   const data = await res.json();
   const div=document.getElementById('orders');
-  div.innerHTML='<h3>Đơn hàng</h3>'+renderTable(data);
+  div.innerHTML='<div class="card admin-section"><h3>Đơn hàng</h3>'+renderTable(data)+'</div>';
 }
 
 function renderTable(items){
   if(!items.length) return '<p>Không có dữ liệu</p>';
   const keys=Object.keys(items[0]);
-  let html='<table><thead><tr>'+keys.map(k=>`<th>${k}</th>`).join('')+'</tr></thead><tbody>';
+  let html='<table class="styled-table"><thead><tr>'+keys.map(k=>`<th>${k}</th>`).join('')+'</tr></thead><tbody>';
   html+=items.map(it=>'<tr>'+keys.map(k=>`<td>${it[k]}</td>`).join('')+'</tr>').join('');
   html+='</tbody></table>';
   return html;
@@ -71,8 +95,8 @@ async function loadMenu(){
 
 function renderMenuTable(menu){
   if(!menu.length) return '<p>Chưa có món</p>';
-  let html='<table><thead><tr><th>Tên</th><th>Loại</th><th>Giá</th><th>Ảnh</th><th>Sao</th><th></th></tr></thead><tbody>';
-  html+=menu.map(m=>`<tr><td>${m.name}</td><td>${m.category}</td><td>${m.price}</td><td>${m.image}</td><td>${m.rating}</td><td><button onclick="delMenuItem(${m.id})">Xóa</button></td></tr>`).join('');
+  let html='<table class="styled-table"><thead><tr><th>Tên</th><th>Loại</th><th>Giá</th><th>Ảnh</th><th>Sao</th><th></th></tr></thead><tbody>';
+  html+=menu.map(m=>`<tr><td>${m.name}</td><td>${m.category}</td><td>${m.price.toLocaleString()}</td><td><img src="${m.image}" style="height:40px"/></td><td>${m.rating}</td><td><button class="btn" onclick="delMenuItem(${m.id})">Xóa</button></td></tr>`).join('');
   html+='</tbody></table>';
   return html;
 }
@@ -85,6 +109,9 @@ async function addMenuItem(){
     image:document.getElementById('itemImage').value,
     rating:parseInt(document.getElementById('itemRating').value||0)
   };
+  if(item.image && !item.image.startsWith('http') && !item.image.startsWith('menu/')){
+    item.image = 'menu/' + item.image.replace(/^\/+/, '');
+  }
   await fetch('menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
   loadMenu();
 }
@@ -98,20 +125,20 @@ async function loadFeedback(){
   const res=await fetch('feedback');
   const data=await res.json();
   const div=document.getElementById('feedback');
-  div.innerHTML='<h3>Góp ý</h3>'+renderTable(data);
+  div.innerHTML='<div class="card admin-section"><h3>Góp ý</h3>'+renderTable(data)+'</div>';
 }
 
 async function loadUsers(){
   const res=await fetch('users');
   const list=await res.json();
   const div=document.getElementById('users');
-  div.innerHTML='<h3>Người dùng</h3>'+renderUserTable(list);
+  div.innerHTML='<div class="card admin-section"><h3>Người dùng</h3>'+renderUserTable(list)+'</div>';
 }
 
 function renderUserTable(users){
   if(!users.length) return '<p>Không có người dùng</p>';
-  let html='<table><thead><tr><th>Username</th><th>Mã số</th><th></th></tr></thead><tbody>';
-  html+=users.map(u=>`<tr><td>${u.username}</td><td>${u.code||''}</td><td><button onclick="delUser('${u.username}')">Xóa</button></td></tr>`).join('');
+  let html='<table class="styled-table"><thead><tr><th>Username</th><th>Họ tên</th><th>Mã số</th><th></th></tr></thead><tbody>';
+  html+=users.map(u=>`<tr><td>${u.username}</td><td>${u.fullName||''}</td><td>${u.code||''}</td><td><button class="btn" onclick="delUser('${u.username}')">Xóa</button></td></tr>`).join('');
   html+='</tbody></table>';
   return html;
 }
