@@ -283,8 +283,8 @@ return (
         <nav className="top-navbar">
             <div className="top-navbar-inner" style={{display: 'flex', alignItems: 'center', width: 'calc(100% - 60px)'}}>
                 <div style={{flex: 1, display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
-                    <div 
-                        className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`} 
+                    <div
+                        className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`}
                         onClick={() => handleTabClick('menu', menuSectionRef)}>
                         <i className="fa-solid fa-utensils"></i>
                         <span>Menu</span>
@@ -308,15 +308,15 @@ return (
                         <i className="fa-solid fa-comments"></i>
                         <span>Góp ý</span>
                     </div>
+                    <div
+                        className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`}
+                        onClick={() => handleTabClick('settings', null)}>
+                        <i className="fa-solid fa-gear"></i>
+                        <span>Cài đặt</span>
+                    </div>
                 </div>
             </div>
         </nav>
-        <button className="btn change-pw-btn" onClick={() => window.location.href = '/change.html'}>
-            <i className="fa-solid fa-key"></i>
-        </button>
-        <button className="btn logout-btn" onClick={handleLogout}>
-            <i className="fa-solid fa-right-from-bracket"></i>
-        </button>
 
         {/* Floating Cart Icon */}
         {cart.length > 0 && activeTab !== 'cart' && (
@@ -572,6 +572,17 @@ return (
                         </div>
                     </div>
                 </div>
+            </div>
+        )}
+
+        {/* Trang Cài đặt */}
+        {currentPage === 'settings' && (
+            <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
+                <h3>Cài đặt tài khoản</h3>
+                <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
+                    Đổi mật khẩu
+                </button>
+                <button className="btn" onClick={handleLogout}>Đăng xuất</button>
             </div>
         )}
 
