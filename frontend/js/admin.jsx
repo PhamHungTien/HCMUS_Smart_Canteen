@@ -30,6 +30,12 @@ function AdminApp() {
     }
   }, [auth]);
 
+  useEffect(() => {
+    if (!auth) return;
+    const id = setInterval(refreshData, 5000);
+    return () => clearInterval(id);
+  }, [auth]);
+
   function login(e) {
     e.preventDefault();
     const token = btoa(`${username}:${password}`);
