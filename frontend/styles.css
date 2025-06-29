@@ -185,6 +185,7 @@ body.dark-mode {
 
         .top-navbar-inner {
             display: flex;
+            flex-wrap: wrap; /* Cho phép xuống hàng khi không đủ chỗ */
             background-color: var(--white-bg); /* Nền trắng cho các tab bên trong */
             border-radius: 10px; /* Bo tròn góc */
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -192,13 +193,14 @@ body.dark-mode {
             gap: 10px; /* Khoảng cách giữa các tab */
             width: 100%;
             max-width: none;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             min-width: 0;
+            overflow-x: auto; /* Ngăn tràn ngang trên thiết bị nhỏ */
         }
 
         .tab-button {
-            flex: 1; /* Chia đều không gian */
+            flex: 1 1 auto; /* Chia đều và có thể co giãn */
             text-align: center;
             padding: 8px 12px;
             border-radius: 8px; /* Bo tròn nút tab */

@@ -17,6 +17,7 @@ function contentType(file) {
     case '.png': return 'image/png';
     case '.jpg':
     case '.jpeg': return 'image/jpeg';
+    case '.glb': return 'model/gltf-binary';
     default: return 'application/octet-stream';
   }
 }

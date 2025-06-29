@@ -8,7 +8,7 @@ function AdminApp() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [newItem, setNewItem] = useState({ name: '', price: '', category: '', file: null });
+  const [newItem, setNewItem] = useState({ name: '', price: '', category: '', file: null, modelFile: null });
   const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' });
   const [pwMap, setPwMap] = useState({});
   const [revFrom, setRevFrom] = useState('');
@@ -102,12 +102,14 @@ function AdminApp() {
     (async () => {
       let image = '';
       if (newItem.file) image = await uploadFile(newItem.file);
+      let model = '';
+      if (newItem.modelFile) model = await uploadFile(newItem.modelFile);
       fetch('/menu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
-        body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn', image })
+        body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn', image, model })
       }).then(r => r.json()).then(() => {
-        setNewItem({ name: '', price: '', category: '', file: null });
+        setNewItem({ name: '', price: '', category: '', file: null, modelFile: null });
         refreshData();
       });
     })();
@@ -128,6 +130,10 @@ function AdminApp() {
 
   function changeItemImage(id, file) {
     uploadFile(file).then(path => updateItem(id, { image: path }));
+  }
+
+  function changeItemModel(id, file) {
+    uploadFile(file).then(path => updateItem(id, { model: path }));
   }
 
   function addUser() {
@@ -181,7 +187,7 @@ function AdminApp() {
   return (
     <>
       <nav className="top-navbar">
-        <div className="top-navbar-inner" style={{display:'flex', alignItems:'center', width:'calc(100% - 60px)'}}>
+        <div className="top-navbar-inner" style={{display:'flex', alignItems:'center', width:'100%'}}>
           <div style={{flex:1, display:'flex', justifyContent:'flex-end', gap:'10px'}}>
             <div className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => setActiveTab('menu')}>
               <i className="fa-solid fa-utensils"></i>
@@ -224,7 +230,7 @@ function AdminApp() {
           <h2>{t('menu_management')}</h2>
           <table className="admin-table">
             <thead>
-              <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
+              <tr><th>ID</th><th>Ảnh</th><th>Model</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
             </thead>
         <tbody>
           {menu.map(item => (
@@ -233,6 +239,10 @@ function AdminApp() {
               <td>
                 {item.image && <img src={item.image} alt="img" style={{width:50}} />}
                 <input type="file" onChange={e => changeItemImage(item.id, e.target.files[0])} />
+              </td>
+              <td>
+                {item.model && <span style={{fontSize:12}}>{item.model}</span>}
+                <input type="file" accept=".glb" onChange={e => changeItemModel(item.id, e.target.files[0])} />
               </td>
               <td><input value={item.name} onChange={e => updateItem(item.id, { name: e.target.value })} /></td>
               <td><input type="number" value={item.price} onChange={e => updateItem(item.id, { price: parseInt(e.target.value, 10) })} /></td>
@@ -243,6 +253,7 @@ function AdminApp() {
           <tr>
             <td>mới</td>
             <td><input type="file" onChange={e => setNewItem({ ...newItem, file: e.target.files[0] })} /></td>
+            <td><input type="file" accept=".glb" onChange={e => setNewItem({ ...newItem, modelFile: e.target.files[0] })} /></td>
             <td><input value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} /></td>
             <td><input type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} /></td>
             <td><input value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })} /></td>
