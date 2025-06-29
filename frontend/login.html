@@ -6,22 +6,23 @@
   <title>Đăng nhập</title>
   <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="js/i18n.js"></script>
 </head>
 <body>
   <div class="card form-card" style="max-width:400px;margin:40px auto">
-    <h3>Đăng nhập</h3>
+    <h3 data-i18n="login_title">Đăng nhập</h3>
     <form id="login-form">
-      <input name="username" placeholder="Tên đăng nhập" required />
-      <input type="password" name="password" placeholder="Mật khẩu" required />
+      <input name="username" placeholder="Tên đăng nhập" data-i18n="username_placeholder" required />
+      <input type="password" name="password" placeholder="Mật khẩu" data-i18n="password_placeholder" required />
       <select name="role">
-        <option value="user">Người dùng</option>
-        <option value="admin">Quản trị</option>
+        <option value="user" data-i18n="role_user">Người dùng</option>
+        <option value="admin" data-i18n="role_admin">Quản trị</option>
       </select>
-      <button class="btn" type="submit">Đăng nhập</button>
+      <button class="btn" type="submit" data-i18n="login_button">Đăng nhập</button>
     </form>
     <p style="text-align:center;margin-top:10px">
-      <a href="signup.html">Tạo tài khoản</a> |
-      <a href="forgot.html">Quên mật khẩu?</a>
+      <a href="signup.html" class="link-btn" data-i18n="create_account">Tạo tài khoản</a> |
+      <a href="forgot.html" class="link-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
     </p>
   </div>
   <div id="toast" class="toast"></div>
@@ -41,6 +42,7 @@
         localStorage.setItem('auth', token);
         localStorage.setItem('username', data.username);
         localStorage.setItem('fullName', data.fullName);
+        localStorage.setItem('staffId', data.staffId);
         localStorage.setItem('role', data.role);
         showToast('Đăng nhập thành công');
         if (form.role.value === 'admin') location.href = '/admin.html';

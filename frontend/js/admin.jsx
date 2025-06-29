@@ -8,13 +8,18 @@ function AdminApp() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
+  const [newItem, setNewItem] = useState({ name: '', price: '', category: '', file: null });
   const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' });
   const [pwMap, setPwMap] = useState({});
   const [revFrom, setRevFrom] = useState('');
   const [revTo, setRevTo] = useState('');
   const [revenue, setRevenue] = useState(null);
-  const [activeTab, setActiveTab] = useState('manage');
+  const [activeTab, setActiveTab] = useState('menu');
+
+  useEffect(() => {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    document.body.classList.toggle('dark-mode', isDark);
+  }, []);
 
   useEffect(() => {
     if (auth) {
@@ -72,16 +77,34 @@ function AdminApp() {
       .then(data => setRevenue(data.total));
   }
 
+  function uploadFile(file) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        fetch('/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+          body: JSON.stringify({ filename: file.name, data: reader.result })
+        }).then(r => r.json()).then(d => resolve(d.path));
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   function addItem() {
     if (!newItem.name || !newItem.price) { showToast('Thiếu thông tin'); return; }
-    fetch('/menu', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
-      body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn' })
-    }).then(r => r.json()).then(() => {
-      setNewItem({ name: '', price: '', category: '' });
-      refreshData();
-    });
+    (async () => {
+      let image = '';
+      if (newItem.file) image = await uploadFile(newItem.file);
+      fetch('/menu', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+        body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn', image })
+      }).then(r => r.json()).then(() => {
+        setNewItem({ name: '', price: '', category: '', file: null });
+        refreshData();
+      });
+    })();
   }
 
   function updateItem(id, updates) {
@@ -95,6 +118,10 @@ function AdminApp() {
   function deleteItem(id) {
     fetch(`/menu/${id}`, { method: 'DELETE', headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json()).then(refreshData);
+  }
+
+  function changeItemImage(id, file) {
+    uploadFile(file).then(path => updateItem(id, { image: path }));
   }
 
   function addUser() {
@@ -150,13 +177,29 @@ function AdminApp() {
       <nav className="top-navbar">
         <div className="top-navbar-inner" style={{display:'flex', alignItems:'center', width:'calc(100% - 60px)'}}>
           <div style={{flex:1, display:'flex', justifyContent:'flex-end', gap:'10px'}}>
-            <div className={`tab-button ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>
-              <i className="fa-solid fa-list"></i>
-              <span>Quản lý</span>
+            <div className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => setActiveTab('menu')}>
+              <i className="fa-solid fa-utensils"></i>
+              <span>{t('menu')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
+              <i className="fa-solid fa-receipt"></i>
+              <span>{t('orders')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'revenue' ? 'active' : ''}`} onClick={() => setActiveTab('revenue')}>
+              <i className="fa-solid fa-chart-line"></i>
+              <span>{t('revenue')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
+              <i className="fa-solid fa-comments"></i>
+              <span>{t('reviews')}</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}>
+              <i className="fa-solid fa-user"></i>
+              <span>{t('users')}</span>
             </div>
             <div className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
               <i className="fa-solid fa-gear"></i>
-              <span>Cài đặt</span>
+              <span>{t('settings')}</span>
             </div>
           </div>
         </div>
@@ -164,23 +207,27 @@ function AdminApp() {
 
       {activeTab === 'settings' && (
         <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
-          <h3>Cài đặt</h3>
-          <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>Đổi mật khẩu</button>
-          <button className="btn" onClick={logout}>Đăng xuất</button>
+          <h3>{t('settings')}</h3>
+          <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>{t('change_password')}</button>
+          <button className="btn danger-btn" onClick={logout}>{t('logout')}</button>
         </div>
       )}
 
-      {activeTab === 'manage' && (
+      {activeTab === 'menu' && (
         <div style={{ padding: '20px' }}>
-          <h2>Quản lý Menu</h2>
-      <table className="admin-table">
-        <thead>
-          <tr><th>ID</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
-        </thead>
+          <h2>{t('menu_management')}</h2>
+          <table className="admin-table">
+            <thead>
+              <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
+            </thead>
         <tbody>
           {menu.map(item => (
             <tr key={item.id}>
               <td>{item.id}</td>
+              <td>
+                {item.image && <img src={item.image} alt="img" style={{width:50}} />}
+                <input type="file" onChange={e => changeItemImage(item.id, e.target.files[0])} />
+              </td>
               <td><input value={item.name} onChange={e => updateItem(item.id, { name: e.target.value })} /></td>
               <td><input type="number" value={item.price} onChange={e => updateItem(item.id, { price: parseInt(e.target.value, 10) })} /></td>
               <td><input value={item.category} onChange={e => updateItem(item.id, { category: e.target.value })} /></td>
@@ -189,6 +236,7 @@ function AdminApp() {
           ))}
           <tr>
             <td>mới</td>
+            <td><input type="file" onChange={e => setNewItem({ ...newItem, file: e.target.files[0] })} /></td>
             <td><input value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} /></td>
             <td><input type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} /></td>
             <td><input value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })} /></td>
@@ -196,16 +244,21 @@ function AdminApp() {
           </tr>
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
+      {activeTab === 'orders' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('orders')}</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>{t('pickup_time')}</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
             <tr key={o.id}>
               <td>{o.id}</td>
+              <td>{new Date(o.time).toLocaleString('vi-VN')}</td>
               <td>{o.customerName}</td>
               <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
               <td>{o.specialRequest}</td>
@@ -221,16 +274,24 @@ function AdminApp() {
           ))}
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Báo cáo doanh thu</h2>
+      {activeTab === 'revenue' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('revenue')}</h2>
       <div className="report-inputs">
         <input type="date" value={revFrom} onChange={e => setRevFrom(e.target.value)} />
         <input type="date" value={revTo} onChange={e => setRevTo(e.target.value)} />
         <button className="btn" onClick={() => fetchRevenue()}>Tính</button>
-        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
+        {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>{t('total')}: {revenue.toLocaleString()}đ</span>}
       </div>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Đánh giá & Góp ý</h2>
+      {activeTab === 'feedback' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('reviews')}</h2>
       <table className="admin-table">
         <thead>
           <tr><th>Loại</th><th>Nội dung</th><th>Thời gian</th></tr>
@@ -249,8 +310,12 @@ function AdminApp() {
           ))}
         </tbody>
       </table>
+        </div>
+      )}
 
-      <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
+      {activeTab === 'users' && (
+        <div style={{ padding: '20px' }}>
+      <h2>{t('users')}</h2>
       <table className="admin-table">
         <thead>
           <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Điện thoại</th><th>Email</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
@@ -269,7 +334,7 @@ function AdminApp() {
                 <input type="password" value={pwMap[u.id] || ''} onChange={e => setPwMap({ ...pwMap, [u.id]: e.target.value })} />
               </td>
               <td>
-                <button className="btn" onClick={() => { updateUser(u.id, { password: pwMap[u.id] }); setPwMap({ ...pwMap, [u.id]: '' }); }}>Đổi</button>
+                <button className="btn" style={{marginRight:10}} onClick={() => { updateUser(u.id, { password: pwMap[u.id] }); setPwMap({ ...pwMap, [u.id]: '' }); }}>Đổi</button>
                 <button className="btn" onClick={() => deleteUser(u.id)}>Xóa</button>
               </td>
             </tr>

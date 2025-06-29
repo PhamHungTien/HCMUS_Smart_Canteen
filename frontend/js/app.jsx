@@ -29,11 +29,16 @@ const [reviewComment, setReviewComment] = useState('');
 const [feedbackText, setFeedbackText] = useState('');
 const [feedbackEmail, setFeedbackEmail] = useState('');
 
+const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
+const [language, setLanguage] = useState(localStorage.getItem('lang') || 'vi');
+const [fullName, setFullName] = useState(localStorage.getItem('fullName') || '');
+const [staffId, setStaffId] = useState(localStorage.getItem('staffId') || '');
+
 const [feedbackTextError, setFeedbackTextError] = useState('');
 const [feedbackEmailError, setFeedbackEmailError] = useState('');
 
 const [searchTerm, setSearchTerm] = useState('');
-const [selectedCategory, setSelectedCategory] = useState('Tất cả');
+const [selectedCategory, setSelectedCategory] = useState(t('all'));
 
 const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 const [orderDetails, setOrderDetails] = useState(null);
@@ -43,6 +48,7 @@ const handleLogout = () => {
     localStorage.removeItem('auth');
     localStorage.removeItem('username');
     localStorage.removeItem('fullName');
+    localStorage.removeItem('staffId');
     localStorage.removeItem('role');
     window.location.href = '/login.html';
 };
@@ -109,6 +115,20 @@ useEffect(() => {
     };
 }, [showConfirmationModal]);
 
+useEffect(() => {
+    document.body.classList.toggle('dark-mode', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+}, [darkMode]);
+
+useEffect(() => {
+    setLang(language);
+    applyTranslations();
+}, [language]);
+
+useEffect(() => {
+    setSelectedCategory(t('all'));
+}, [language]);
+
 
 const addItemToCart = (item) => {
     if (addingId === item.id) return;
@@ -121,7 +141,7 @@ const addItemToCart = (item) => {
             }
             return [...prev, { ...item, qty: 1 }];
         });
-        showToast(`Đã thêm ${item.name} vào giỏ hàng`);
+        showToast(t('add_cart', {name: item.name}));
         setAddingId(null);
         // XÓA DÒNG NÀY ĐỂ NGĂN TỰ ĐỘNG CUỘN ĐẾN GIỎ HÀNG:
         // handleTabClick('cart', cartSectionRef); 
@@ -146,11 +166,11 @@ const handleCheckout = () => {
     const now = new Date();
     const maxAllowedDate = new Date(now.getTime() + 30 * 24 * 60 * 60000);
 
-    if (pickupDate < now) { showToast('Không thể đặt món vào thời gian trong quá khứ!'); isValid = false; }
-    if (pickupDate > maxAllowedDate) { showToast('Chỉ được đặt món trong vòng 30 ngày tới!'); isValid = false; }
+    if (pickupDate < now) { showToast(t('error_past_time')); isValid = false; }
+    if (pickupDate > maxAllowedDate) { showToast(t('error_30_days')); isValid = false; }
     const pickupHour = pickupDate.getHours();
-    if (pickupHour < 6 || pickupHour >= 18) { showToast('Chỉ đặt món trong khung giờ 6:00 – 18:00!'); isValid = false; }
-    if (!cart.length) { showToast('Giỏ hàng của bạn đang trống!'); isValid = false; }
+    if (pickupHour < 6 || pickupHour >= 18) { showToast(t('error_working_hours')); isValid = false; }
+    if (!cart.length) { showToast(t('error_empty_cart')); isValid = false; }
 
     if (!isValid) {
         handleTabClick('checkout', infoSectionRef);
@@ -171,7 +191,7 @@ const handleCheckout = () => {
             total: calculateCartTotal,
             paymentMethod: paymentMethod
         });
-        showToast('Đơn hàng đã được tạo. Vui lòng kiểm tra thông tin!');
+        showToast(t('order_created'));
         setShowConfirmationModal(true);
         
         // Clear cart and form fields after successful order
@@ -203,12 +223,12 @@ const handleCheckout = () => {
         })
         .catch(error => {
         console.error(error);
-        showToast('Có vấn đề khi ghi nhận đơn hàng!');
+        showToast(t('order_error'));
         });
 
 };
 
-const categories = ['Tất cả', ...new Set(menuItems.map(i => i.category))];
+const categories = [t('all'), ...new Set(menuItems.map(i => i.category))];
 
 const handleRatingChange = (event) => {
     setRating(parseInt(event.target.value));
@@ -216,11 +236,11 @@ const handleRatingChange = (event) => {
 
 const handleSubmitRating = () => {
     if (!selectedMenuItem) {
-        showToast('Vui lòng chọn món để đánh giá!');
+        showToast(t('rating_choose_item'));
         return;
     }
     if (rating === 0) {
-        showToast('Vui lòng chọn số sao để đánh giá!');
+        showToast(t('rating_choose_star'));
         return;
     }
     fetch('/feedback', {
@@ -228,8 +248,8 @@ const handleSubmitRating = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'rating', itemId: parseInt(selectedMenuItem), rating, comment: reviewComment })
     }).then(() => {
-        showToast(`Bạn đã đánh giá món "${menuItems.find(i => i.id === parseInt(selectedMenuItem)).name}" ${rating} sao. Cảm ơn!`);
-    }).catch(() => showToast('Có lỗi khi gửi đánh giá'));
+        showToast(t('rating_success', {name: menuItems.find(i => i.id === parseInt(selectedMenuItem)).name, rating}));
+    }).catch(() => showToast(t('rating_error')));
     setRating(0);
     setSelectedMenuItem('');
     setReviewComment('');
@@ -241,19 +261,19 @@ const handleSubmitFeedback = () => {
     setFeedbackEmailError('');
 
     if (!feedbackText.trim()) {
-        setFeedbackTextError('Vui lòng nhập nội dung góp ý!');
+        setFeedbackTextError(t('feedback_text_required'));
         isValid = false;
     }
     if (!feedbackEmail.trim()) {
-        setFeedbackEmailError('Vui lòng nhập email để nhận phản hồi!');
+        setFeedbackEmailError(t('feedback_email_required'));
         isValid = false;
     } else if (!isValidEmail(feedbackEmail)) {
-        setFeedbackEmailError('Email không hợp lệ!');
+        setFeedbackEmailError(t('invalid_email'));
         isValid = false;
     }
 
     if (!isValid) {
-        showToast('Vui lòng kiểm tra lại thông tin góp ý.');
+        showToast(t('feedback_invalid'));
         return;
     }
     fetch('/feedback', {
@@ -261,10 +281,25 @@ const handleSubmitFeedback = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'feedback', text: feedbackText, email: feedbackEmail })
     }).then(() => {
-        showToast('Cảm ơn ý kiến đóng góp của bạn! Chúng tôi sẽ phản hồi qua email.');
-    }).catch(() => showToast('Không gửi được góp ý!'));
+        showToast(t('feedback_success'));
+    }).catch(() => showToast(t('feedback_error')));
     setFeedbackText('');
     setFeedbackEmail('');
+};
+
+const handleUpdateInfo = () => {
+    fetch('/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + localStorage.getItem('auth') },
+        body: JSON.stringify({ fullName, staffId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message) showToast(t('info_updated'));
+        localStorage.setItem('fullName', fullName);
+        localStorage.setItem('staffId', staffId);
+    })
+    .catch(() => showToast('Lỗi'));
 };
 
 const filteredMenuItems = menuItems.filter(item => {
@@ -272,7 +307,7 @@ const filteredMenuItems = menuItems.filter(item => {
     const normalizedSearchTerm = searchTerm.toLowerCase();
     const searchWords = normalizedSearchTerm.split(' ').filter(word => word.length > 0);
     const matchesSearch = searchWords.every(word => normalizedItemName.includes(word));
-    const matchesCategory = selectedCategory === 'Tất cả' || item.category === selectedCategory;
+    const matchesCategory = selectedCategory === t('all') || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
 });
 
@@ -287,32 +322,32 @@ return (
                         className={`tab-button ${activeTab === 'menu' ? 'active' : ''}`}
                         onClick={() => handleTabClick('menu', menuSectionRef)}>
                         <i className="fa-solid fa-utensils"></i>
-                        <span>Menu</span>
+                        <span>{t('menu')}</span>
                     </div>
                     <div 
                         className={`tab-button ${activeTab === 'cart' ? 'active' : ''}`} 
                         onClick={() => handleTabClick('cart', cartSectionRef)}>
                         <i className="fa-solid fa-shopping-cart"></i>
-                        <span>Giỏ hàng</span>
+                        <span>{t('cart')}</span>
                         {cart.length > 0 && <span className="floating-cart-count" style={{position:'static', transform:'none', marginLeft:'5px'}}>{cart.reduce((sum, item) => sum + item.qty, 0)}</span>}
                     </div>
                     <div 
                         className={`tab-button ${activeTab === 'checkout' ? 'active' : ''}`} 
                         onClick={() => handleTabClick('checkout', infoSectionRef)}>
                         <i className="fa-solid fa-credit-card"></i>
-                        <span>Thanh toán</span>
+                        <span>{t('checkout')}</span>
                     </div>
                     <div 
                         className={`tab-button ${activeTab === 'feedback' ? 'active' : ''}`} 
                         onClick={() => handleTabClick('feedback', feedbackSectionRef)}>
                         <i className="fa-solid fa-comments"></i>
-                        <span>Góp ý</span>
+                        <span>{t('feedback')}</span>
                     </div>
                     <div
                         className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`}
                         onClick={() => handleTabClick('settings', null)}>
                         <i className="fa-solid fa-gear"></i>
-                        <span>Cài đặt</span>
+                        <span>{t('settings')}</span>
                     </div>
                 </div>
             </div>
@@ -332,9 +367,9 @@ return (
                 {/* Banner chữ nổi bật + ảnh canteen */}
                 <div className="canteen-banner">
                     <div className="canteen-banner-title">
-                        <span>Chào mừng đến với</span>
-                        <h1>Canteen HCMUS!</h1>
-                        <small>(Cơ sở Nguyễn Văn Cừ)</small>
+                        <span>{t('welcome')}</span>
+                        <h1>{t('canteen_title')}</h1>
+                        <small>{t('branch')}</small>
                     </div>
                     <img src="img/canteen.jpg" alt="Canteen HCMUS" className="canteen-img" />
                 </div>
@@ -343,7 +378,7 @@ return (
                         <i className="fa-solid fa-magnifying-glass search-icon"></i>
                         <input
                             type="text"
-                            placeholder="Tìm kiếm món ăn..."
+                            placeholder={t('search_placeholder')}
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                         />
@@ -370,12 +405,12 @@ return (
                         itemsGroupedByCategory[item.category].push(item);
                     });
 
-                    const categoryKeys = selectedCategory === 'Tất cả' ?
+                    const categoryKeys = selectedCategory === t('all') ?
                         Object.keys(itemsGroupedByCategory) :
                         (itemsGroupedByCategory[selectedCategory] ? [selectedCategory] : []);
 
                     if (filteredMenuItems.length === 0) {
-                        return <p style={{textAlign: 'center', marginTop: '30px', fontSize: '18px', color: '#666'}}>Không tìm thấy món ăn nào khớp với tiêu chí của bạn.</p>;
+                        return <p style={{textAlign: 'center', marginTop: '30px', fontSize: '18px', color: '#666'}}>{t('not_found')}</p>;
                     }
 
                     return categoryKeys.map(cat => (
@@ -407,9 +442,9 @@ return (
         {currentPage === 'cart' && (
             <div id="cart-page" style={{maxWidth: 600, margin: '40px auto'}}>
                 <div className="card form-card">
-                    <h2 style={{textAlign:'center'}}><i className="fa-solid fa-shopping-cart"></i> Giỏ hàng của bạn</h2>
+                    <h2 style={{textAlign:'center'}}><i className="fa-solid fa-shopping-cart"></i> {t('your_cart')}</h2>
                     {!cart.length ? (
-                        <p style={{textAlign:'center'}}>Chưa có sản phẩm trong giỏ hàng.</p>
+                        <p style={{textAlign:'center'}}>{t('empty_cart')}</p>
                     ) : (
                         <>
                             <ul className="cart-list">
@@ -423,9 +458,9 @@ return (
                                     />
                                 ))}
                             </ul>
-                            <p style={{textAlign:'right', fontWeight:'bold', fontSize:'18px'}}>Tổng cộng: {calculateCartTotal.toLocaleString()}đ</p>
+                            <p style={{textAlign:'right', fontWeight:'bold', fontSize:'18px'}}>{t('total')}: {calculateCartTotal.toLocaleString()}đ</p>
                             <button className="btn payment-btn" onClick={handleGoToCheckout} disabled={!cart.length}>
-                                <i className="fa-solid fa-credit-card"></i> Thanh toán
+                                <i className="fa-solid fa-credit-card"></i> {t('checkout_btn')}
                             </button>
                         </>
                     )}
@@ -440,14 +475,14 @@ return (
                     {/* Chọn thời gian lấy món */}
                     <div className="card form-card relative">
                         {loading && <div className="form-overlay"><span className="spinner"></span></div>}
-                        <h3><i className="fa-solid fa-clock"></i>Chọn thời gian lấy món</h3>
+                        <h3><i className="fa-solid fa-clock"></i>{t('choose_time')}</h3>
                         <input type="datetime-local" value={pickup} min={new Date().toISOString().slice(0,16)} max={new Date(Date.now() + 30 * 24 * 60 * 60000).toISOString().slice(0,16)} onChange={e=>setPickup(e.target.value)}/>
                     </div>
 
                     {/* PHƯƠNG THỨC THANH TOÁN */}
                     <div className="card form-card relative">
                         {loading && <div className="form-overlay"><span className="spinner"></span></div>}
-                        <h3><i className="fa-solid fa-money-bill-wave"></i>Phương thức thanh toán</h3>
+                        <h3><i className="fa-solid fa-money-bill-wave"></i>{t('payment_method')}</h3>
                         <div className="payment-methods">
                             {/* Chỉ còn Momo và VietQR */}
                             <label>
@@ -459,7 +494,7 @@ return (
                                     onChange={() => setPaymentMethod('momo')}
                                 />
                                 <img src="img/momo_logo.png" alt="Momo Logo" onError={(e)=>{e.target.onerror = null; e.target.src='https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_PROJECT_ID/o/img%2Fmomo_logo.png?alt=media&token=YOUR_MOMO_LOGO_TOKEN';}} />
-                                <span>Thanh toán qua Momo</span>
+                                <span>{t('pay_momo')}</span>
                             </label>
                             <label>
                                 <input
@@ -470,7 +505,7 @@ return (
                                     onChange={() => setPaymentMethod('vietqr')}
                                 />
                                 <img src="img/vietqr_logo.png" alt="VietQR Logo" onError={(e)=>{e.target.onerror = null; e.target.src='https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_PROJECT_ID/o/img%2Fvietqr_logo.png?alt=media&token=YOUR_VIETQR_LOGO_TOKEN';}} />
-                                <span>Thanh toán qua VietQR (Ngân hàng)</span>
+                                <span>{t('pay_vietqr')}</span>
                             </label>
                         </div>
                     </div>
@@ -478,19 +513,19 @@ return (
 
                 {/* Thông tin người đặt */}
                 <div className="card form-card">
-                    <h3><i className="fa-solid fa-user"></i>Người đặt</h3>
+                    <h3><i className="fa-solid fa-user"></i>{t('customer')}</h3>
                     <p>{localStorage.getItem('fullName')}</p>
                 </div>
 
                 {/* Yêu cầu đặc biệt */}
                 <div className="card form-card relative">
                     {loading && <div className="form-overlay"><span className="spinner"></span></div>}
-                    <h3><i className="fa-solid fa-note-sticky"></i>Yêu cầu đặc biệt</h3>
-                    <textarea rows={2} placeholder="Ví dụ: Cà phê ít đường, không đá,..." value={special} onChange={e=>setSpecial(e.target.value)}></textarea>
+                    <h3><i className="fa-solid fa-note-sticky"></i>{t('special_request')}</h3>
+                    <textarea rows={2} placeholder={t('special_placeholder')} value={special} onChange={e=>setSpecial(e.target.value)}></textarea>
                 </div>
 
                 <button className="btn payment-btn" onClick={handleCheckout} disabled={loading || !cart.length}>
-                    {loading?<span className="spinner"></span>:'Thanh toán và đặt món'}
+                    {loading?<span className="spinner"></span>:t('pay_and_order')}
                 </button>
             </div>
         )}
@@ -514,9 +549,9 @@ return (
                 {/* Đánh giá món ăn và Góp ý & Liên hệ (sẽ tự động xếp chồng trên mobile) */}
                 <div className="bottom-section feedback-row">
                     <div className="card form-card">
-                        <h3><i className="fa-solid fa-star"></i>Đánh giá món ăn</h3>
+                        <h3><i className="fa-solid fa-star"></i>{t('rate_dish')}</h3>
                         <select style={{width:'100%',padding:10,marginTop:12, marginBottom: 12}} value={selectedMenuItem} onChange={(e) => setSelectedMenuItem(e.target.value)}>
-                            <option value="">Chọn món để đánh giá</option>
+                            <option value="">{t('choose_dish')}</option>
                             {menuItems.map(i=> <option key={i.id} value={i.id}>{i.name}</option>)}
                         </select>
                         <div className="star-rating">
@@ -536,22 +571,22 @@ return (
                         </div>
                         <textarea
                             rows={3}
-                            placeholder="Cảm nhận của bạn (không bắt buộc)"
+                            placeholder={t('comment_placeholder')}
                             value={reviewComment}
                             onChange={e => setReviewComment(e.target.value)}
                         ></textarea>
                         {/* Nút gửi đánh giá */}
                         <div className="feedback-btn-row">
-                            <button className="btn" onClick={handleSubmitRating}>Gửi đánh giá</button>
+                            <button className="btn" onClick={handleSubmitRating}>{t('submit_rating')}</button>
                         </div>
                     </div>
 
                     <div className="card form-card">
-                        <h3><i className="fa-solid fa-comments"></i>Góp ý và Liên hệ</h3>
+                        <h3><i className="fa-solid fa-comments"></i>{t('feedback_contact')}</h3>
                         <div className="form-group">
                             <textarea
                                 rows={4}
-                                placeholder="Nội dung góp ý của bạn..."
+                                placeholder={t('feedback_placeholder')}
                                 value={feedbackText}
                                 onChange={e => {setFeedbackText(e.target.value); setFeedbackTextError('');}}
                             ></textarea>
@@ -560,7 +595,7 @@ return (
                         <div className="form-group">
                             <input
                                 type="email"
-                                placeholder="Email của bạn (để nhận phản hồi)"
+                                placeholder={t('email_placeholder')}
                                 value={feedbackEmail}
                                 onChange={e => {setFeedbackEmail(e.target.value); setFeedbackEmailError('');}}
                             />
@@ -568,7 +603,7 @@ return (
                         </div>
                         {/* Nút gửi góp ý */}
                         <div className="feedback-btn-row" style={{marginTop:32}} >
-                            <button className="btn" onClick={handleSubmitFeedback}>Gửi góp ý</button>
+                            <button className="btn" onClick={handleSubmitFeedback}>{t('submit_feedback')}</button>
                         </div>
                     </div>
                 </div>
@@ -577,12 +612,37 @@ return (
 
         {/* Trang Cài đặt */}
         {currentPage === 'settings' && (
-            <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
-                <h3>Cài đặt tài khoản</h3>
-                <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
-                    Đổi mật khẩu
-                </button>
-                <button className="btn" onClick={handleLogout}>Đăng xuất</button>
+            <div style={{maxWidth:400, margin:'80px auto'}}>
+                <div className="card form-card" style={{marginBottom:20}}>
+                    <h3>{t('interface_settings')}</h3>
+                    <label className="toggle-switch" style={{marginBottom:12}}>
+                        <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} />
+                        <span className="slider"></span>
+                        <span style={{marginLeft:8}}>{t('dark_mode')}</span>
+                    </label>
+                    <div style={{marginBottom:12}}>
+                        <select value={language} onChange={e => setLanguage(e.target.value)}>
+                            <option value="vi">{t('vietnamese')}</option>
+                            <option value="en">{t('english')}</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="card form-card">
+                    <h3>{t('account_settings')}</h3>
+                    <div className="form-group">
+                        <label>{t('full_name')}</label>
+                        <input value={fullName} onChange={e => setFullName(e.target.value)} />
+                    </div>
+                    <div className="form-group" style={{marginBottom:16}}>
+                        <label>{t('staff_id')}</label>
+                        <input value={staffId} onChange={e => setStaffId(e.target.value)} />
+                    </div>
+                    <button className="btn" onClick={handleUpdateInfo} style={{marginBottom:12}}>{t('update_info')}</button>
+                    <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
+                        {t('change_password')}
+                    </button>
+                    <button className="btn danger-btn" onClick={handleLogout}>{t('logout')}</button>
+                </div>
             </div>
         )}
 
