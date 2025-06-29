@@ -52,5 +52,5 @@ pass: admin@123
 ### Giao diện quản trị
 Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng và tài khoản người dùng trực tiếp trên trình duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API trên.
 
-Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
+Dự án đã bao gồm đầy đủ các tính năng cơ bản như quản lý tài khoản, thực đơn và đơn hàng. Bạn có thể tiếp tục mở rộng thêm các chức năng nâng cao (ví dụ báo cáo doanh thu) tùy ý.
 
