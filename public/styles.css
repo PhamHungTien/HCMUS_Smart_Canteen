@@ -424,10 +424,57 @@
             font-size: 22px; /* Kích thước tiêu đề */
         }
 
-        .form-card h3 i {
+       .form-card h3 i {
             font-size: 24px; /* Kích thước icon */
             color: var(--primary-color);
+       }
+
+        /* Bảng trong trang quản trị */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        .styled-table th {
+            background: var(--light-bg);
+        }
+.styled-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Container rộng hơn cho trang admin */
+.admin-container {
+    max-width: 1200px;
+}
+
+/* Utility classes for admin page */
+.admin-section {
+    margin-bottom: 20px;
+}
+.hidden {
+    display: none;
+}
+.thumb {
+    height: 40px;
+    object-fit: cover;
+}
+
+/* Phần quản trị */
+.admin-section input {
+    max-width: 100%;
+}
+.admin-section table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+    word-break: break-word;
+}
 
         .cart-list {
             list-style: none; /* Removed default disc */

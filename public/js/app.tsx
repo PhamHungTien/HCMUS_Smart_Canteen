@@ -4,20 +4,14 @@
 
         const { useState, useEffect, useRef } = React;
 
-        const menuItems = [
-            {id:1,category:'Món ăn',name:'Cơm phần thịt kho',price:25000,originalPrice:30000,image:'menu/com_thit_kho.jpg',rating:4},
-            {id:2,category:'Món ăn',name:'Bánh mì ốp la',price:20000,originalPrice:25000,image:'menu/banh_mi_op_la.jpg',rating:3}, // Tăng giá gốc
-            {id:3,category:'Món ăn',name:'Salad healthy',price:30000,originalPrice:35000,image:'menu/salad_healthy.jpg',rating:5}, // Tăng giá gốc
-            {id:4,category:'Món ăn',name:'Cơm tấm sườn',price:28000,originalPrice:32000,image:'menu/com_tam_suon.jpg',rating:4},
-            {id:5,category:'Món ăn',name:'Phở bò',price:30000,originalPrice:38000,image:'menu/pho_bo.jpg',rating:5}, // Tăng giá gốc
-            {id:6,category:'Món ăn',name:'Bún chả',price:35000,originalPrice:38000,image:'menu/bun_cha.jpg',rating:4},
-            {id:10,category:'Đồ uống',name:'Trà sữa',price:20000,originalPrice:23000,image:'menu/tra_sua.jpg',rating:4}, // Tăng giá gốc
-            {id:11,category:'Đồ uống',name:'Cà phê sữa đá',price:15000,originalPrice:18000,image:'menu/ca_phe_sua_da.jpg',rating:3}, // Tăng giá gốc
-            {id:12,category:'Đồ uống',name:'Nước ép detox',price:15000,originalPrice:18000,image:'menu/nuoc_ep_detox.jpg',rating:5},
-            {id:13,category:'Đồ uống',name:'Nước cam vắt',price:18000,originalPrice:22000,image:'menu/nuoc_cam_vat.jpg',rating:4}, // Tăng giá gốc
-            {id:14,category:'Đồ uống',name:'Nước mía',price:12000,originalPrice:15000,image:'menu/nuoc_mia.jpg',rating:3}, // Tăng giá gốc
-            {id:15,category:'Đồ uống',name:'Sữa chua nếp cẩm',price:25000,originalPrice:28000,image:'menu/sua_chua_nep_cam.jpg',rating:5} // Tăng giá gốc
-        ];
+        const [menuItems, setMenuItems] = useState([]);
+
+        useEffect(() => {
+            fetch('menu')
+                .then(res => res.json())
+                .then(setMenuItems)
+                .catch(() => setMenuItems([]));
+        }, []);
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -167,7 +161,7 @@
 
                         {orderDetails.paymentMethod === 'cod' && (
                             <p className="pickup-instruction">
-                                Vui lòng mang ảnh mã vạch này hoặc mã SV/CB: <strong>{orderDetails.customerStaffId}</strong> của bạn đến quầy vào giờ lấy món để nhận hàng nhé!
+                                Vui lòng mang ảnh mã vạch này cùng mã SV/CB <strong>{localStorage.getItem('code') || ''}</strong> đến quầy vào giờ lấy món để nhận hàng.
                                 Bạn sẽ thanh toán **{orderDetails.total.toLocaleString()}đ** khi nhận hàng.
                             </p>
                         )}
@@ -263,9 +257,6 @@
             const [cart, setCart] = useState([]);
             const [addingId, setAddingId] = useState(null);
             const [pickup, setPickup] = useState('');
-            const [name, setName] = useState('');
-            const [phone, setPhone] = useState('');
-            const [staff, setStaff] = useState('');
             const [special, setSpecial] = useState('');
             const [loading, setLoading] = useState(false);
             const [selectedMenuItem, setSelectedMenuItem] = useState('');
@@ -274,9 +265,6 @@
             const [feedbackText, setFeedbackText] = useState('');
             const [feedbackEmail, setFeedbackEmail] = useState('');
 
-            const [nameError, setNameError] = useState('');
-            const [phoneError, setPhoneError] = useState('');
-            const [staffError, setStaffError] = useState('');
             const [feedbackTextError, setFeedbackTextError] = useState('');
             const [feedbackEmailError, setFeedbackEmailError] = useState('');
 
@@ -363,9 +351,6 @@
             
             const calculateCartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-            const isValidPhone = (ph) => /^[0-9]{9,11}$/.test(ph);
-            const isValidName = (nm) => /^[\p{L}\s]+$/u.test(nm.trim()) && nm.trim().length >= 2; 
-            const isValidStaff = (st) => st.trim().length > 0 && st.trim().length <= 20;
             const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
             const generateOrderId = () => 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -376,9 +361,6 @@
                 const now = new Date();
                 const maxAllowedDate = new Date(now.getTime() + 30 * 24 * 60 * 60000);
 
-                setNameError('');
-                setPhoneError('');
-                setStaffError('');
 
                 if (pickupDate < now) { showToast('Không thể đặt món vào thời gian trong quá khứ!'); isValid = false; }
                 if (pickupDate > maxAllowedDate) { showToast('Chỉ được đặt món trong vòng 30 ngày tới!'); isValid = false; }
@@ -386,9 +368,7 @@
                 if (pickupHour < 6 || pickupHour >= 18) { showToast('Chỉ đặt món trong khung giờ 6:00 – 18:00!'); isValid = false; }
                 if (!cart.length) { showToast('Giỏ hàng của bạn đang trống!'); isValid = false; }
 
-                if (!isValidName(name)) { setNameError('Họ tên không hợp lệ (ít nhất 2 chữ, chỉ chữ và dấu cách)!'); isValid = false; }
-                if (!isValidPhone(phone)) { setPhoneError('Số điện thoại không hợp lệ (9-11 chữ số)!'); isValid = false; }
-                if (!isValidStaff(staff)) { setStaffError('Vui lòng nhập mã CB/SV (tối đa 20 ký tự)!'); isValid = false; }
+
 
                 if (!isValid) {
                     // Cuộn lên phần thông tin nếu có lỗi
@@ -406,9 +386,7 @@
                             weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric',
                             hour: '2-digit', minute: '2-digit', hour12: false
                         }),
-                        customerName: name,
-                        customerPhone: phone, 
-                        customerStaffId: staff,
+                        customerName: localStorage.getItem('fullName') || '',
                         items: cart,
                         total: calculateCartTotal,
                         paymentMethod: paymentMethod
@@ -418,9 +396,6 @@
                     
                     // Clear cart and form fields after successful order
                     setCart([]);
-                    setName('');
-                    setPhone('');
-                    setStaff('');
                     setSpecial('');
                     // Reset pickup time to 15 mins from now
                     const nowReset = new Date();
@@ -437,9 +412,6 @@
                     body: JSON.stringify({
                         id: orderId,
                         time: new Date(pickup).toLocaleString(),
-                        customerName: name,
-                        customerPhone: phone,
-                        customerStaffId: staff,
                         specialRequest: special,
                         items: cart,
                         total: calculateCartTotal,
@@ -736,23 +708,6 @@
                                 </div>
                             </div>
 
-                            {/* Thông tin liên hệ */}
-                            <div className="card form-card relative">
-                                {loading && <div className="form-overlay"><span className="spinner"></span></div>}
-                                <h3><i className="fa-solid fa-user"></i>Thông tin liên hệ</h3>
-                                <div className="form-group">
-                                    <input placeholder="Họ và tên" value={name} onChange={e=>{setName(e.target.value); setNameError('');}}/>
-                                    {nameError && <span className="error-message">{nameError}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <input placeholder="Số điện thoại" value={phone} onChange={e=>{setPhone(e.target.value); setPhoneError('');}}/>
-                                    {phoneError && <span className="error-message">{phoneError}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <input placeholder="Mã số cán bộ/sinh viên" value={staff} onChange={e=>{setStaff(e.target.value); setStaffError('');}}/>
-                                    {staffError && <span className="error-message">{staffError}</span>}
-                                </div>
-                            </div>
 
                             {/* Yêu cầu đặc biệt */}
                             <div className="card form-card relative">
