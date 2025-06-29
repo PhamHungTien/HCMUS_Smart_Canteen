@@ -582,6 +582,12 @@
             padding: 8px 12px;
         }
 
+        .payment-btn {
+            width: 100%;
+            padding: 16px;
+            margin: 20px 0 80px; /* ensure clear of tab bar */
+        }
+
         .toast {
             position: fixed;
             bottom: 20px;

@@ -9,7 +9,7 @@ function AdminApp() {
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
-  const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '' });
+  const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' });
   const [pwMap, setPwMap] = useState({});
   const [revFrom, setRevFrom] = useState('');
   const [revTo, setRevTo] = useState('');
@@ -97,12 +97,12 @@ function AdminApp() {
   }
 
   function addUser() {
-    if (!newUser.username || !newUser.password || !newUser.fullName || !newUser.staffId) { showToast('Thiếu thông tin'); return; }
+    if (!newUser.username || !newUser.password || !newUser.fullName || !newUser.staffId || !newUser.phone || !newUser.email) { showToast('Thiếu thông tin'); return; }
     fetch('/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newUser)
-    }).then(r => r.json()).then(() => { setNewUser({ username: '', password: '', fullName: '', staffId: '' }); refreshData(); });
+    }).then(r => r.json()).then(() => { setNewUser({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' }); refreshData(); });
   }
 
   function updateUser(id, updates) {
@@ -227,7 +227,7 @@ function AdminApp() {
       <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
+          <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Điện thoại</th><th>Email</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
         </thead>
         <tbody>
           {users.map(u => (
@@ -236,6 +236,8 @@ function AdminApp() {
               <td>{u.username}</td>
               <td><input value={u.fullName} onChange={e => updateUser(u.id, { fullName: e.target.value })} /></td>
               <td><input value={u.staffId} onChange={e => updateUser(u.id, { staffId: e.target.value })} /></td>
+              <td><input value={u.phone || ''} onChange={e => updateUser(u.id, { phone: e.target.value })} /></td>
+              <td><input value={u.email || ''} onChange={e => updateUser(u.id, { email: e.target.value })} /></td>
               <td>{u.role}</td>
               <td>
                 <input type="password" value={pwMap[u.id] || ''} onChange={e => setPwMap({ ...pwMap, [u.id]: e.target.value })} />
@@ -251,6 +253,8 @@ function AdminApp() {
             <td><input value={newUser.username} onChange={e => setNewUser({ ...newUser, username: e.target.value })} /></td>
             <td><input value={newUser.fullName} onChange={e => setNewUser({ ...newUser, fullName: e.target.value })} /></td>
             <td><input value={newUser.staffId} onChange={e => setNewUser({ ...newUser, staffId: e.target.value })} /></td>
+            <td><input value={newUser.phone} onChange={e => setNewUser({ ...newUser, phone: e.target.value })} /></td>
+            <td><input value={newUser.email} onChange={e => setNewUser({ ...newUser, email: e.target.value })} /></td>
             <td>user</td>
             <td><input type="password" value={newUser.password} onChange={e => setNewUser({ ...newUser, password: e.target.value })} /></td>
             <td><button className="btn" onClick={addUser}>Thêm</button></td>

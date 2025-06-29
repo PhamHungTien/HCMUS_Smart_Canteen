@@ -15,6 +15,8 @@
       <input type="password" name="password" placeholder="Mật khẩu" required />
       <input name="fullName" placeholder="Họ và tên" required />
       <input name="staffId" placeholder="Mã số CB/SV" required />
+      <input name="phone" placeholder="Số điện thoại" required />
+      <input type="email" name="email" placeholder="Email liên hệ" required />
       <button class="btn" type="submit">Đăng ký</button>
     </form>
     <p style="text-align:center;margin-top:10px">
@@ -34,7 +36,9 @@
           username: f.username.value,
           password: f.password.value,
           fullName: f.fullName.value,
-          staffId: f.staffId.value
+          staffId: f.staffId.value,
+          phone: f.phone.value,
+          email: f.email.value
         })
       });
       const data = await res.json();

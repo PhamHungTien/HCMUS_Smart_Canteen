@@ -94,7 +94,7 @@ async function handler(req, res) {
 
   if (req.method === 'POST' && url.pathname === '/signup') {
     const user = await parseBody(req);
-    if (!user || !user.username || !user.password || !user.fullName || !user.staffId) {
+    if (!user || !user.username || !user.password || !user.fullName || !user.staffId || !user.phone || !user.email) {
       send(res, 400, { error: 'Thiếu thông tin' });
       return;
     }
@@ -110,6 +110,8 @@ async function handler(req, res) {
       password: user.password,
       fullName: user.fullName,
       staffId: user.staffId,
+      phone: user.phone,
+      email: user.email,
       role: user.role || 'user'
     });
     await writeJson(USERS_FILE, users);
@@ -130,6 +132,8 @@ async function handler(req, res) {
         username: found.username,
         fullName: found.fullName,
         staffId: found.staffId,
+        phone: found.phone,
+        email: found.email,
         role: found.role
       });
     }
@@ -308,7 +312,7 @@ async function handler(req, res) {
   if (req.method === 'GET' && url.pathname === '/users') {
     if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const users = await readJson(USERS_FILE);
-    send(res, 200, users.map(u => ({ id: u.id, username: u.username, fullName: u.fullName, staffId: u.staffId, role: u.role })));
+    send(res, 200, users.map(u => ({ id: u.id, username: u.username, fullName: u.fullName, staffId: u.staffId, phone: u.phone, email: u.email, role: u.role })));
     return;
   }
 
