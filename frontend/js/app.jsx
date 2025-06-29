@@ -31,6 +31,8 @@ const [feedbackEmail, setFeedbackEmail] = useState('');
 
 const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
 const [language, setLanguage] = useState(localStorage.getItem('lang') || 'vi');
+const [fullName, setFullName] = useState(localStorage.getItem('fullName') || '');
+const [staffId, setStaffId] = useState(localStorage.getItem('staffId') || '');
 
 const [feedbackTextError, setFeedbackTextError] = useState('');
 const [feedbackEmailError, setFeedbackEmailError] = useState('');
@@ -46,6 +48,7 @@ const handleLogout = () => {
     localStorage.removeItem('auth');
     localStorage.removeItem('username');
     localStorage.removeItem('fullName');
+    localStorage.removeItem('staffId');
     localStorage.removeItem('role');
     window.location.href = '/login.html';
 };
@@ -119,6 +122,7 @@ useEffect(() => {
 
 useEffect(() => {
     setLang(language);
+    applyTranslations();
 }, [language]);
 
 useEffect(() => {
@@ -281,6 +285,21 @@ const handleSubmitFeedback = () => {
     }).catch(() => showToast(t('feedback_error')));
     setFeedbackText('');
     setFeedbackEmail('');
+};
+
+const handleUpdateInfo = () => {
+    fetch('/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + localStorage.getItem('auth') },
+        body: JSON.stringify({ fullName, staffId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message) showToast(t('info_updated'));
+        localStorage.setItem('fullName', fullName);
+        localStorage.setItem('staffId', staffId);
+    })
+    .catch(() => showToast('Lỗi'));
 };
 
 const filteredMenuItems = menuItems.filter(item => {
@@ -610,6 +629,15 @@ return (
                 </div>
                 <div className="card form-card">
                     <h3>{t('account_settings')}</h3>
+                    <div className="form-group">
+                        <label>{t('full_name')}</label>
+                        <input value={fullName} onChange={e => setFullName(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>{t('staff_id')}</label>
+                        <input value={staffId} onChange={e => setStaffId(e.target.value)} />
+                    </div>
+                    <button className="btn" onClick={handleUpdateInfo} style={{marginBottom:12}}>{t('update_info')}</button>
                     <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>
                         {t('change_password')}
                     </button>

@@ -567,11 +567,20 @@ body.dark-mode {
             outline: none;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px; /* Min height for textarea */
-            max-height: 200px;
-        }
+textarea {
+    resize: vertical;
+    min-height: 80px; /* Min height for textarea */
+    max-height: 200px;
+}
+
+.link-btn {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+.link-btn:hover {
+    text-decoration: underline;
+}
 
 .btn {
     padding: 12px 20px; /* larger padding for main button */
