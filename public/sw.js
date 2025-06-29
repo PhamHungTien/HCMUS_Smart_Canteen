@@ -5,7 +5,11 @@ const ASSETS = [
   '/admin.html',
   '/login.html',
   '/register.html',
-  '/app.jsx',
+  '/js/app.jsx',
+  '/js/login.js',
+  '/js/register.js',
+  '/js/admin.js',
+  '/js/sw-register.js',
   '/styles.css',
 ];
 self.addEventListener('install', e => {

@@ -26,7 +26,13 @@ const publicDir = path.join(__dirname, '../public');
 
 const app = express();
 app.use(express.json());
-app.use(express.static(publicDir));
+app.use(express.static(publicDir, {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.jsx')) {
+      res.type('application/javascript');
+    }
+  }
+}));
 
 // Login
 app.post('/login', async (req, res) => {

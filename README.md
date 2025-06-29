@@ -34,7 +34,7 @@ Server mặc định lắng nghe tại `http://localhost:3001` (có thể thay �
 - `http://localhost:3001/register.html` – trang đăng ký tài khoản (yêu cầu cả họ tên).
 - `http://localhost:3001/admin.html` – trang quản trị (đăng nhập bằng tài khoản admin).
 
-Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh. Phần menu được tải động từ API `/menu` để quản trị có thể cập nhật dễ dàng.
+Frontend dùng Babel nên không cần bước build, chỉ cần chạy server để phục vụ các file tĩnh. Server đã cấu hình trả về đúng kiểu MIME cho các file `.jsx` trong thư mục `public/js` để trình duyệt luôn tải được script. Phần menu được tải động từ API `/menu` để quản trị có thể cập nhật dễ dàng.
 Thông tin họ tên và mã số người đặt được lấy trực tiếp từ tài khoản sau khi đăng nhập nên không cần nhập lại ở bước thanh toán.
 
 ## Cấu trúc thư mục và chức năng từng file
