@@ -43,18 +43,46 @@ const ConfirmationModal = ({ orderDetails, onClose }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
-        <h3>Đơn hàng đã tạo</h3>
-        <p>Mã đơn: {orderDetails.id}</p>
-        <svg ref={barcodeRef}></svg>
-        <p>Thời gian nhận: {orderDetails.time}</p>
-        <p>Tổng cộng: {orderDetails.total.toLocaleString()}đ</p>
-        <button className="btn" onClick={handleSaveBarcode}>
-          Lưu mã vạch
-        </button>
-        <button className="btn" onClick={onClose} style={{ marginLeft: 12 }}>
-          Đóng
-        </button>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <h3>
+          <i className="fa-solid fa-circle-check success-icon"></i>
+          Đơn hàng đã tạo
+        </h3>
+        <p>
+          <strong>Mã đơn:</strong> {orderDetails.id}
+        </p>
+        <p>
+          <strong>Thời gian nhận:</strong> {orderDetails.time}
+        </p>
+        <ul>
+          {orderDetails.items.map(item => (
+            <li key={item.id}>
+              <span>
+                {item.name} x{item.qty}
+              </span>
+              <strong>
+                {(item.price * item.qty).toLocaleString()}đ
+              </strong>
+            </li>
+          ))}
+        </ul>
+        <p className="total-price">
+          {t('total')}: {orderDetails.total.toLocaleString()}đ
+        </p>
+        <div className="barcode-container">
+          <svg ref={barcodeRef}></svg>
+        </div>
+        <p className="pickup-instruction">
+          Vui lòng mang mã vạch đến quầy để nhận món.
+        </p>
+        <div className="modal-button-group">
+          <button className="btn modal-save-barcode-btn" onClick={handleSaveBarcode}>
+            Lưu mã vạch
+          </button>
+          <button className="btn modal-close-btn" onClick={onClose}>
+            Đóng
+          </button>
+        </div>
       </div>
     </div>
   );
