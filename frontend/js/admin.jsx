@@ -14,6 +14,7 @@ function AdminApp() {
   const [revFrom, setRevFrom] = useState('');
   const [revTo, setRevTo] = useState('');
   const [revenue, setRevenue] = useState(null);
+  const [activeTab, setActiveTab] = useState('manage');
 
   useEffect(() => {
     if (auth) {
@@ -145,11 +146,33 @@ function AdminApp() {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <button className="btn logout-btn" onClick={logout}>
-        <i className="fa-solid fa-right-from-bracket"></i>
-      </button>
-      <h2>Quản lý Menu</h2>
+    <>
+      <nav className="top-navbar">
+        <div className="top-navbar-inner" style={{display:'flex', alignItems:'center', width:'calc(100% - 60px)'}}>
+          <div style={{flex:1, display:'flex', justifyContent:'flex-end', gap:'10px'}}>
+            <div className={`tab-button ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>
+              <i className="fa-solid fa-list"></i>
+              <span>Quản lý</span>
+            </div>
+            <div className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+              <i className="fa-solid fa-gear"></i>
+              <span>Cài đặt</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {activeTab === 'settings' && (
+        <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
+          <h3>Cài đặt</h3>
+          <button className="btn" onClick={() => window.location.href='/change.html'} style={{marginBottom:12}}>Đổi mật khẩu</button>
+          <button className="btn" onClick={logout}>Đăng xuất</button>
+        </div>
+      )}
+
+      {activeTab === 'manage' && (
+        <div style={{ padding: '20px' }}>
+          <h2>Quản lý Menu</h2>
       <table className="admin-table">
         <thead>
           <tr><th>ID</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
@@ -265,6 +288,8 @@ function AdminApp() {
         </tbody>
       </table>
     </div>
+  )}
+    </>
   );
 }
 

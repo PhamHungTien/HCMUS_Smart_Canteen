@@ -28,6 +28,8 @@ Giao diện đăng nhập nằm ở `/login` (có liên kết tới tạo tài k
 Người dùng phải đăng nhập (hoặc đăng ký tại `/signup`) mới có thể đặt món.
 Thông tin đăng ký yêu cầu đủ họ tên và mã số cán bộ/sinh viên để quản lý.
 Nếu quên mật khẩu hãy dùng `/forgot` để đặt lại.
+Sau khi đăng nhập, có thể đổi mật khẩu tại trang `/change`.
+Thanh điều hướng có thêm tab **Cài đặt** để đổi mật khẩu hoặc đăng xuất.
 Tài khoản quản trị mặc định:
 ```
 user: admin

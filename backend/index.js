@@ -26,7 +26,8 @@ async function serveStatic(pathname, res) {
     '/admin': '/admin.html',
     '/login': '/login.html',
     '/signup': '/signup.html',
-    '/forgot': '/forgot.html'
+    '/forgot': '/forgot.html',
+    '/change': '/change.html'
   };
   const resolved = routes[pathname] || pathname;
   const filePath = join(PUBLIC_DIR, pathname === '/' ? 'index.html' : normalize(resolved).replace(/^\/+/, ''));
