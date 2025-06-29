@@ -13,6 +13,7 @@
     <form id="signup-form">
       <input name="username" placeholder="Tên đăng nhập" required />
       <input type="password" name="password" placeholder="Mật khẩu" required />
+      <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu" required />
       <input name="fullName" placeholder="Họ và tên" required />
       <input name="staffId" placeholder="Mã số CB/SV" required />
       <input name="phone" placeholder="Số điện thoại" required />
@@ -29,6 +30,10 @@
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const f = e.target;
+      if (f.password.value !== f.confirmPassword.value) {
+        showToast('Mật khẩu không khớp');
+        return;
+      }
       const res = await fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -146,6 +146,9 @@ function AdminApp() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <button className="btn change-pw-btn" onClick={() => window.location.href = '/change.html'}>
+        <i className="fa-solid fa-key"></i>
+      </button>
       <button className="btn logout-btn" onClick={logout}>
         <i className="fa-solid fa-right-from-bracket"></i>
       </button>

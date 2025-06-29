@@ -311,6 +311,9 @@ return (
                 </div>
             </div>
         </nav>
+        <button className="btn change-pw-btn" onClick={() => window.location.href = '/change.html'}>
+            <i className="fa-solid fa-key"></i>
+        </button>
         <button className="btn logout-btn" onClick={handleLogout}>
             <i className="fa-solid fa-right-from-bracket"></i>
         </button>

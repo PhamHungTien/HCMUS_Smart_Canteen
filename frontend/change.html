@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đổi mật khẩu</title>
+  <link rel="icon" href="img/favicon.png" sizes="64x64" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="card form-card" style="max-width:400px;margin:40px auto">
+    <h3>Đổi mật khẩu</h3>
+    <form id="change-form">
+      <input type="password" name="oldPassword" placeholder="Mật khẩu hiện tại" required />
+      <input type="password" name="newPassword" placeholder="Mật khẩu mới" required />
+      <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required />
+      <button class="btn" type="submit">Cập nhật</button>
+    </form>
+    <p style="text-align:center;margin-top:10px">
+      <a href="index.html">Trang chủ</a>
+    </p>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="js/utils.js"></script>
+  <script>
+    if (!localStorage.getItem('auth')) {
+      location.href = 'login.html';
+    }
+    document.getElementById('change-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      if (f.newPassword.value !== f.confirmPassword.value) {
+        showToast('Mật khẩu mới không khớp');
+        return;
+      }
+      const token = btoa(`${localStorage.getItem('username')}:${f.oldPassword.value}`);
+      const res = await fetch('/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + token },
+        body: JSON.stringify({ newPassword: f.newPassword.value })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast('Đã đổi mật khẩu');
+        localStorage.setItem('auth', btoa(`${localStorage.getItem('username')}:${f.newPassword.value}`));
+        setTimeout(() => location.href = 'index.html', 1000);
+      } else {
+        showToast(data.error || 'Lỗi');
+      }
+    });
+  </script>
+</body>
+</html>
