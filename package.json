@@ -2,20 +2,12 @@
   "name": "hcmus_smart_canteen",
   "version": "1.0.0",
   "description": "Smart Canteen backend and frontend",
-  "main": "backend/server.ts",
+  "main": "backend/server.js",
   "type": "module",
-  "dependencies": {
-    "better-sqlite3": "^9.0.0",
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "@types/node": "^24.0.7",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
-  },
+  "dependencies": {},
   "scripts": {
-  "start": "tsx backend/server.ts"
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
