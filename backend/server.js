@@ -1,8 +1,7 @@
-import http from 'http';
-import { promises as fs } from 'fs';
+import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { parse } from 'url';
+import { promises as fs } from 'fs';
 import { readOrders, addOrder } from './orders.js';
 import { readMenu, addMenuItem, updateMenuItem, deleteMenuItem } from './menu.js';
 import { readFeedback, addFeedback } from './feedback.js';
@@ -25,146 +24,95 @@ const PORT = process.env.PORT || 3001;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '../public');
 
-const mime = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.css': 'text/css',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml',
-  '.jsx': 'text/javascript'
-};
+const app = express();
+app.use(express.json());
+app.use(express.static(publicDir));
 
-function send(res, status, data, type = 'application/json') {
-  res.writeHead(status, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type' });
-  res.end(type === 'application/json' ? JSON.stringify(data) : data);
-}
-
-function notFound(res) { send(res, 404, { error: 'Not found' }); }
-
-function match(pathname, pattern) {
-  const pSeg = pattern.split('/').filter(Boolean);
-  const uSeg = pathname.split('/').filter(Boolean);
-  if (pSeg.length !== uSeg.length) return null;
-  const params = {};
-  for (let i = 0; i < pSeg.length; i++) {
-    if (pSeg[i].startsWith(':')) params[pSeg[i].slice(1)] = uSeg[i];
-    else if (pSeg[i] !== uSeg[i]) return null;
+// Login
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Thiếu tên hoặc mật khẩu' });
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    return res.json({ role: 'admin' });
   }
-  return params;
-}
-
-function body(req) {
-  return new Promise((resolve, reject) => {
-    let data = '';
-    req.on('data', c => { data += c; });
-    req.on('end', () => {
-      try { resolve(data ? JSON.parse(data) : {}); }
-      catch (e) { reject(e); }
-    });
-  });
-}
-
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'OPTIONS') return send(res, 204, '');
-  const { pathname } = parse(req.url);
-  try {
-    // Login
-    if (req.method === 'POST' && pathname === '/login') {
-      const { username, password } = await body(req);
-      if (!username || !password) return send(res, 400, { error: 'Thiếu tên hoặc mật khẩu' });
-      if (username === ADMIN_USER && password === ADMIN_PASS) {
-        return send(res, 200, { role: 'admin' });
-      }
-      const users = await readUsers();
-      const found = users.find(u => u.username.trim() === username.trim() && u.password.trim() === password.trim());
-      if (found) {
-        return send(res, 200, { role: 'user', username: found.username, code: found.code, fullName: found.fullName });
-      }
-      return send(res, 401, { error: 'Sai thông tin đăng nhập' });
-    }
-    // Users list
-    if (req.method === 'GET' && pathname === '/users') {
-      const users = await readUsers();
-      return send(res, 200, users.map(u => ({ username: u.username, code: u.code, fullName: u.fullName }))); 
-    }
-    // Register
-    if (req.method === 'POST' && pathname === '/users') {
-      const { username, password, code, fullName } = await body(req);
-      if (!username || !password || !code || !fullName) return send(res, 400, { error: 'Thiếu thông tin' });
-      const user = await addUser({ username: username.trim(), password: password.trim(), code: code.trim(), fullName: fullName.trim() });
-      if (!user) return send(res, 409, { error: 'Người dùng đã tồn tại' });
-      return send(res, 200, { username: user.username, code: user.code, fullName: user.fullName });
-    }
-    if (req.method === 'DELETE' && pathname.startsWith('/users/')) {
-      const name = decodeURIComponent(pathname.split('/')[2]);
-      await deleteUser(name);
-      return send(res, 200, {});
-    }
-    // Orders
-    if (req.method === 'GET' && pathname === '/orders') {
-      const orders = await readOrders();
-      return send(res, 200, orders);
-    }
-    if (req.method === 'POST' && pathname === '/orders') {
-      const order = await body(req);
-      if (!order.items)
-        return send(res, 400, { error: 'Thiếu thông tin bắt buộc' });
-      await addOrder(order);
-      return send(res, 200, { message: 'Đơn hàng được ghi nhận thành công' });
-    }
-    // Menu
-    if (req.method === 'GET' && pathname === '/menu') {
-      const menu = await readMenu();
-      return send(res, 200, menu);
-    }
-    if (req.method === 'POST' && pathname === '/menu') {
-      const item = await addMenuItem(await body(req));
-      return send(res, 200, item);
-    }
-    const menuIdParams = match(pathname, '/menu/:id');
-    if (menuIdParams) {
-      const id = parseInt(menuIdParams.id);
-      if (req.method === 'PUT') {
-        const updated = await updateMenuItem(id, await body(req));
-        if (!updated) return notFound(res);
-        return send(res, 200, updated);
-      }
-      if (req.method === 'DELETE') {
-        await deleteMenuItem(id);
-        return send(res, 200, {});
-      }
-    }
-    // Feedback
-    if (req.method === 'GET' && pathname === '/feedback') {
-      const list = await readFeedback();
-      return send(res, 200, list);
-    }
-    if (req.method === 'POST' && pathname === '/feedback') {
-      await addFeedback(await body(req));
-      return send(res, 200, { message: 'ok' });
-    }
-    // Static files
-    let filePath = path.join(publicDir, pathname === '/' ? 'index.html' : pathname);
-    try {
-      const stat = await fs.stat(filePath);
-      if (stat.isDirectory()) filePath = path.join(filePath, 'index.html');
-      const data = await fs.readFile(filePath);
-      const ext = path.extname(filePath);
-      return send(res, 200, data, mime[ext] || 'application/octet-stream');
-    } catch (e) {
-      // fallback to index.html
-      const data = await fs.readFile(path.join(publicDir, 'index.html'));
-      return send(res, 200, data, 'text/html');
-    }
-  } catch (e) {
-    console.error(e);
-    return send(res, 500, { error: 'Lỗi máy chủ' });
+  const users = await readUsers();
+  const found = users.find(u => u.username.trim() === username.trim() && u.password.trim() === password.trim());
+  if (found) {
+    return res.json({ role: 'user', username: found.username, code: found.code, fullName: found.fullName });
   }
+  return res.status(401).json({ error: 'Sai thông tin đăng nhập' });
 });
 
-server.listen(PORT, () => {
+// Users
+app.get('/users', async (_req, res) => {
+  const users = await readUsers();
+  res.json(users.map(u => ({ username: u.username, code: u.code, fullName: u.fullName })));
+});
+
+app.post('/users', async (req, res) => {
+  const { username, password, code, fullName } = req.body;
+  if (!username || !password || !code || !fullName) return res.status(400).json({ error: 'Thiếu thông tin' });
+  const user = await addUser({ username: username.trim(), password: password.trim(), code: code.trim(), fullName: fullName.trim() });
+  if (!user) return res.status(409).json({ error: 'Người dùng đã tồn tại' });
+  res.json({ username: user.username, code: user.code, fullName: user.fullName });
+});
+
+app.delete('/users/:name', async (req, res) => {
+  await deleteUser(req.params.name);
+  res.json({});
+});
+
+// Orders
+app.get('/orders', async (_req, res) => {
+  const orders = await readOrders();
+  res.json(orders);
+});
+
+app.post('/orders', async (req, res) => {
+  const order = req.body;
+  if (!order.items) return res.status(400).json({ error: 'Thiếu thông tin bắt buộc' });
+  await addOrder(order);
+  res.json({ message: 'Đơn hàng được ghi nhận thành công' });
+});
+
+// Menu
+app.get('/menu', async (_req, res) => {
+  const menu = await readMenu();
+  res.json(menu);
+});
+
+app.post('/menu', async (req, res) => {
+  const item = await addMenuItem(req.body);
+  res.json(item);
+});
+
+app.put('/menu/:id', async (req, res) => {
+  const updated = await updateMenuItem(parseInt(req.params.id), req.body);
+  if (!updated) return res.status(404).json({ error: 'Not found' });
+  res.json(updated);
+});
+
+app.delete('/menu/:id', async (req, res) => {
+  await deleteMenuItem(parseInt(req.params.id));
+  res.json({});
+});
+
+// Feedback
+app.get('/feedback', async (_req, res) => {
+  const list = await readFeedback();
+  res.json(list);
+});
+
+app.post('/feedback', async (req, res) => {
+  await addFeedback(req.body);
+  res.json({ message: 'ok' });
+});
+
+// Fallback to index.html for other routes
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
+
+app.listen(PORT, () => {
   console.log(`✅ Server chạy trên http://localhost:${PORT}`);
 });

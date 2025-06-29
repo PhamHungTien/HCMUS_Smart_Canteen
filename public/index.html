@@ -17,11 +17,7 @@
 <body>
     <div id="root" class="container"></div>
     <div id="toast" class="toast"></div>
-    <script type="text/babel" src="app.jsx"></script>
-    <script>
-        if('serviceWorker' in navigator){
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
+    <script type="text/babel" src="js/app.jsx"></script>
+<script src='js/sw-register.js'></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 # HCMUS Smart Canteen
 
-Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên (HCMUS). Toàn bộ phần backend được xây dựng bằng Node.js thuần mà không sử dụng framework ngoài; giao diện viết bằng React chạy trực tiếp trên trình duyệt thông qua Babel.
+Ứng dụng web đặt món cho căng tin Trường Đại học Khoa học Tự nhiên (HCMUS). Backend nay dùng Node.js cùng framework **Express** để tổ chức API rõ ràng hơn, còn giao diện viết bằng React chạy trực tiếp trên trình duyệt thông qua Babel.
 
 ## Công cụ và thư viện sử dụng
 
-- **Node.js** (>= 18) cung cấp HTTP server và thao tác với hệ thống file.
+- **Node.js** (>= 18) kèm **Express** làm máy chủ HTTP và định nghĩa API.
 - **React 18** kèm **Babel Standalone** để biên dịch JSX ngay trên trình duyệt, không cần bước build.
 - **Font Awesome** dùng các biểu tượng cho UI.
 - **JSBarcode** tạo mã vạch khi xác nhận đơn hàng.
@@ -12,14 +12,13 @@
 - **Service Worker** đơn giản để cache các tệp tĩnh và cho phép truy cập khi
   mất mạng.
 
-Backend hoạt động mà không cần cài thêm gói npm nào. Tất cả dữ liệu đều lưu vào các file JSON trong thư mục `data/` (đã được `.gitignore`).
+Tất cả dữ liệu được lưu vào các file JSON trong thư mục `data/` (đã được `.gitignore`).
 
 ## Cài đặt
 
 1. Cài Node.js phiên bản 18 trở lên.
 2. Tạo file `.env` dựa trên `.env.example` và chỉnh lại tài khoản quản trị hoặc cổng nếu muốn.
-3. Không có phụ thuộc ngoài, do đó không cần chạy `npm install`.
-
+3. Chạy `npm install` để cài các phụ thuộc.
 ## Chạy ứng dụng
 
 Khởi động máy chủ bằng lệnh:
@@ -54,7 +53,7 @@ HCMUS_Smart_Canteen/
 │   ├── login.html      # Mẫu đăng nhập, gọi API /login
 │   ├── register.html   # Mẫu đăng ký tài khoản, gọi API /users
 │   ├── admin.html      # Trang quản trị đơn hàng/menu/feedback/người dùng
-│   ├── app.jsx         # Toàn bộ mã React cho trang đặt món và xử lý giỏ hàng
+│   ├── js/             # Các script cho frontend (app.jsx, login.js, ...)
 │   ├── styles.css      # Tập tin CSS dùng chung
 │   ├── img/            # Logo và hình ảnh giao diện
 │   ├── menu/           # Hình ảnh các món ăn hiển thị trên trang
