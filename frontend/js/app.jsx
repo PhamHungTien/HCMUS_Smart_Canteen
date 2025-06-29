@@ -39,6 +39,14 @@ const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 const [orderDetails, setOrderDetails] = useState(null);
 const [paymentMethod, setPaymentMethod] = useState('cod');
 
+const handleLogout = () => {
+    localStorage.removeItem('auth');
+    localStorage.removeItem('username');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('role');
+    window.location.href = '/login.html';
+};
+
 useEffect(() => {
     if (!localStorage.getItem('auth')) {
         window.location.href = '/login.html';
@@ -303,6 +311,9 @@ return (
                 </div>
             </div>
         </nav>
+        <button className="btn logout-btn" onClick={handleLogout}>
+            <i className="fa-solid fa-right-from-bracket"></i>
+        </button>
 
         {/* Floating Cart Icon */}
         {cart.length > 0 && activeTab !== 'cart' && (
@@ -410,7 +421,7 @@ return (
                                 ))}
                             </ul>
                             <p style={{textAlign:'right', fontWeight:'bold', fontSize:'18px'}}>Tổng cộng: {calculateCartTotal.toLocaleString()}đ</p>
-                            <button className="btn" style={{width:'100%',padding:'16px',marginTop:'20px'}} onClick={handleGoToCheckout} disabled={!cart.length}>
+                            <button className="btn payment-btn" onClick={handleGoToCheckout} disabled={!cart.length}>
                                 <i className="fa-solid fa-credit-card"></i> Thanh toán
                             </button>
                         </>
@@ -475,7 +486,7 @@ return (
                     <textarea rows={2} placeholder="Ví dụ: Cà phê ít đường, không đá,..." value={special} onChange={e=>setSpecial(e.target.value)}></textarea>
                 </div>
 
-                <button className="btn" style={{width:'100%',padding:'16px',margin:'20px 0'}} onClick={handleCheckout} disabled={loading || !cart.length}>
+                <button className="btn payment-btn" onClick={handleCheckout} disabled={loading || !cart.length}>
                     {loading?<span className="spinner"></span>:'Thanh toán và đặt món'}
                 </button>
             </div>

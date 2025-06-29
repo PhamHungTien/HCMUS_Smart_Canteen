@@ -7,8 +7,9 @@ function AdminApp() {
   const [menu, setMenu] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
-  const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '' });
+  const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' });
   const [pwMap, setPwMap] = useState({});
   const [revFrom, setRevFrom] = useState('');
   const [revTo, setRevTo] = useState('');
@@ -38,6 +39,15 @@ function AdminApp() {
       });
   }
 
+  function logout() {
+    localStorage.removeItem('auth');
+    localStorage.removeItem('username');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('role');
+    setAuth('');
+    window.location.href = '/login.html';
+  }
+
   function refreshData() {
     fetch('/menu').then(r => r.json()).then(setMenu);
     fetch('/orders', { headers: { Authorization: 'Basic ' + auth } })
@@ -46,6 +56,9 @@ function AdminApp() {
     fetch('/users', { headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json())
       .then(setUsers);
+    fetch('/feedback', { headers: { Authorization: 'Basic ' + auth } })
+      .then(r => r.json())
+      .then(setFeedbacks);
     fetchRevenue();
   }
 
@@ -84,12 +97,12 @@ function AdminApp() {
   }
 
   function addUser() {
-    if (!newUser.username || !newUser.password || !newUser.fullName || !newUser.staffId) { showToast('Thiếu thông tin'); return; }
+    if (!newUser.username || !newUser.password || !newUser.fullName || !newUser.staffId || !newUser.phone || !newUser.email) { showToast('Thiếu thông tin'); return; }
     fetch('/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newUser)
-    }).then(r => r.json()).then(() => { setNewUser({ username: '', password: '', fullName: '', staffId: '' }); refreshData(); });
+    }).then(r => r.json()).then(() => { setNewUser({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' }); refreshData(); });
   }
 
   function updateUser(id, updates) {
@@ -133,6 +146,9 @@ function AdminApp() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <button className="btn logout-btn" onClick={logout}>
+        <i className="fa-solid fa-right-from-bracket"></i>
+      </button>
       <h2>Quản lý Menu</h2>
       <table className="admin-table">
         <thead>
@@ -161,13 +177,15 @@ function AdminApp() {
       <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Khách</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
             <tr key={o.id}>
               <td>{o.id}</td>
               <td>{o.customerName}</td>
+              <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
+              <td>{o.specialRequest}</td>
               <td>{o.total.toLocaleString()}đ</td>
               <td>
                 <select value={o.status} onChange={e => updateOrder(o.id, e.target.value)}>
@@ -189,10 +207,30 @@ function AdminApp() {
         {revenue !== null && <span style={{ marginLeft: '10px', fontWeight: '600' }}>Tổng: {revenue.toLocaleString()}đ</span>}
       </div>
 
+      <h2 style={{ marginTop: '40px' }}>Đánh giá & Góp ý</h2>
+      <table className="admin-table">
+        <thead>
+          <tr><th>Loại</th><th>Nội dung</th><th>Thời gian</th></tr>
+        </thead>
+        <tbody>
+          {feedbacks.map((f, idx) => (
+            <tr key={idx}>
+              <td>{f.type === 'rating' ? 'Đánh giá' : 'Góp ý'}</td>
+              <td>
+                {f.type === 'rating'
+                  ? `${menu.find(i => i.id === f.itemId)?.name || ''} - ${f.rating}★ ${f.comment || ''}`
+                  : `${f.text} (${f.email})`}
+              </td>
+              <td>{new Date(f.createdAt).toLocaleString('vi-VN')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       <h2 style={{ marginTop: '40px' }}>Người dùng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
+          <tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Mã số</th><th>Điện thoại</th><th>Email</th><th>Vai trò</th><th>Mật khẩu mới</th><th></th></tr>
         </thead>
         <tbody>
           {users.map(u => (
@@ -201,6 +239,8 @@ function AdminApp() {
               <td>{u.username}</td>
               <td><input value={u.fullName} onChange={e => updateUser(u.id, { fullName: e.target.value })} /></td>
               <td><input value={u.staffId} onChange={e => updateUser(u.id, { staffId: e.target.value })} /></td>
+              <td><input value={u.phone || ''} onChange={e => updateUser(u.id, { phone: e.target.value })} /></td>
+              <td><input value={u.email || ''} onChange={e => updateUser(u.id, { email: e.target.value })} /></td>
               <td>{u.role}</td>
               <td>
                 <input type="password" value={pwMap[u.id] || ''} onChange={e => setPwMap({ ...pwMap, [u.id]: e.target.value })} />
@@ -216,6 +256,8 @@ function AdminApp() {
             <td><input value={newUser.username} onChange={e => setNewUser({ ...newUser, username: e.target.value })} /></td>
             <td><input value={newUser.fullName} onChange={e => setNewUser({ ...newUser, fullName: e.target.value })} /></td>
             <td><input value={newUser.staffId} onChange={e => setNewUser({ ...newUser, staffId: e.target.value })} /></td>
+            <td><input value={newUser.phone} onChange={e => setNewUser({ ...newUser, phone: e.target.value })} /></td>
+            <td><input value={newUser.email} onChange={e => setNewUser({ ...newUser, email: e.target.value })} /></td>
             <td>user</td>
             <td><input type="password" value={newUser.password} onChange={e => setNewUser({ ...newUser, password: e.target.value })} /></td>
             <td><button className="btn" onClick={addUser}>Thêm</button></td>
