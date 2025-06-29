@@ -1,27 +1,13 @@
 import http from 'http';
-import { promises as fs, existsSync } from 'fs';
+import { promises as fs } from 'fs';
 import { extname, join, normalize } from 'path';
 import { URL } from 'url';
+import { readJson, writeJson } from './lib/fsUtil.js';
+import { initData, ORDERS_FILE, USERS_FILE, MENU_FILE, FEEDBACK_FILE } from './lib/initData.js';
 
 const PORT = process.env.PORT || 3001;
 const PUBLIC_DIR = '.';
 const DATA_DIR = join('.', 'data');
-const ORDERS_FILE = join(DATA_DIR, 'orders.json');
-const USERS_FILE = join(DATA_DIR, 'users.json');
-const MENU_FILE = join(DATA_DIR, 'menu.json');
-const FEEDBACK_FILE = join(DATA_DIR, 'feedback.json');
-
-async function readJson(file, fallback = []) {
-  try {
-    return JSON.parse(await fs.readFile(file, 'utf8'));
-  } catch {
-    return fallback;
-  }
-}
-
-async function writeJson(file, data) {
-  await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
-}
 
 function contentType(file) {
   switch (extname(file)) {
@@ -47,38 +33,6 @@ async function serveStatic(pathname, res) {
   }
 }
 
-const DEFAULT_MENU = [
-  { id: 1, category: 'M\u00f3n \u0103n', name: 'C\u01a1m ph\u1ea7n th\u1ecbt kho', price: 25000, originalPrice: 30000, image: 'menu/com_thit_kho.jpg', rating: 4 },
-  { id: 2, category: 'M\u00f3n \u0103n', name: 'B\u00e1nh m\u00ec \u1ed1p la', price: 20000, originalPrice: 25000, image: 'menu/banh_mi_op_la.jpg', rating: 3 },
-  { id: 3, category: 'M\u00f3n \u0103n', name: 'Salad healthy', price: 30000, originalPrice: 35000, image: 'menu/salad_healthy.jpg', rating: 5 },
-  { id: 4, category: 'M\u00f3n \u0103n', name: 'C\u01a1m t\u1ea5m s\u01b0\u1eddn', price: 28000, originalPrice: 32000, image: 'menu/com_tam_suon.jpg', rating: 4 },
-  { id: 5, category: 'M\u00f3n \u0103n', name: 'Ph\u1edf b\u00f2', price: 30000, originalPrice: 38000, image: 'menu/pho_bo.jpg', rating: 5 },
-  { id: 6, category: 'M\u00f3n \u0103n', name: 'B\u00fan ch\u1ea3', price: 35000, originalPrice: 38000, image: 'menu/bun_cha.jpg', rating: 4 },
-  { id: 10, category: '\u0110\u1ed3 u\u1ed1ng', name: 'Tr\u00e0 s\u1eefa', price: 20000, originalPrice: 23000, image: 'menu/tra_sua.jpg', rating: 4 },
-  { id: 11, category: '\u0110\u1ed3 u\u1ed1ng', name: 'C\u00e0 ph\u00ea s\u1eefa \u0111\u00e1', price: 15000, originalPrice: 18000, image: 'menu/ca_phe_sua_da.jpg', rating: 3 },
-  { id: 12, category: '\u0110\u1ed3 u\u1ed1ng', name: 'N\u01b0\u1edbc \u00e9p detox', price: 15000, originalPrice: 18000, image: 'menu/nuoc_ep_detox.jpg', rating: 5 },
-  { id: 13, category: '\u0110\u1ed3 u\u1ed1ng', name: 'N\u01b0\u1edbc cam v\u1eaft', price: 18000, originalPrice: 22000, image: 'menu/nuoc_cam_vat.jpg', rating: 4 },
-  { id: 14, category: '\u0110\u1ed3 u\u1ed1ng', name: 'N\u01b0\u1edbc m\u00eca', price: 12000, originalPrice: 15000, image: 'menu/nuoc_mia.jpg', rating: 3 },
-  { id: 15, category: '\u0110\u1ed3 u\u1ed1ng', name: 'S\u1eefa chua n\u1ebfp c\u1ea9m', price: 25000, originalPrice: 28000, image: 'menu/sua_chua_nep_cam.jpg', rating: 5 }
-];
-
-async function initData() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  const users = await readJson(USERS_FILE);
-  if (!users.find(u => u.username === 'admin')) {
-    users.push({ id: 1, username: 'admin', password: 'admin@123', role: 'admin' });
-    await writeJson(USERS_FILE, users);
-  }
-  if (!existsSync(ORDERS_FILE)) {
-    await writeJson(ORDERS_FILE, []);
-  }
-  if (!existsSync(MENU_FILE)) {
-    await writeJson(MENU_FILE, DEFAULT_MENU);
-  }
-  if (!existsSync(FEEDBACK_FILE)) {
-    await writeJson(FEEDBACK_FILE, []);
-  }
-}
 
 function send(res, status, data) {
   const body = JSON.stringify(data);
@@ -255,7 +209,7 @@ async function handler(req, res) {
   res.end('Not Found');
 }
 
-initData().then(() => {
+initData(fs).then(() => {
   http.createServer(handler).listen(PORT, () => {
     console.log(`✅ Server chạy trên http://localhost:${PORT}`);
   });

@@ -13,7 +13,7 @@ Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
 - Backend: [Node.js](https://nodejs.org/) thuần, lưu trữ dữ liệu ở các file JSON.
 
 ## Cấu trúc thư mục
-- `server/` – mã nguồn API Node và máy chủ tĩnh.
+- `server/` – mã nguồn API Node và máy chủ tĩnh (tiện ích nằm trong `server/lib`, dữ liệu mẫu ở `server/data`).
 - `data/` – nơi lưu các file JSON tạo ra khi chạy server.
 - `img/`, `menu/`, `qr/` – tài nguyên tĩnh phục vụ demo và được phục vụ công khai.
 - `js/` – mã nguồn React tách thành nhiều file JSX nhỏ.
