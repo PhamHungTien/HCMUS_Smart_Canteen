@@ -192,6 +192,18 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === 'POST' && url.pathname === '/upload') {
+    if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
+    const body = await parseBody(req);
+    if (!body || !body.filename || !body.data) { send(res, 400, { error: 'Thiếu dữ liệu' }); return; }
+    const ext = extname(body.filename) || '.jpg';
+    const fname = `item_${Date.now()}${ext}`;
+    const base64 = body.data.split(',').pop();
+    await fs.writeFile(join(PUBLIC_DIR, 'menu', fname), Buffer.from(base64, 'base64'));
+    send(res, 200, { path: `menu/${fname}` });
+    return;
+  }
+
   if (req.method === 'PUT' && url.pathname.startsWith('/menu/')) {
     if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const id = parseInt(url.pathname.split('/')[2]);

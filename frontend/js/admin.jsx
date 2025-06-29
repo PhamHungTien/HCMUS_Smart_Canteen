@@ -8,7 +8,7 @@ function AdminApp() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [newItem, setNewItem] = useState({ name: '', price: '', category: '' });
+  const [newItem, setNewItem] = useState({ name: '', price: '', category: '', file: null });
   const [newUser, setNewUser] = useState({ username: '', password: '', fullName: '', staffId: '', phone: '', email: '' });
   const [pwMap, setPwMap] = useState({});
   const [revFrom, setRevFrom] = useState('');
@@ -77,16 +77,34 @@ function AdminApp() {
       .then(data => setRevenue(data.total));
   }
 
+  function uploadFile(file) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        fetch('/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+          body: JSON.stringify({ filename: file.name, data: reader.result })
+        }).then(r => r.json()).then(d => resolve(d.path));
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   function addItem() {
     if (!newItem.name || !newItem.price) { showToast('Thiếu thông tin'); return; }
-    fetch('/menu', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
-      body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn' })
-    }).then(r => r.json()).then(() => {
-      setNewItem({ name: '', price: '', category: '' });
-      refreshData();
-    });
+    (async () => {
+      let image = '';
+      if (newItem.file) image = await uploadFile(newItem.file);
+      fetch('/menu', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth },
+        body: JSON.stringify({ name: newItem.name, price: parseInt(newItem.price, 10), category: newItem.category || 'Món ăn', image })
+      }).then(r => r.json()).then(() => {
+        setNewItem({ name: '', price: '', category: '', file: null });
+        refreshData();
+      });
+    })();
   }
 
   function updateItem(id, updates) {
@@ -100,6 +118,10 @@ function AdminApp() {
   function deleteItem(id) {
     fetch(`/menu/${id}`, { method: 'DELETE', headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json()).then(refreshData);
+  }
+
+  function changeItemImage(id, file) {
+    uploadFile(file).then(path => updateItem(id, { image: path }));
   }
 
   function addUser() {
@@ -180,12 +202,16 @@ function AdminApp() {
           <h2>Quản lý Menu</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>ID</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
+          <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th></th></tr>
         </thead>
         <tbody>
           {menu.map(item => (
             <tr key={item.id}>
               <td>{item.id}</td>
+              <td>
+                {item.image && <img src={item.image} alt="img" style={{width:50}} />}
+                <input type="file" onChange={e => changeItemImage(item.id, e.target.files[0])} />
+              </td>
               <td><input value={item.name} onChange={e => updateItem(item.id, { name: e.target.value })} /></td>
               <td><input type="number" value={item.price} onChange={e => updateItem(item.id, { price: parseInt(e.target.value, 10) })} /></td>
               <td><input value={item.category} onChange={e => updateItem(item.id, { category: e.target.value })} /></td>
@@ -194,6 +220,7 @@ function AdminApp() {
           ))}
           <tr>
             <td>mới</td>
+            <td><input type="file" onChange={e => setNewItem({ ...newItem, file: e.target.files[0] })} /></td>
             <td><input value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} /></td>
             <td><input type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} /></td>
             <td><input value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })} /></td>
@@ -205,12 +232,13 @@ function AdminApp() {
       <h2 style={{ marginTop: '40px' }}>Đơn hàng</h2>
       <table className="admin-table">
         <thead>
-          <tr><th>Mã</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
+          <tr><th>Mã</th><th>Thời gian</th><th>Khách</th><th>Món đã đặt</th><th>Yêu cầu</th><th>Tổng</th><th>Trạng thái</th><th></th></tr>
         </thead>
         <tbody>
           {orders.map(o => (
             <tr key={o.id}>
               <td>{o.id}</td>
+              <td>{new Date(o.createdAt).toLocaleString('vi-VN')}</td>
               <td>{o.customerName}</td>
               <td>{o.items.map(i => `${i.name} (${i.category}) x${i.qty}`).join(', ')}</td>
               <td>{o.specialRequest}</td>
