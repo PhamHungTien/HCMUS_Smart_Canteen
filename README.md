@@ -1,63 +1,49 @@
 # Smart Canteen
 
-Đây là mô hình mẫu cho hệ thống căng tin thông minh với giao diện React và máy chủ Node.js.
-Server nay được viết theo chuẩn ES module của Node 18+, không cần cài gói phụ thuộc.
-Chỉ cần Node đã cài đặt là có thể khởi chạy trực tiếp.
+Smart Canteen là dự án mô phỏng hệ thống căng tin thông minh sử dụng React và Node.js. Ứng dụng giúp người dùng đặt món nhanh chóng và hỗ trợ quản trị viên theo dõi thực đơn cũng như doanh thu.
 
-## Chức năng chính
-- **Người dùng** có thể tạo tài khoản, đăng nhập, xem thực đơn, đặt món và gửi góp ý. Khi xem trên thiết bị di động có thể trải nghiệm AR cho món ăn (nếu quản trị viên đã tải lên mô hình `.glb`).
-- **Quản trị viên** quản lí các món ăn (bao gồm hình ảnh và file mô hình 3D), theo dõi đơn đặt hàng, xem báo cáo doanh thu và xử lý phản hồi của người dùng.
+## Đặc điểm nổi bật
+- **Trải nghiệm AR (Augmented Reality)**: trên thiết bị di động, khi chạm vào hình ảnh món ăn sẽ mở mô hình 3D dưới dạng AR thông qua `<model-viewer>` (nếu quản trị viên đã tải lên file `.glb`).
+- **Quản lý thực đơn**: thêm, sửa, xoá món ăn kèm ảnh và mô hình 3D; phân loại thức ăn, đồ uống.
+- **Đặt hàng trực tuyến**: chọn thời gian lấy món, thanh toán qua Momo hoặc VietQR.
+- **Đánh giá và góp ý**: gửi nhận xét cho từng món, liên hệ phản hồi với căng tin.
+- **Báo cáo doanh thu** và **quản lý tài khoản** dành cho quản trị viên.
 
-## Công nghệ sử dụng
-- Frontend: [React](https://react.dev/) tải trực tiếp qua CDN.
-- Backend: [Node.js](https://nodejs.org/) thuần, lưu trữ dữ liệu ở các file JSON.
+## Công nghệ
+- **Frontend**: React tải trực tiếp từ CDN, kết hợp JSX qua Babel.
+- **Backend**: Node.js 18+ theo chuẩn ES module, lưu dữ liệu bằng JSON nên không cần CSDL riêng.
+- **AR**: sử dụng [`<model-viewer>`](https://modelviewer.dev) hỗ trợ WebXR, Scene Viewer và Quick Look.
 
-## Cấu trúc thư mục
-- `backend/` – mã nguồn API Node và máy chủ tĩnh (tiện ích nằm trong `backend/lib`, dữ liệu mẫu ở `backend/data`).
-- `frontend/` – giao diện React và các tài nguyên (`img/`, `menu/`, `qr/`, `js/`, `styles.css`, `admin.html`).
-- `data/` – nơi lưu các file JSON tạo ra khi chạy server.
+## Thư mục dự án
+- `backend/` – mã nguồn máy chủ và các tiện ích khởi tạo dữ liệu.
+- `frontend/` – giao diện React cho người dùng và trang quản trị.
+- `data/` – các file JSON tự sinh khi khởi chạy lần đầu.
 
-## Hướng dẫn chạy nhanh
-Chỉ cần Node.js 18 trở lên, chạy:
+## Khởi chạy nhanh
+Cài đặt Node.js 18 trở lên và chạy:
 ```bash
 node backend/index.js
 ```
-Server sẽ khởi động tại http://localhost:3001, tự tạo các file dữ liệu JSON nếu chưa tồn tại và phục vụ giao diện web.
-Mở trình duyệt tới địa chỉ trên để xem trang chủ.
-Giao diện đăng nhập nằm ở `/login` (có liên kết tới tạo tài khoản và quên mật khẩu).
-Người dùng phải đăng nhập (hoặc đăng ký tại `/signup`) mới có thể đặt món.
-Thông tin đăng ký yêu cầu đủ họ tên và mã số cán bộ/sinh viên để quản lý.
-Nếu quên mật khẩu hãy dùng `/forgot` để đặt lại.
-Sau khi đăng nhập, có thể đổi mật khẩu tại trang `/change`.
-Thanh điều hướng có thêm tab **Cài đặt** để đổi mật khẩu hoặc đăng xuất.
+Máy chủ lắng nghe tại http://localhost:3001 và tự tạo dữ liệu mẫu nếu chưa có.
+Một số đường dẫn:
+- `/login` – đăng nhập hoặc tạo tài khoản
+- `/signup` – đăng ký người dùng mới
+- `/admin` – giao diện quản trị
+
 Tài khoản quản trị mặc định:
 ```
 user: admin
 pass: admin@123
 ```
 
-### API mới
+## API chính
+- `GET /menu` – lấy thực đơn
+- `POST /menu` – thêm món (admin)
+- `PUT /menu/:id`, `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (admin)
+- `POST /orders` – tạo đơn mới (yêu cầu đăng nhập)
+- `GET /orders` – danh sách đơn hàng (admin)
+- `GET /revenue?from=YYYY-MM-DD&to=YYYY-MM-DD` – báo cáo doanh thu (admin)
+- `POST /feedback` – gửi góp ý
+- các API quản lý tài khoản: `/change-password`, `/reset-password`, `/users/...`
 
-- `GET /menu` – lấy danh sách món ăn.
-- `POST /menu` – thêm món (cần header `Authorization: Basic base64(admin:pass)`).
-- `PUT /menu/:id` và `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (cần quyền admin).
-- `POST /feedback` – gửi đánh giá hoặc góp ý.
-- `GET /feedback` – lấy danh sách góp ý (admin).
-- `POST /change-password` – đổi mật khẩu (yêu cầu Basic Auth và `newPassword`).
-- `POST /reset-password` – đặt lại mật khẩu khi quên (cần `username`, `staffId`, `newPassword`).
-- `GET /users` – lấy danh sách tài khoản (admin).
-- `PUT /users/:id` – cập nhật thông tin hoặc đổi mật khẩu (admin).
-- `DELETE /users/:id` – xoá tài khoản (admin).
-
-### Quản lý đơn hàng
-- `GET /orders` – lấy danh sách đơn hàng (cần quyền admin).
-- `POST /orders` – tạo đơn mới (người dùng gửi kèm header `Authorization: Basic base64(user:pass)`).
-- `PUT /orders/:id` – cập nhật trạng thái đơn (admin).
-- `DELETE /orders/:id` – xoá đơn (admin).
-- `GET /revenue?from=YYYY-MM-DD&to=YYYY-MM-DD` – tổng doanh thu trong khoảng ngày (admin).
-
-### Giao diện quản trị
-Mở `admin.html` để đăng nhập và quản lý thực đơn, đơn hàng, tài khoản cũng như xem báo cáo doanh thu trực tiếp trên trình duyệt. Sau khi đăng nhập, các thao tác thêm/xoá/sửa sẽ gửi yêu cầu tới các API trên.
-
-Dự án đã bao gồm đầy đủ các tính năng cơ bản và có thêm báo cáo doanh thu. Bạn vẫn có thể mở rộng thêm các chức năng nâng cao khác tùy ý.
-
+Dự án cung cấp nền tảng để xây dựng căng tin trực tuyến với các tính năng cơ bản và có thể mở rộng thêm tuỳ nhu cầu.
