@@ -20,6 +20,13 @@ Chỉ cần Node.js có sẵn, chạy:
 ```bash
 node server.js
 ```
-Server sẽ khởi động tại http://localhost:3001 và tự tạo file `orders.json` nếu chưa tồn tại.
+
+Server sẽ khởi động tại http://localhost:3001 và tự tạo các file dữ liệu JSON nếu chưa tồn tại.
+Bạn có thể đăng ký người dùng mới qua `/signup` hoặc đăng nhập qua `/login`.
+Tài khoản quản trị mặc định:
+```
+user: admin
+pass: admin@123
+```
 
 Dự án ở mức tối giản để bạn có thể mở rộng thêm chức năng quản lý thực đơn, đặt món hay báo cáo doanh thu tùy nhu cầu.
