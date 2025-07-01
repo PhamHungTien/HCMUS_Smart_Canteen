@@ -58,3 +58,31 @@ pass: admin@123
 - các API quản lý tài khoản: `/change-password`, `/reset-password`, `/users/...`
 
 Smart Canteen là nền tảng mẫu để xây dựng căng tin thông minh. Bạn có thể mở rộng thêm tính năng hoặc tích hợp với hệ thống có sẵn tuỳ nhu cầu.
+
+## Giải thuật và quy trình hoạt động
+
+### 1. Khởi tạo dữ liệu
+- Khi server chạy lần đầu, hàm `initData()` tạo thư mục `data/` và các file JSON nếu chưa tồn tại.
+- Tài khoản quản trị mặc định (`admin/admin@123`) được thêm vào `users.json` nếu không có sẵn.
+- Menu mẫu lấy từ `backend/data/defaultMenu.js` sẽ ghi vào `menu.json` lần đầu tiên.
+
+### 2. Xác thực người dùng
+- Các API yêu cầu đăng nhập dùng `Basic` authentication.
+- Hàm `authenticate()` đọc header `Authorization`, giải mã Base64 để lấy `username:password` và so sánh với dữ liệu trong `users.json`.
+- Nếu khớp, thông tin người dùng được trả về và tiếp tục xử lý; ngược lại gửi lỗi `401 Unauthorized`.
+
+### 3. Đặt món và giới hạn thời gian
+- Mỗi đơn hàng có trường `time` do người dùng chọn.
+- Hàm `slotKey()` chuyển thời gian thành khoá theo từng **15 phút** (ví dụ `10:00`, `10:15`, ...).
+- Server đếm số đơn cùng khoá đã lưu trong `orders.json`. Nếu đạt **5 đơn**, API trả lỗi "Khung giờ này đã đủ lượt đặt" để yêu cầu khách chọn giờ khác.
+- Khi còn chỗ, đơn hàng được thêm vào file với trạng thái `pending` kèm thời gian tạo.
+
+### 4. Tính doanh thu
+- API `/revenue` nhận tham số `from` và `to` để lọc các đơn trong `orders.json` theo ngày tháng.
+- Doanh thu bằng tổng `total` của các đơn thoả điều kiện.
+
+### 5. Lưu góp ý và quản trị
+- Góp ý từ người dùng lưu vào `feedback.json` với `createdAt` để quản trị viên xem lại.
+- Các thao tác chỉnh sửa menu, đơn hàng hay tài khoản cập nhật trực tiếp vào các file JSON tương ứng thông qua các API `POST`, `PUT`, `DELETE`.
+
+Tất cả quá trình đọc/ghi dữ liệu đều dùng hàm bất đồng bộ (`async/await`) trên hệ thống file, phù hợp để triển khai demo mà không cần cơ sở dữ liệu phức tạp.
