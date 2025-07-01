@@ -8,6 +8,14 @@ import { initData, ORDERS_FILE, USERS_FILE, MENU_FILE, FEEDBACK_FILE } from './l
 const PORT = process.env.PORT || 3001;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(__dirname, '../frontend');
+const MAX_ORDERS_PER_SLOT = 5;
+const SLOT_INTERVAL = 15; // minutes
+
+function slotKey(time) {
+  const d = new Date(time);
+  d.setMinutes(Math.floor(d.getMinutes() / SLOT_INTERVAL) * SLOT_INTERVAL, 0, 0);
+  return d.toISOString();
+}
 
 function contentType(file) {
   switch (extname(file)) {
@@ -277,6 +285,12 @@ async function handler(req, res) {
       return;
     }
     const orders = await readJson(ORDERS_FILE);
+    const key = slotKey(order.time);
+    const count = orders.filter(o => slotKey(o.time) === key).length;
+    if (count >= MAX_ORDERS_PER_SLOT) {
+      send(res, 400, { error: 'Khung giờ này đã đủ lượt đặt' });
+      return;
+    }
     orders.push({
       id: order.id || orders.length + 1,
       time: order.time,
