@@ -2,6 +2,7 @@ import { promises as fsp, existsSync } from 'fs';
 import { join } from 'path';
 import { readJson, writeJson } from './fsUtil.js';
 import { DEFAULT_MENU } from '../data/defaultMenu.js';
+import { hashPassword } from './auth.js';
 
 const DATA_DIR = join('.', 'data');
 export const ORDERS_FILE = join(DATA_DIR, 'orders.json');
@@ -13,10 +14,12 @@ export async function initData(fsPromises = fsp) {
   await fsPromises.mkdir(DATA_DIR, { recursive: true });
   const users = await readJson(USERS_FILE);
   if (!users.find(u => u.username === 'admin')) {
+    const { hash, salt } = hashPassword('admin@123');
     users.push({
       id: 1,
       username: 'admin',
-      password: 'admin@123',
+      hash,
+      salt,
       fullName: 'Administrator',
       staffId: 'ADMIN',
       role: 'admin'
