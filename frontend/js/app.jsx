@@ -144,8 +144,6 @@ const addItemToCart = (item) => {
         });
         showToast(t('add_cart', {name: item.name}));
         setAddingId(null);
-        // XÓA DÒNG NÀY ĐỂ NGĂN TỰ ĐỘNG CUỘN ĐẾN GIỎ HÀNG:
-        // handleTabClick('cart', cartSectionRef); 
     }, 300);
 };
 
@@ -228,15 +226,20 @@ const handleCheckout = () => {
             total: calculateCartTotal,
             paymentMethod: paymentMethod
         })
-        })
-        .then(res => res.json())
-        .then(data => {
-        console.log(data.message);
-        })
-        .catch(error => {
+    })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+        if (!ok) {
+            const msg = data.error && data.error.includes('đủ lượt đặt') ? t('error_slot_full') : (data.error || t('order_error'));
+            showToast(msg);
+        } else {
+            console.log(data.message);
+        }
+    })
+    .catch(error => {
         console.error(error);
         showToast(t('order_error'));
-        });
+    });
 
 };
 
