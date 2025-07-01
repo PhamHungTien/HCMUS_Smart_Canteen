@@ -4,6 +4,7 @@ import { extname, join, normalize, dirname } from 'path';
 import { fileURLToPath, URL } from 'url';
 import { readJson, writeJson } from './lib/fsUtil.js';
 import { initData, ORDERS_FILE, USERS_FILE, MENU_FILE, FEEDBACK_FILE } from './lib/initData.js';
+import { hashPassword, verifyPassword, createSession, getSession } from './lib/auth.js';
 
 const PORT = process.env.PORT || 3001;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -62,10 +63,17 @@ function send(res, status, data) {
 
 async function authenticate(req) {
   const auth = req.headers['authorization'];
-  if (!auth || !auth.startsWith('Basic ')) return null;
-  const [user, pass] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
-  const users = await readJson(USERS_FILE);
-  return users.find(u => u.username === user && u.password === pass) || null;
+  if (!auth) return null;
+  if (auth.startsWith('Bearer ')) {
+    return getSession(auth.slice(7));
+  }
+  if (auth.startsWith('Basic ')) {
+    const [user, pass] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
+    const users = await readJson(USERS_FILE);
+    const found = users.find(u => u.username === user);
+    if (found && verifyPassword(pass, found)) return found;
+  }
+  return null;
 }
 
 async function isAdmin(req) {
@@ -121,10 +129,12 @@ async function handler(req, res) {
       return;
     }
     const id = users.reduce((m, u) => Math.max(m, u.id || 0), 0) + 1;
+    const { hash, salt } = hashPassword(user.password);
     users.push({
       id,
       username: user.username,
-      password: user.password,
+      hash,
+      salt,
       fullName: user.fullName,
       staffId: user.staffId,
       phone: user.phone,
@@ -137,14 +147,24 @@ async function handler(req, res) {
   }
 
   if (req.method === 'POST' && url.pathname === '/login') {
-    const user = await parseBody(req);
-    if (!user) { send(res, 400, { error: 'Thiếu thông tin' }); return; }
+    const creds = await parseBody(req);
+    if (!creds) { send(res, 400, { error: 'Thiếu thông tin' }); return; }
     const users = await readJson(USERS_FILE);
-    const found = users.find(u => u.username === user.username && u.password === user.password);
-    if (!found) {
+    const found = users.find(u => u.username === creds.username);
+    if (!found || !verifyPassword(creds.password, found)) {
       send(res, 401, { error: 'Sai thông tin đăng nhập' });
     } else {
+      const token = createSession({
+        id: found.id,
+        username: found.username,
+        role: found.role,
+        fullName: found.fullName,
+        staffId: found.staffId,
+        phone: found.phone,
+        email: found.email
+      });
       send(res, 200, {
+        token,
         id: found.id,
         username: found.username,
         fullName: found.fullName,
@@ -158,15 +178,16 @@ async function handler(req, res) {
   }
 
   if (req.method === 'POST' && url.pathname === '/change-password') {
-    const auth = req.headers['authorization'];
-    if (!auth || !auth.startsWith('Basic ')) { send(res, 401, { error: 'Unauthorized' }); return; }
-    const [username, password] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
+    const user = await authenticate(req);
+    if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
     const body = await parseBody(req);
     if (!body || !body.newPassword) { send(res, 400, { error: 'Thiếu mật khẩu mới' }); return; }
     const users = await readJson(USERS_FILE);
-    const idx = users.findIndex(u => u.username === username && u.password === password);
+    const idx = users.findIndex(u => u.username === user.username);
     if (idx === -1) { send(res, 401, { error: 'Sai thông tin' }); return; }
-    users[idx].password = body.newPassword;
+    const { hash, salt } = hashPassword(body.newPassword);
+    users[idx].hash = hash;
+    users[idx].salt = salt;
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã đổi mật khẩu' });
     return;
@@ -181,7 +202,9 @@ async function handler(req, res) {
     const users = await readJson(USERS_FILE);
     const idx = users.findIndex(u => u.username === body.username && u.staffId === body.staffId);
     if (idx === -1) { send(res, 404, { error: 'Không tìm thấy người dùng' }); return; }
-    users[idx].password = body.newPassword;
+    const { hash, salt } = hashPassword(body.newPassword);
+    users[idx].hash = hash;
+    users[idx].salt = salt;
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã đặt lại mật khẩu' });
     return;
@@ -195,7 +218,10 @@ async function handler(req, res) {
     const users = await readJson(USERS_FILE);
     const idx = users.findIndex(u => u.username === user.username);
     if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
-    users[idx] = { ...users[idx], ...body };
+    const updates = { ...body };
+    delete updates.hash;
+    delete updates.salt;
+    users[idx] = { ...users[idx], ...updates };
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã cập nhật' });
     return;
@@ -372,7 +398,10 @@ async function handler(req, res) {
     const users = await readJson(USERS_FILE);
     const idx = users.findIndex(u => u.id === id);
     if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
-    users[idx] = { ...users[idx], ...updates, id };
+    const safe = { ...updates };
+    delete safe.hash;
+    delete safe.salt;
+    users[idx] = { ...users[idx], ...safe, id };
     await writeJson(USERS_FILE, users);
     send(res, 200, { message: 'Đã cập nhật' });
     return;

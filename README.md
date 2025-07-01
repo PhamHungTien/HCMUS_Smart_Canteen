@@ -51,6 +51,7 @@ pass: admin@123
 - `GET /menu` – lấy thực đơn
 - `POST /menu` – thêm món (admin)
 - `PUT /menu/:id`, `DELETE /menu/:id` – chỉnh sửa hoặc xoá món (admin)
+- `POST /login` – đăng nhập và nhận token
 - `POST /orders` – tạo đơn mới (yêu cầu đăng nhập)
 - `GET /orders` – danh sách đơn hàng (admin)
 - `GET /revenue?from=YYYY-MM-DD&to=YYYY-MM-DD` – doanh thu theo khoảng thời gian (admin)
@@ -62,14 +63,14 @@ Smart Canteen là nền tảng mẫu để xây dựng căng tin thông minh. B�
 ## Giải thuật và quy trình hoạt động
 
 ### 1. Khởi tạo dữ liệu
-- Khi server chạy lần đầu, hàm `initData()` tạo thư mục `data/` và các file JSON nếu chưa tồn tại.
-- Tài khoản quản trị mặc định (`admin/admin@123`) được thêm vào `users.json` nếu không có sẵn.
+ - Khi server chạy lần đầu, hàm `initData()` tạo thư mục `data/` và các file JSON nếu chưa tồn tại.
+ - Tài khoản quản trị mặc định (`admin/admin@123`) được thêm vào `users.json` với mật khẩu đã được băm nếu không có sẵn.
 - Menu mẫu lấy từ `backend/data/defaultMenu.js` sẽ ghi vào `menu.json` lần đầu tiên.
 
 ### 2. Xác thực người dùng
-- Các API yêu cầu đăng nhập dùng `Basic` authentication.
-- Hàm `authenticate()` đọc header `Authorization`, giải mã Base64 để lấy `username:password` và so sánh với dữ liệu trong `users.json`.
-- Nếu khớp, thông tin người dùng được trả về và tiếp tục xử lý; ngược lại gửi lỗi `401 Unauthorized`.
+- Đăng nhập qua `/login` trả về `token` sinh ngẫu nhiên.
+- Các API yêu cầu đăng nhập gửi header `Authorization: Bearer <token>`.
+- Hàm `authenticate()` kiểm tra token hoặc Basic (để tương thích) và so khớp mật khẩu đã băm trong `users.json`.
 
 ### 3. Đặt món và giới hạn thời gian
 - Mỗi đơn hàng có trường `time` do người dùng chọn.
