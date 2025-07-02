@@ -15,11 +15,12 @@ function AdminApp() {
   const [revTo, setRevTo] = useState('');
   const [revenue, setRevenue] = useState(null);
   const [activeTab, setActiveTab] = useState('menu');
+  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
 
   useEffect(() => {
-    const isDark = localStorage.getItem('darkMode') === 'true';
-    document.body.classList.toggle('dark-mode', isDark);
-  }, []);
+    document.body.classList.toggle('dark-mode', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     if (auth) {
@@ -220,6 +221,11 @@ function AdminApp() {
       {activeTab === 'settings' && (
         <div style={{maxWidth:400, margin:'80px auto'}} className="card form-card">
           <h3>{t('settings')}</h3>
+          <label className="toggle-switch" style={{marginBottom:12}}>
+            <input type="checkbox" checked={darkMode} onChange={e => setDarkMode(e.target.checked)} />
+            <span className="slider"></span>
+            <span style={{marginLeft:8}}>{t('dark_mode')}</span>
+          </label>
           <button className="btn" onClick={() => window.location.href='/change'} style={{marginBottom:12}}>{t('change_password')}</button>
           <button className="btn danger-btn" onClick={logout}>{t('logout')}</button>
         </div>
