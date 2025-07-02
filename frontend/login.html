@@ -9,6 +9,10 @@
   <script src="js/i18n.js"></script>
 </head>
 <body>
+  <div class="auth-header">
+    <img src="img/HCMUS.png" alt="HCMUS Logo" />
+    <h1>Canteen HCMUS</h1>
+  </div>
   <div class="card form-card" style="max-width:400px;margin:40px auto">
     <h3 data-i18n="login_title">Đăng nhập</h3>
     <form id="login-form">
@@ -20,10 +24,15 @@
       </select>
       <button class="btn" type="submit" data-i18n="login_button">Đăng nhập</button>
     </form>
-    <p style="text-align:center;margin-top:10px">
-      <a href="signup" class="link-btn" data-i18n="create_account">Tạo tài khoản</a> |
-      <a href="forgot" class="link-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
-    </p>
+    <div class="auth-actions">
+      <a href="signup" class="btn secondary-btn" data-i18n="create_account">Tạo tài khoản</a>
+      <a href="forgot" class="btn secondary-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-logo"><img src="img/HCMUS.png" alt="ĐHQG-HCM Logo" /></div>
+    <p>&copy; <span id="year"></span> Canteen KHTN Nguyễn Văn Cừ. All rights reserved.</p>
+    <p>Phát triển bởi: Hồ Sĩ Phú, Phạm Hùng Tiến, Phạm Cao Bằng, Trần Thái Nguyên, Lê Quang Bảo Trung.</p>
   </div>
   <div id="toast" class="toast"></div>
   <script src="js/utils.js"></script>
@@ -51,6 +60,7 @@
         showToast(data.error || 'Đăng nhập thất bại');
       }
     });
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
