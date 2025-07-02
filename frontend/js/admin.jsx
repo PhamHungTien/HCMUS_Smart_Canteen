@@ -178,7 +178,7 @@ function AdminApp() {
         <form onSubmit={login}>
           <input placeholder="Tên đăng nhập" value={username} onChange={e => setUsername(e.target.value)} />
           <input type="password" placeholder="Mật khẩu" value={password} onChange={e => setPassword(e.target.value)} />
-          <button className="btn" type="submit">Đăng nhập</button>
+          <button className="btn full-btn" type="submit">Đăng nhập</button>
         </form>
       </div>
     );

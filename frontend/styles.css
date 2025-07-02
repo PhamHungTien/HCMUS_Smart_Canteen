@@ -617,6 +617,13 @@ textarea {
     background: var(--danger-hover-color);
 }
 
+/* full-width button used in forms */
+.full-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+}
+
 .toggle-switch {
     display: inline-flex;
     align-items: center;
