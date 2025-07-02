@@ -21,6 +21,8 @@ const [menuItems, setMenuItems] = useState(defaultMenu);
 const [cart, setCart] = useState([]);
 const [addingId, setAddingId] = useState(null);
 const [pickup, setPickup] = useState('');
+const [slotDate, setSlotDate] = useState(new Date().toISOString().slice(0,10));
+const [slots, setSlots] = useState([]);
 const [special, setSpecial] = useState('');
 const [loading, setLoading] = useState(false);
 const [selectedMenuItem, setSelectedMenuItem] = useState('');
@@ -97,12 +99,17 @@ const handleGoToCheckout = () => {
     setCurrentPage('checkout');
 };
 
-// Set initial pickup time to 15 minutes from now
 useEffect(() => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 15);
-    setPickup(now.toISOString().slice(0,16));
-}, []);
+    fetch(`/slots?date=${slotDate}`)
+        .then(res => res.json())
+        .then(data => {
+            setSlots(data);
+            const now = new Date();
+            const first = data.find(s => new Date(s.time) > now && s.remaining > 0) || data[0];
+            if (first) setPickup(first.time.slice(0,16));
+        })
+        .catch(() => setSlots([]));
+}, [slotDate]);
 
 // Effect để thêm/bỏ class modal-open cho body
 useEffect(() => {
@@ -492,7 +499,14 @@ return (
                     <div className="card form-card relative">
                         {loading && <div className="form-overlay"><span className="spinner"></span></div>}
                         <h3><i className="fa-solid fa-clock"></i>{t('choose_time')}</h3>
-                        <input type="datetime-local" value={pickup} min={new Date().toISOString().slice(0,16)} max={new Date(Date.now() + 30 * 24 * 60 * 60000).toISOString().slice(0,16)} onChange={e=>setPickup(e.target.value)}/>
+                        <input type="date" value={slotDate} min={new Date().toISOString().slice(0,10)} max={new Date(Date.now() + 30 * 24 * 60 * 60000).toISOString().slice(0,10)} onChange={e=>setSlotDate(e.target.value)} />
+                        <select value={pickup} onChange={e=>setPickup(e.target.value)}>
+                            {slots.map(s => {
+                                const time = new Date(s.time);
+                                const label = time.toLocaleTimeString(document.documentElement.lang==='vi'?'vi-VN':'en-US', {hour:'2-digit', minute:'2-digit', hour12:false});
+                                return <option key={s.time} value={s.time.slice(0,16)} disabled={s.remaining===0}>{label + ' ' + (s.remaining>0?t('slots_left',{count:s.remaining}):t('slot_full'))}</option>;
+                            })}
+                        </select>
                     </div>
 
                     {/* PHƯƠNG THỨC THANH TOÁN */}

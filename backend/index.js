@@ -276,6 +276,22 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/slots') {
+    const dateStr = url.searchParams.get('date') || new Date().toISOString().slice(0,10);
+    const day = new Date(dateStr + 'T00:00:00');
+    const start = new Date(day); start.setHours(6,0,0,0);
+    const end = new Date(day); end.setHours(18,0,0,0);
+    const orders = await readJson(ORDERS_FILE);
+    const slots = [];
+    for (let t = new Date(start); t < end; t.setMinutes(t.getMinutes() + SLOT_INTERVAL)) {
+      const key = slotKey(t);
+      const count = orders.filter(o => slotKey(o.time) === key).length;
+      slots.push({ time: new Date(t).toISOString(), remaining: Math.max(0, MAX_ORDERS_PER_SLOT - count) });
+    }
+    send(res, 200, slots);
+    return;
+  }
+
   if (req.method === 'POST' && url.pathname === '/orders') {
     const user = await authenticate(req);
     if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
