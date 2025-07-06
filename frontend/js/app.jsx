@@ -100,7 +100,7 @@ useEffect(() => {
 
 // Effect để thêm/bỏ class modal-open cho body
 useEffect(() => {
-    if (showConfirmationModal) {
+    if (showConfirmationModal || arItem) {
         document.body.classList.add('modal-open');
     } else {
         document.body.classList.remove('modal-open');
@@ -108,7 +108,7 @@ useEffect(() => {
     return () => {
         document.body.classList.remove('modal-open');
     };
-}, [showConfirmationModal]);
+}, [showConfirmationModal, arItem]);
 
 useEffect(() => {
     document.body.classList.toggle('dark-mode', darkMode);
@@ -147,14 +147,10 @@ const updateItemQuantity = (index, delta) => setCart(prev =>
     prev.map((x, idx) => idx === index ? { ...x, qty: Math.max(1, Math.min(10, x.qty + delta)) } : x)
 );
 
-const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
 const handleImageClick = (item) => {
-    if (isMobile && item.model) {
+    if (item.model) {
         setArItem(item);
-    } else if (!isMobile) {
-        showToast('Tính năng AR chỉ khả dụng trên thiết bị di động');
-    } else if (!item.model) {
+    } else {
         showToast('Món ăn này chưa có mô hình 3D');
     }
 };

@@ -31,7 +31,7 @@ Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng 
 ## Công nghệ sử dụng
 - **Frontend**: React qua CDN và Babel cho JSX.
 - **Backend**: Node.js 18+ chuẩn ES module, lưu dữ liệu ở thư mục `data/`.
-- **AR**: [`<model-viewer>`](https://modelviewer.dev) cho phép xem mô hình 3D trên thiết bị di động.
+- **AR**: [`<model-viewer>`](https://modelviewer.dev) cho phép xem mô hình 3D trên cả điện thoại và máy tính.
 
 ## Cấu trúc thư mục
 - `backend/` – mã nguồn máy chủ và script khởi tạo dữ liệu.
