@@ -37,6 +37,7 @@ Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng 
 - `backend/` – mã nguồn máy chủ và script khởi tạo dữ liệu.
 - `frontend/` – giao diện React cho người dùng và trang quản trị.
 - `data/` – các file JSON được tạo tự động khi chạy lần đầu.
+- `frontend/menu/` – thư mục lưu hình ảnh món ăn, sẽ được tạo tự động khi tải ảnh.
 
 ## Khởi chạy
 Cài Node.js 18 trở lên rồi chạy:
