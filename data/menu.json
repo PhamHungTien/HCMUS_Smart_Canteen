@@ -8,14 +8,6 @@
     "model": "menu/item_1751815276119.glb"
   },
   {
-    "id": 2,
-    "name": "Cơm gà khoai tây ",
-    "price": 35000,
-    "category": "Món ăn",
-    "image": "menu/item_1751815302443.webp",
-    "model": "menu/item_1751815303652.glb"
-  },
-  {
     "id": 3,
     "name": "Gà nguyên con",
     "price": 97000,
@@ -89,7 +81,7 @@
   },
   {
     "id": 12,
-    "name": "cherry cheese cake",
+    "name": "Cherry Cheese Cake",
     "price": 30000,
     "category": "Món tráng miệng",
     "image": "menu/item_1751815787145.jpg",
@@ -97,7 +89,7 @@
   },
   {
     "id": 13,
-    "name": "fruit cake",
+    "name": "Fruit Cake",
     "price": 25000,
     "category": "Món tráng miệng",
     "image": "menu/item_1751815861232.jpg",
@@ -105,10 +97,50 @@
   },
   {
     "id": 14,
-    "name": "sprinkle",
+    "name": "Sprinkle",
     "price": 25000,
     "category": "Món tráng miệng",
     "image": "menu/item_1751815883964.jpg",
     "model": "menu/item_1751815885017.glb"
+  },
+  {
+    "id": 15,
+    "name": "Pepsi",
+    "price": 10000,
+    "category": "Đồ uống",
+    "image": "menu/item_1751817591661.jpg",
+    "model": "menu/item_1751817591879.glb"
+  },
+  {
+    "id": 16,
+    "name": "Coca Cola",
+    "price": 10000,
+    "category": "Đồ uống",
+    "image": "menu/item_1751817642075.png",
+    "model": "menu/item_1751817642151.glb"
+  },
+  {
+    "id": 17,
+    "name": "Red Bull",
+    "price": 18000,
+    "category": "Đồ uống",
+    "image": "menu/item_1751817819128.jpg",
+    "model": "menu/item_1751817819398.glb"
+  },
+  {
+    "id": 18,
+    "name": "Heiniken",
+    "price": 22000,
+    "category": "Đồ uống",
+    "image": "menu/item_1751818046426.jpeg",
+    "model": "menu/item_1751818046545.glb"
+  },
+  {
+    "id": 19,
+    "name": "Sting Xanh",
+    "price": 15000,
+    "category": "Đồ uống",
+    "image": "menu/item_1751818564781.jpg",
+    "model": "menu/item_1751818564872.glb"
   }
 ]

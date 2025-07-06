@@ -3,58 +3,23 @@ nohup: ignoring input
 > smart-canteen@1.0.0 start
 > node backend/index.js
 
-✅ Server chạy trên http://localhost:3001
-Error sending mail Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
-535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-23c8457ad35sm64704315ad.144 - gsmtp
-    at SMTPConnection._formatError (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:809:19)
-    at SMTPConnection._actionAUTHComplete (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:1588:34)
-    at SMTPConnection.<anonymous> (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:556:26)
-    at SMTPConnection._processResponse (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
-    at SMTPConnection._onData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
-    at SMTPConnection._onSocketData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
-    at TLSSocket.emit (node:events:514:28)
-    at addChunk (node:internal/streams/readable:376:12)
-    at readableAddChunk (node:internal/streams/readable:349:9)
-    at Readable.push (node:internal/streams/readable:286:10) {
-  code: 'EAUTH',
-  response: '535-5.7.8 Username and Password not accepted. For more information, go to\n' +
-    '535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-23c8457ad35sm64704315ad.144 - gsmtp',
-  responseCode: 535,
-  command: 'AUTH PLAIN'
+node:events:492
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at Server.listen (node:net:2008:7)
+    at file:///volume1/web/HCMUS_Smart_Canteen/backend/index.js:483:30
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1899:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3001
 }
-Error sending mail Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
-535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-74ce4180a5bsm7226802b3a.106 - gsmtp
-    at SMTPConnection._formatError (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:809:19)
-    at SMTPConnection._actionAUTHComplete (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:1588:34)
-    at SMTPConnection.<anonymous> (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:556:26)
-    at SMTPConnection._processResponse (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
-    at SMTPConnection._onData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
-    at SMTPConnection._onSocketData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
-    at TLSSocket.emit (node:events:514:28)
-    at addChunk (node:internal/streams/readable:376:12)
-    at readableAddChunk (node:internal/streams/readable:349:9)
-    at Readable.push (node:internal/streams/readable:286:10) {
-  code: 'EAUTH',
-  response: '535-5.7.8 Username and Password not accepted. For more information, go to\n' +
-    '535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-74ce4180a5bsm7226802b3a.106 - gsmtp',
-  responseCode: 535,
-  command: 'AUTH PLAIN'
-}
-Error sending mail Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
-535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-74ce42d547dsm6924793b3a.159 - gsmtp
-    at SMTPConnection._formatError (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:809:19)
-    at SMTPConnection._actionAUTHComplete (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:1588:34)
-    at SMTPConnection.<anonymous> (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:556:26)
-    at SMTPConnection._processResponse (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
-    at SMTPConnection._onData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
-    at SMTPConnection._onSocketData (/volume1/web/HCMUS_Smart_Canteen/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
-    at TLSSocket.emit (node:events:514:28)
-    at addChunk (node:internal/streams/readable:376:12)
-    at readableAddChunk (node:internal/streams/readable:349:9)
-    at Readable.push (node:internal/streams/readable:286:10) {
-  code: 'EAUTH',
-  response: '535-5.7.8 Username and Password not accepted. For more information, go to\n' +
-    '535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-74ce42d547dsm6924793b3a.159 - gsmtp',
-  responseCode: 535,
-  command: 'AUTH PLAIN'
-}
+
+Node.js v20.9.0
