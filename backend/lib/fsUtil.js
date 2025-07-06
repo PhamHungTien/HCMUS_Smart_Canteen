@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import { dirname } from 'path';
 
 export async function readJson(file, fallback = []) {
   try {
@@ -10,5 +11,9 @@ export async function readJson(file, fallback = []) {
 }
 
 export async function writeJson(file, data) {
-  await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
+  const dir = dirname(file);
+  await fs.mkdir(dir, { recursive: true });
+  const tmp = file + '.tmp';
+  await fs.writeFile(tmp, JSON.stringify(data, null, 2), 'utf8');
+  await fs.rename(tmp, file);
 }
