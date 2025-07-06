@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password": "admin@123",
+    "fullName": "Administrator",
+    "staffId": "ADMIN",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "username": "phamhungtien",
+    "password": "12345678",
+    "fullName": "Phạm Hùng Tiến",
+    "staffId": "24207043",
+    "phone": "0378210629",
+    "email": "hungtien10a7@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 3,
+    "username": "ttnguyen1412",
+    "password": "14122006",
+    "fullName": "Trần Thái Nguyên",
+    "staffId": "24207029",
+    "phone": "0332113816",
+    "email": "trannguyen1412cm@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 4,
+    "username": "abc",
+    "password": "123456789",
+    "fullName": "a b c",
+    "staffId": "2420700000",
+    "phone": "0381234567",
+    "email": "11111@gmail.com",
+    "role": "user"
+  }
+]

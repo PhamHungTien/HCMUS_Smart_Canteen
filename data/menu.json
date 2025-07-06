@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "name": "Bánh nướng",
+    "price": 25000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815275711.webp",
+    "model": "menu/item_1751815276119.glb"
+  },
+  {
+    "id": 2,
+    "name": "Cơm gà khoai tây ",
+    "price": 35000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815302443.webp",
+    "model": "menu/item_1751815303652.glb"
+  },
+  {
+    "id": 3,
+    "name": "Gà nguyên con",
+    "price": 97000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815328917.jpg",
+    "model": "menu/item_1751815329609.glb"
+  },
+  {
+    "id": 4,
+    "name": "Ramen",
+    "price": 40000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815395423.jpg",
+    "model": "menu/item_1751815395700.glb"
+  },
+  {
+    "id": 5,
+    "name": "Mì bò",
+    "price": 30000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815442777.jpg",
+    "model": "menu/item_1751815442845.glb"
+  },
+  {
+    "id": 6,
+    "name": "Salads",
+    "price": 20000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815474333.jpg",
+    "model": "menu/item_1751815475939.glb"
+  },
+  {
+    "id": 7,
+    "name": "Thịt bò hầm",
+    "price": 40000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815504664.jpg",
+    "model": "menu/item_1751815505182.glb"
+  },
+  {
+    "id": 8,
+    "name": "Sushi",
+    "price": 40000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815587097.jpg",
+    "model": "menu/item_1751815587160.glb"
+  },
+  {
+    "id": 9,
+    "name": "Sandwich",
+    "price": 25000,
+    "category": "Món ăn",
+    "image": "menu/item_1751815624740.webp",
+    "model": "menu/item_1751815624858.glb"
+  },
+  {
+    "id": 10,
+    "name": "Vanilla",
+    "price": 15000,
+    "category": "Món tráng miệng",
+    "image": "menu/item_1751815725567.jpg",
+    "model": ""
+  },
+  {
+    "id": 11,
+    "name": "Cheese cake",
+    "price": 20000,
+    "category": "Món tráng miệng",
+    "image": "menu/item_1751815753600.jpg",
+    "model": "menu/item_1751815753881.glb"
+  },
+  {
+    "id": 12,
+    "name": "cherry cheese cake",
+    "price": 30000,
+    "category": "Món tráng miệng",
+    "image": "menu/item_1751815787145.jpg",
+    "model": "menu/item_1751815787393.glb"
+  },
+  {
+    "id": 13,
+    "name": "fruit cake",
+    "price": 25000,
+    "category": "Món tráng miệng",
+    "image": "menu/item_1751815861232.jpg",
+    "model": "menu/item_1751815862681.glb"
+  },
+  {
+    "id": 14,
+    "name": "sprinkle",
+    "price": 25000,
+    "category": "Món tráng miệng",
+    "image": "menu/item_1751815883964.jpg",
+    "model": "menu/item_1751815885017.glb"
+  }
+]
