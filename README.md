@@ -7,11 +7,13 @@ Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng 
 ### Đăng ký và đăng nhập
 - Người dùng có thể tạo tài khoản mới tại `/signup` và đăng nhập tại `/login`.
 - Hỗ trợ quên mật khẩu và đổi mật khẩu sau khi đăng nhập.
+- Sau khi đăng ký, hệ thống gửi email xác nhận vào địa chỉ đã đăng ký.
 
 ### Đặt món trực tuyến
 - Xem thực đơn, thêm món vào giỏ hàng và chọn thời gian lấy món.
 - Hệ thống chỉ nhận tối đa **5 đơn** trong mỗi khung **15 phút** để tránh quá tải lúc nhận hàng. Nếu khung giờ đã đầy, người dùng sẽ được thông báo chọn thời gian khác.
 - Thanh toán bằng Momo hoặc VietQR ngay trên giao diện web.
+- Bạn sẽ nhận hai email nhắc nhở trước khi lấy món (khoảng 30 phút và 10 phút trước giờ nhận) kèm liên kết huỷ đơn nếu cần.
 
 ### Đánh giá và góp ý
 - Người dùng có thể đánh giá từng món ăn bằng số sao và nhận xét.
@@ -20,11 +22,11 @@ Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng 
 ### Cài đặt tài khoản
 - Thay đổi thông tin cá nhân, bật/tắt chế độ tối và chọn ngôn ngữ Việt/Anh.
 
-### Chức năng quản trị
-- **Quản lý thực đơn**: thêm, sửa, xoá món ăn, tải lên hình ảnh và mô hình 3D để hiển thị ở chế độ AR.
+- **Quản lý thực đơn**: thêm, sửa, xoá món ăn, tải lên hình ảnh và mô hình 3D để hiển thị ở chế độ AR. Mặc định có ba danh mục "Món ăn", "Đồ uống" và "Món tráng miệng"; hiện không có món mẫu nên bạn có thể tự thêm món và hình ảnh sau.
 - **Quản lý đơn hàng**: xem danh sách đơn, cập nhật trạng thái hoặc huỷ đơn.
 - **Báo cáo doanh thu**: thống kê doanh thu theo khoảng thời gian tuỳ chọn.
 - **Quản lý người dùng**: xem và chỉnh sửa thông tin tài khoản.
+- Người dùng có thể xem trạng thái và huỷ các đơn "Chờ" trong trang Cài đặt.
 
 ## Công nghệ sử dụng
 - **Frontend**: React qua CDN và Babel cho JSX.
@@ -46,6 +48,9 @@ Máy chủ chạy tại `http://localhost:3001`. Tài khoản quản trị mặc
 user: admin
 pass: admin@123
 ```
+Mặc định server sẽ gửi email bằng tài khoản `canteenar@gmail.com` để thông báo
+khi đăng ký và trước giờ nhận món. Bạn có thể thay đổi bằng biến môi trường
+`EMAIL_USER` và `EMAIL_PASS`.
 
 ## API chính
 - `GET /menu` – lấy thực đơn
@@ -64,7 +69,7 @@ Smart Canteen là nền tảng mẫu để xây dựng căng tin thông minh. B�
 ### 1. Khởi tạo dữ liệu
 - Khi server chạy lần đầu, hàm `initData()` tạo thư mục `data/` và các file JSON nếu chưa tồn tại.
 - Tài khoản quản trị mặc định (`admin/admin@123`) được thêm vào `users.json` nếu không có sẵn.
-- Menu mẫu lấy từ `backend/data/defaultMenu.js` sẽ ghi vào `menu.json` lần đầu tiên.
+- `menu.json` được tạo rỗng để bạn tự thêm món ăn trong trang quản trị.
 
 ### 2. Xác thực người dùng
 - Các API yêu cầu đăng nhập dùng `Basic` authentication.

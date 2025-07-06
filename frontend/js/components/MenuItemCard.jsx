@@ -6,7 +6,11 @@ const MenuItemCard = ({ item, add, addingId, onImageClick }) => {
   return (
     <div key={item.id} className="card">
       <div className="image-container" onClick={() => onImageClick && onImageClick(item)}>
-        <img src={item.image} alt={item.name} loading="lazy" />
+        {item.image ? (
+          <img src={item.image} alt={item.name} loading="lazy" />
+        ) : (
+          <div className="no-image">No Image</div>
+        )}
       </div>
       <div className="card-content">
         <h3>{item.name}</h3>

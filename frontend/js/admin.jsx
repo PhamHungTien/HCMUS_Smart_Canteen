@@ -5,6 +5,7 @@ function AdminApp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [menu, setMenu] = useState([]);
+  const CATEGORIES = ['Món ăn', 'Đồ uống', 'Món tráng miệng'];
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
@@ -246,7 +247,13 @@ function AdminApp() {
               </td>
               <td><input value={item.name} onChange={e => updateItem(item.id, { name: e.target.value })} /></td>
               <td><input type="number" value={item.price} onChange={e => updateItem(item.id, { price: parseInt(e.target.value, 10) })} /></td>
-              <td><input value={item.category} onChange={e => updateItem(item.id, { category: e.target.value })} /></td>
+              <td>
+                <select value={item.category} onChange={e => updateItem(item.id, { category: e.target.value })}>
+                  {CATEGORIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </td>
               <td><button className="btn" onClick={() => deleteItem(item.id)}>Xóa</button></td>
             </tr>
           ))}
@@ -256,7 +263,14 @@ function AdminApp() {
             <td><input type="file" accept=".glb" onChange={e => setNewItem({ ...newItem, modelFile: e.target.files[0] })} /></td>
             <td><input value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} /></td>
             <td><input type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} /></td>
-            <td><input value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })} /></td>
+            <td>
+              <select value={newItem.category} onChange={e => setNewItem({ ...newItem, category: e.target.value })}>
+                <option value="">Chọn</option>
+                {CATEGORIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </td>
             <td><button className="btn" onClick={addItem}>Thêm</button></td>
           </tr>
         </tbody>
@@ -284,6 +298,7 @@ function AdminApp() {
                 <select value={o.status} onChange={e => updateOrder(o.id, e.target.value)}>
                   <option value="pending">Chờ</option>
                   <option value="done">Hoàn tất</option>
+                  <option value="cancelled">Đã huỷ</option>
                 </select>
               </td>
               <td><button className="btn" onClick={() => deleteOrder(o.id)}>Xóa</button></td>

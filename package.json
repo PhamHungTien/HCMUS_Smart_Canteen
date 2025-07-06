@@ -4,5 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "node backend/index.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
   }
 }

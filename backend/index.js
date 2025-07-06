@@ -4,6 +4,7 @@ import { extname, join, normalize, dirname } from 'path';
 import { fileURLToPath, URL } from 'url';
 import { readJson, writeJson } from './lib/fsUtil.js';
 import { initData, ORDERS_FILE, USERS_FILE, MENU_FILE, FEEDBACK_FILE } from './lib/initData.js';
+import { sendMail } from './lib/mailer.js';
 
 const PORT = process.env.PORT || 3001;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -84,6 +85,35 @@ async function parseBody(req) {
   });
 }
 
+async function sendOrderReminders() {
+  const orders = await readJson(ORDERS_FILE);
+  const users = await readJson(USERS_FILE);
+  const now = Date.now();
+  let changed = false;
+  for (const o of orders) {
+    if (o.status !== 'pending') continue;
+    const t = new Date(o.time).getTime();
+    const diff = t - now;
+    const user = users.find(x => x.username === o.customerUsername);
+    if (!user) continue;
+    const cancelLink = `http://${process.env.HOST || 'localhost:' + PORT}/cancel?id=${o.id}`;
+    const html = `<p>Đơn hàng #${o.id} sẽ sẵn sàng lúc ${new Date(o.time).toLocaleTimeString()}.</p>` +
+      `<p><a href="${cancelLink}" style="padding:8px 12px;background:#d9534f;color:#fff;text-decoration:none">Huỷ đơn</a></p>`;
+    if (!o.firstReminderSent && diff > 10 * 60 * 1000 && diff <= 30 * 60 * 1000) {
+      await sendMail(user.email, 'Nhắc nhở nhận món',
+        `Đơn hàng #${o.id} sẽ sẵn sàng lúc ${new Date(o.time).toLocaleTimeString()}.`, html);
+      o.firstReminderSent = true;
+      changed = true;
+    } else if (!o.secondReminderSent && diff > 0 && diff <= 10 * 60 * 1000) {
+      await sendMail(user.email, 'Sắp đến giờ nhận món',
+        `Đơn hàng #${o.id} sẽ sẵn sàng lúc ${new Date(o.time).toLocaleTimeString()}.`, html);
+      o.secondReminderSent = true;
+      changed = true;
+    }
+  }
+  if (changed) await writeJson(ORDERS_FILE, orders);
+}
+
 async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (req.method === "GET" && url.pathname.endsWith(".html")) {
@@ -132,6 +162,12 @@ async function handler(req, res) {
       role: user.role || 'user'
     });
     await writeJson(USERS_FILE, users);
+    sendMail(
+      user.email,
+      'Đăng ký thành công',
+      `Chào ${user.fullName}, tài khoản của bạn đã được tạo thành công.`,
+      `<p>Chào ${user.fullName}, tài khoản của bạn đã được tạo thành công.</p>`
+    );
     send(res, 200, { message: 'Đăng ký thành công' });
     return;
   }
@@ -358,6 +394,41 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/my-orders') {
+    const user = await authenticate(req);
+    if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
+    const orders = await readJson(ORDERS_FILE);
+    const list = orders.filter(o => o.customerUsername === user.username);
+    send(res, 200, list);
+    return;
+  }
+
+  if (req.method === 'PUT' && url.pathname.startsWith('/my-orders/')) {
+    const user = await authenticate(req);
+    if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
+    const id = url.pathname.split('/')[2];
+    let orders = await readJson(ORDERS_FILE);
+    const idx = orders.findIndex(o => String(o.id) === id && o.customerUsername === user.username);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    if (orders[idx].status !== 'pending') { send(res, 400, { error: 'Không thể huỷ' }); return; }
+    orders[idx].status = 'cancelled';
+    await writeJson(ORDERS_FILE, orders);
+    send(res, 200, { message: 'Đã huỷ đơn' });
+    return;
+  }
+
+  if (req.method === 'GET' && url.pathname === '/cancel') {
+    const id = url.searchParams.get('id');
+    let orders = await readJson(ORDERS_FILE);
+    const idx = orders.findIndex(o => String(o.id) === id);
+    if (idx === -1) { send(res, 404, { error: 'Không tìm thấy' }); return; }
+    orders[idx].status = 'cancelled';
+    await writeJson(ORDERS_FILE, orders);
+    res.writeHead(200, { 'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*' });
+    res.end('<h1>Đơn hàng đã được huỷ</h1>');
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/users') {
     if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const users = await readJson(USERS_FILE);
@@ -398,4 +469,5 @@ initData(fs).then(() => {
   http.createServer(handler).listen(PORT, () => {
     console.log(`✅ Server chạy trên http://localhost:${PORT}`);
   });
+  setInterval(sendOrderReminders, 60000);
 });
