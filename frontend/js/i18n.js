@@ -87,7 +87,8 @@ const translations = {
     role_admin: 'Quản trị',
     login_button: 'Đăng nhập',
     create_account: 'Tạo tài khoản',
-    forgot_password: 'Quên mật khẩu?'
+    forgot_password: 'Quên mật khẩu?',
+    tap_image_ar: 'Ấn vào hình để xem AR'
   },
   en: {
     menu: 'Menu',
@@ -177,7 +178,8 @@ const translations = {
     role_admin: 'Admin',
     login_button: 'Login',
     create_account: 'Create account',
-    forgot_password: 'Forgot password?'
+    forgot_password: 'Forgot password?',
+    tap_image_ar: 'Tap image for AR view'
   }
 };
 

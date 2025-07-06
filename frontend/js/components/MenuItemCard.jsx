@@ -11,6 +11,7 @@ const MenuItemCard = ({ item, add, addingId, onImageClick }) => {
         ) : (
           <div className="no-image">No Image</div>
         )}
+        <span className="ar-hint">{t('tap_image_ar')}</span>
       </div>
       <div className="card-content">
         <h3>{item.name}</h3>

@@ -1,5 +1,6 @@
 const ModelViewerModal = ({ item, onClose, onAdd }) => {
-  const [scale, setScale] = React.useState(0.5); // mặc định nhỏ nhất
+  // tỉ lệ mô hình khi hiển thị, có thể thay đổi bằng các nút +/-
+  const [scale, setScale] = React.useState(0.5);
   if (!item) return null;
   const adjust = (d) => {
     setScale(s => {
@@ -12,7 +13,16 @@ const ModelViewerModal = ({ item, onClose, onAdd }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" style={{width:'90%',maxWidth:'600px',height:'80vh',display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
-        <model-viewer src={item.model} ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" camera-controls autoplay style={{flex:1,transform:`scale(${scale})`,transition:'transform 0.2s ease-out'}}></model-viewer>
+        <model-viewer
+          src={item.model}
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          ar-scale="auto"
+          camera-controls
+          auto-rotate
+          scale={`${scale} ${scale} ${scale}`}
+          style={{flex:1,width:'100%',height:'100%',margin:'0 auto'}}
+        ></model-viewer>
         <div style={{marginTop:10,display:'flex',justifyContent:'center',alignItems:'center',gap:'10px'}}>
           <button className="btn" onClick={() => adjust(-0.1)}>-</button>
           <span>{Math.round(scale*100)}%</span>
