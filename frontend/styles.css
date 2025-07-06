@@ -312,6 +312,7 @@ body.dark-mode {
             height: 150px;
             background: #f0f0f0;
             overflow: hidden;
+            position: relative;
         }
 
         .image-container img {
@@ -329,6 +330,18 @@ body.dark-mode {
             justify-content: center;
             color: #777;
             font-size: 14px;
+        }
+
+        .ar-hint {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
         }
 
         .card-content {
