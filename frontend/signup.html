@@ -21,20 +21,26 @@
       <input type="email" name="email" placeholder="Email liên hệ" required />
       <button class="btn" type="submit">Đăng ký</button>
     </form>
-    <p style="text-align:center;margin-top:10px">
-      <a href="/login">Quay lại đăng nhập</a>
-    </p>
-  </div>
-  <div id="toast" class="toast"></div>
-  <script src="js/utils.js"></script>
-  <script>
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const f = e.target;
-      if (f.password.value !== f.confirmPassword.value) {
-        showToast('Mật khẩu không khớp');
-        return;
-      }
+    <div class="action-links">
+        <a href="/login" class="btn">Quay lại đăng nhập</a>
+      </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="js/utils.js"></script>
+    <script>
+      const suUser = document.querySelector('#signup-form input[name="username"]');
+      sanitizeUsernameInput(suUser);
+      document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const f = e.target;
+        if(!isValidUsername(f.username.value)) {
+          showToast('Tên đăng nhập chỉ gồm chữ và số, không dấu cách.');
+          return;
+        }
+        if (f.password.value !== f.confirmPassword.value) {
+          showToast('Mật khẩu không khớp');
+          return;
+        }
       const res = await fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

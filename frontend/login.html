@@ -20,17 +20,31 @@
       </select>
       <button class="btn" type="submit" data-i18n="login_button">Đăng nhập</button>
     </form>
-    <p style="text-align:center;margin-top:10px">
-      <a href="signup" class="link-btn" data-i18n="create_account">Tạo tài khoản</a> |
-      <a href="forgot" class="link-btn" data-i18n="forgot_password">Quên mật khẩu?</a>
-    </p>
+    <div class="action-links">
+      <a href="signup" class="btn" data-i18n="create_account">Tạo tài khoản</a>
+      <a href="forgot" class="btn" data-i18n="forgot_password">Quên mật khẩu?</a>
+    </div>
   </div>
   <div id="toast" class="toast"></div>
+  <div class="footer">
+    <div class="footer-logo">
+      <img src="img/HCMUS.png" alt="ĐHQG-HCM Logo" />
+    </div>
+    <p id="footer-year"></p>
+    <p>Phát triển bởi: Hồ Sĩ Phú, Phạm Hùng Tiến, Phạm Cao Bằng, Trần Thái Nguyên, Lê Quang Bảo Trung.</p>
+  </div>
   <script src="js/utils.js"></script>
   <script>
+    document.getElementById('footer-year').textContent = `© ${new Date().getFullYear()} Canteen KHTN Nguyễn Văn Cừ. All rights reserved.`;
+    const usernameInput = document.querySelector('input[name="username"]');
+    sanitizeUsernameInput(usernameInput);
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
+      if(!isValidUsername(form.username.value)) {
+        showToast('Tên đăng nhập chỉ gồm chữ và số, không dấu cách.');
+        return;
+      }
       const res = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

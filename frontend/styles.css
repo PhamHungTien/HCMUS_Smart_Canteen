@@ -446,6 +446,12 @@ body.dark-mode {
 
         .form-card {
             padding: 20px; /* increased padding */
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-card h3 {
@@ -594,12 +600,20 @@ textarea {
 .link-btn:hover {
     text-decoration: underline;
 }
+.action-links {
+    text-align: center;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
 .btn {
     padding: 12px 20px; /* larger padding for main button */
     border: none;
     background: var(--primary-color);
     color: var(--text-light);
+    display: inline-block;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
@@ -610,6 +624,11 @@ textarea {
 .btn:hover:not(:disabled) {
     background: #084298; /* darker primary color on hover */
     transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .danger-btn {
@@ -1303,6 +1322,13 @@ textarea {
 .admin-table select {
     width: 100%;
     box-sizing: border-box;
+}
+
+.user-action-cell {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .change-pw-btn {

@@ -145,6 +145,10 @@ async function handler(req, res) {
       send(res, 400, { error: 'Thiếu thông tin' });
       return;
     }
+    if(!/^[a-zA-Z0-9]+$/.test(user.username)) {
+      send(res, 400, { error: 'Tên đăng nhập không hợp lệ' });
+      return;
+    }
     const users = await readJson(USERS_FILE);
     if (users.some(u => u.username === user.username)) {
       send(res, 400, { error: 'Tài khoản đã tồn tại' });
@@ -175,6 +179,10 @@ async function handler(req, res) {
   if (req.method === 'POST' && url.pathname === '/login') {
     const user = await parseBody(req);
     if (!user) { send(res, 400, { error: 'Thiếu thông tin' }); return; }
+    if(!/^[a-zA-Z0-9]+$/.test(user.username)) {
+      send(res, 400, { error: 'Tên đăng nhập không hợp lệ' });
+      return;
+    }
     const users = await readJson(USERS_FILE);
     const found = users.find(u => u.username === user.username && u.password === user.password);
     if (!found) {
@@ -212,6 +220,10 @@ async function handler(req, res) {
     const body = await parseBody(req);
     if (!body || !body.username || !body.staffId || !body.newPassword) {
       send(res, 400, { error: 'Thiếu thông tin' });
+      return;
+    }
+    if(!/^[a-zA-Z0-9]+$/.test(body.username)) {
+      send(res, 400, { error: 'Tên đăng nhập không hợp lệ' });
       return;
     }
     const users = await readJson(USERS_FILE);
