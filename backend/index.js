@@ -265,7 +265,9 @@ async function handler(req, res) {
     const ext = extname(body.filename) || '.jpg';
     const fname = `item_${Date.now()}${ext}`;
     const base64 = body.data.split(',').pop();
-    await fs.writeFile(join(PUBLIC_DIR, 'menu', fname), Buffer.from(base64, 'base64'));
+    const menuDir = join(PUBLIC_DIR, 'menu');
+    await fs.mkdir(menuDir, { recursive: true });
+    await fs.writeFile(join(menuDir, fname), Buffer.from(base64, 'base64'));
     send(res, 200, { path: `menu/${fname}` });
     return;
   }
