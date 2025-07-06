@@ -17,16 +17,22 @@
       <input type="password" name="newPassword" placeholder="Mật khẩu mới" required />
       <button class="btn" type="submit">Đổi mật khẩu</button>
     </form>
-    <p style="text-align:center;margin-top:10px">
-      <a href="/login" class="link-btn" data-i18n="back_login">Quay lại đăng nhập</a>
-    </p>
+    <div class="action-links">
+      <a href="/login" class="btn" data-i18n="back_login">Quay lại đăng nhập</a>
+    </div>
   </div>
   <div id="toast" class="toast"></div>
   <script src="js/utils.js"></script>
   <script>
+    const fu = document.querySelector('#reset-form input[name="username"]');
+    sanitizeUsernameInput(fu);
     document.getElementById('reset-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const f = e.target;
+      if(!isValidUsername(f.username.value)) {
+        showToast('Tên đăng nhập chỉ gồm chữ và số, không dấu cách.');
+        return;
+      }
       const res = await fetch('/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

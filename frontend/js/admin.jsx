@@ -365,9 +365,9 @@ function AdminApp() {
               <td>
                 <input type="password" value={pwMap[u.id] || ''} onChange={e => setPwMap({ ...pwMap, [u.id]: e.target.value })} />
               </td>
-              <td>
-                <button className="btn" style={{marginRight:10}} onClick={() => { updateUser(u.id, { password: pwMap[u.id] }); setPwMap({ ...pwMap, [u.id]: '' }); }}>Đổi</button>
-                <button className="btn" onClick={() => deleteUser(u.id)}>Xóa</button>
+              <td className="user-action-cell">
+                <button className="btn" onClick={() => { updateUser(u.id, { password: pwMap[u.id] }); setPwMap({ ...pwMap, [u.id]: '' }); }}>Đổi</button>
+                <button className="btn danger-btn" onClick={() => deleteUser(u.id)}>Xóa</button>
               </td>
             </tr>
           ))}
