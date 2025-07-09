@@ -283,6 +283,9 @@ body.dark-mode {
                 padding: 8px; /* Even less padding on very small screens */
                 font-size: 14px; /* Smaller font for tighter spaces */
             }
+            .grid {
+                grid-template-columns: repeat(2, 1fr); /* Hiển thị 2 cột món ăn */
+            }
         }
 
         .card {
