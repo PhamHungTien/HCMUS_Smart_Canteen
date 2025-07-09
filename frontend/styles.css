@@ -19,7 +19,7 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f9fafb;
+    background: linear-gradient(135deg, #e0f2ff 0%, #f9f9fb 100%); /* pastel gradient */
     color: var(--text-color);
     scroll-behavior: smooth; /* Cuộn mượt khi click Floating Cart */
     padding-top: var(--navbar-height); /* Đảm bảo nội dung không bị che bởi navbar */
@@ -135,7 +135,7 @@ body.dark-mode {
     --shadow-light: rgba(255,255,255,0.08);
     --shadow-medium: rgba(255,255,255,0.12);
     --shadow-hover: rgba(255,255,255,0.15);
-    background: #121212;
+    background: linear-gradient(135deg, #1a237e 0%, #311b92 100%); /* dark gradient */
     color: var(--text-color);
     /* Brighten key accents in dark mode */
     --price-accent: #64a8ff; /* lighter blue for prices and cart icon */

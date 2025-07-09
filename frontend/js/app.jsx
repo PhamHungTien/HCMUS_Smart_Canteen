@@ -440,6 +440,7 @@ return (
                                 <h4 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px', marginBottom: '20px', fontSize: '24px', color: '#333' }}>
                                     {cat === 'Món ăn' && <i className="fa-solid fa-burger" style={{ color: 'var(--primary-color)', fontSize: '28px' }}></i>}
                                     {cat === 'Đồ uống' && <i className="fa-solid fa-mug-saucer" style={{ color: 'var(--primary-color)', fontSize: '28px' }}></i>}
+                                    {cat === 'Món tráng miệng' && <i className="fa-solid fa-ice-cream" style={{ color: 'var(--primary-color)', fontSize: '28px' }}></i>}
                                     {cat}
                                 </h4>
                             )}
