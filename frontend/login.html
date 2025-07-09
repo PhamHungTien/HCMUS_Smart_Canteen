@@ -10,7 +10,7 @@
 </head>
 <body>
   <div class="card form-card" style="max-width:400px;margin:40px auto">
-    <h2 class="welcome-title">Chào mừng đến với Smart Canteen</h2>
+    <h2 class="welcome-title">Chào mừng đến với Smart Canteen AR</h2>
     <h3 data-i18n="login_title">Đăng nhập</h3>
     <form id="login-form">
       <input name="username" placeholder="Tên đăng nhập" data-i18n="username_placeholder" required />
@@ -36,7 +36,7 @@
   </div>
   <script src="js/utils.js"></script>
   <script>
-    document.getElementById('footer-year').textContent = `© ${new Date().getFullYear()} Canteen KHTN Nguyễn Văn Cừ. All rights reserved.`;
+    document.getElementById('footer-year').textContent = `© ${new Date().getFullYear()} Smart Canteen AR. All rights reserved.`;
     const usernameInput = document.querySelector('input[name="username"]');
     sanitizeUsernameInput(usernameInput);
     document.getElementById('login-form').addEventListener('submit', async (e) => {

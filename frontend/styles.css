@@ -135,7 +135,7 @@ body.dark-mode {
     --shadow-light: rgba(255,255,255,0.08);
     --shadow-medium: rgba(255,255,255,0.12);
     --shadow-hover: rgba(255,255,255,0.15);
-    background: linear-gradient(135deg, #08152e 0%, #001123 100%); /* darker blue-black gradient */
+    background: linear-gradient(135deg, #000b1d 0%, #00040e 100%); /* deepest blue-black gradient */
     color: var(--text-color);
     /* Brighten key accents in dark mode */
     --price-accent: #64a8ff; /* lighter blue for prices and cart icon */
@@ -648,6 +648,7 @@ textarea {
     background: #084298; /* darker primary color on hover */
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-decoration: none; /* keep links un-underlined */
 }
 
 .btn:active:not(:disabled) {
