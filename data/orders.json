@@ -29,6 +29,558 @@
     "total": 25000,
     "paymentMethod": "momo",
     "createdAt": "2025-07-06T16:22:17.006Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 2,
+    "time": "2025-07-08T10:22:00.000Z",
+    "customerName": "Administrator",
+    "customerUsername": "admin",
+    "staffId": "ADMIN",
+    "specialRequest": "Iu cầu",
+    "items": [
+      {
+        "id": 1,
+        "name": "Bánh nướng",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815275711.webp",
+        "model": "menu/item_1751815276119.glb",
+        "qty": 1
+      },
+      {
+        "id": 4,
+        "name": "Ramen",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815395423.jpg",
+        "model": "menu/item_1751815395700.glb",
+        "qty": 1
+      },
+      {
+        "id": 5,
+        "name": "Mì bò",
+        "price": 30000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815442777.jpg",
+        "model": "menu/item_1751815442845.glb",
+        "qty": 1
+      },
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 2
+      },
+      {
+        "id": 7,
+        "name": "Thịt bò hầm",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815504664.jpg",
+        "model": "menu/item_1751815505182.glb",
+        "qty": 2
+      },
+      {
+        "id": 8,
+        "name": "Sushi",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815587097.jpg",
+        "model": "menu/item_1751815587160.glb",
+        "qty": 2
+      }
+    ],
+    "total": 295000,
+    "paymentMethod": "momo",
+    "createdAt": "2025-07-06T17:10:23.555Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 3,
+    "time": "2025-07-07T07:10:00.000Z",
+    "customerName": "Tiến Phạm Hùng",
+    "customerUsername": "phamhungtien1404",
+    "staffId": "24207043",
+    "specialRequest": "Abc",
+    "items": [
+      {
+        "id": 4,
+        "name": "Ramen",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815395423.jpg",
+        "model": "menu/item_1751815395700.glb",
+        "qty": 2
+      },
+      {
+        "id": 7,
+        "name": "Thịt bò hầm",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815504664.jpg",
+        "model": "menu/item_1751815505182.glb",
+        "qty": 4
+      }
+    ],
+    "total": 240000,
+    "paymentMethod": "momo",
+    "createdAt": "2025-07-07T03:57:34.202Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 4,
+    "time": "2025-07-07T06:14:00.000Z",
+    "customerName": "abc",
+    "customerUsername": "abc123",
+    "staffId": "24207abc",
+    "specialRequest": "sushi rẻ vậy, hàng chất lượng ko vậy",
+    "items": [
+      {
+        "id": 8,
+        "name": "Sushi",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815587097.jpg",
+        "model": "menu/item_1751815587160.glb",
+        "qty": 1
+      }
+    ],
+    "total": 40000,
+    "paymentMethod": "cod",
+    "createdAt": "2025-07-07T04:01:13.898Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 5,
+    "time": "2025-07-31T01:15:00.000Z",
+    "customerName": "T",
+    "customerUsername": "Uia123",
+    "staffId": "999999",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 1,
+        "name": "Bánh nướng",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815275711.webp",
+        "model": "menu/item_1751815276119.glb",
+        "qty": 3
+      },
+      {
+        "id": 3,
+        "name": "Gà nguyên con",
+        "price": 97000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815328917.jpg",
+        "model": "menu/item_1751815329609.glb",
+        "qty": 6
+      },
+      {
+        "id": 4,
+        "name": "Ramen",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815395423.jpg",
+        "model": "menu/item_1751815395700.glb",
+        "qty": 10
+      },
+      {
+        "id": 5,
+        "name": "Mì bò",
+        "price": 30000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815442777.jpg",
+        "model": "menu/item_1751815442845.glb",
+        "qty": 1
+      },
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 1
+      },
+      {
+        "id": 7,
+        "name": "Thịt bò hầm",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815504664.jpg",
+        "model": "menu/item_1751815505182.glb",
+        "qty": 1
+      },
+      {
+        "id": 8,
+        "name": "Sushi",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815587097.jpg",
+        "model": "menu/item_1751815587160.glb",
+        "qty": 1
+      },
+      {
+        "id": 9,
+        "name": "Sandwich",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815624740.webp",
+        "model": "menu/item_1751815624858.glb",
+        "qty": 1
+      },
+      {
+        "id": 10,
+        "name": "Vanilla",
+        "price": 15000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815725567.jpg",
+        "model": "",
+        "qty": 1
+      },
+      {
+        "id": 11,
+        "name": "Cheese cake",
+        "price": 20000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815753600.jpg",
+        "model": "menu/item_1751815753881.glb",
+        "qty": 1
+      },
+      {
+        "id": 12,
+        "name": "Cherry Cheese Cake",
+        "price": 30000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815787145.jpg",
+        "model": "menu/item_1751815787393.glb",
+        "qty": 5
+      },
+      {
+        "id": 13,
+        "name": "Fruit Cake",
+        "price": 25000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815861232.jpg",
+        "model": "menu/item_1751815862681.glb",
+        "qty": 3
+      },
+      {
+        "id": 14,
+        "name": "Sprinkle",
+        "price": 25000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815883964.jpg",
+        "model": "menu/item_1751815885017.glb",
+        "qty": 4
+      }
+    ],
+    "total": 1572000,
+    "paymentMethod": "momo",
+    "createdAt": "2025-07-07T04:01:42.727Z",
+    "status": "pending"
+  },
+  {
+    "id": 6,
+    "time": "2025-07-08T08:15:00.000Z",
+    "customerName": "mmmb",
+    "customerUsername": "mmb",
+    "staffId": "8910jqka",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 1
+      },
+      {
+        "id": 7,
+        "name": "Thịt bò hầm",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815504664.jpg",
+        "model": "menu/item_1751815505182.glb",
+        "qty": 1
+      }
+    ],
+    "total": 60000,
+    "paymentMethod": "vietqr",
+    "createdAt": "2025-07-07T04:01:45.804Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 7,
+    "time": "2025-07-07T06:12:00.000Z",
+    "customerName": "Lê Võ Thanh Tuyền ",
+    "customerUsername": "Nhong",
+    "staffId": "24207048",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 9,
+        "name": "Sandwich",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815624740.webp",
+        "model": "menu/item_1751815624858.glb",
+        "qty": 1
+      }
+    ],
+    "total": 25000,
+    "paymentMethod": "momo",
+    "createdAt": "2025-07-07T04:03:28.605Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 8,
+    "time": "2025-07-07T06:04:00.000Z",
+    "customerName": "Thuong",
+    "customerUsername": "Thuonh",
+    "staffId": "24207107",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 11,
+        "name": "Cheese cake",
+        "price": 20000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815753600.jpg",
+        "model": "menu/item_1751815753881.glb",
+        "qty": 1
+      },
+      {
+        "id": 13,
+        "name": "Fruit Cake",
+        "price": 25000,
+        "category": "Món tráng miệng",
+        "image": "menu/item_1751815861232.jpg",
+        "model": "menu/item_1751815862681.glb",
+        "qty": 1
+      }
+    ],
+    "total": 45000,
+    "paymentMethod": "cod",
+    "createdAt": "2025-07-07T04:04:20.649Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 9,
+    "time": "2025-07-07T06:19:00.000Z",
+    "customerName": "mmmb",
+    "customerUsername": "mmb",
+    "staffId": "8910jqka",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 1,
+        "name": "Bánh nướng",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815275711.webp",
+        "model": "menu/item_1751815276119.glb",
+        "qty": 1
+      },
+      {
+        "id": 3,
+        "name": "Gà nguyên con",
+        "price": 97000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815328917.jpg",
+        "model": "menu/item_1751815329609.glb",
+        "qty": 1
+      },
+      {
+        "id": 5,
+        "name": "Mì bò",
+        "price": 30000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815442777.jpg",
+        "model": "menu/item_1751815442845.glb",
+        "qty": 1
+      },
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 1
+      },
+      {
+        "id": 9,
+        "name": "Sandwich",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815624740.webp",
+        "model": "menu/item_1751815624858.glb",
+        "qty": 1
+      }
+    ],
+    "total": 197000,
+    "paymentMethod": "vietqr",
+    "createdAt": "2025-07-07T04:04:59.663Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 10,
+    "time": "2025-07-07T05:20:00.000Z",
+    "customerName": "mmmb",
+    "customerUsername": "mmb",
+    "staffId": "8910jqka",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 3,
+        "name": "Gà nguyên con",
+        "price": 97000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815328917.jpg",
+        "model": "menu/item_1751815329609.glb",
+        "qty": 1
+      },
+      {
+        "id": 1,
+        "name": "Bánh nướng",
+        "price": 25000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815275711.webp",
+        "model": "menu/item_1751815276119.glb",
+        "qty": 1
+      },
+      {
+        "id": 4,
+        "name": "Ramen",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815395423.jpg",
+        "model": "menu/item_1751815395700.glb",
+        "qty": 1
+      },
+      {
+        "id": 5,
+        "name": "Mì bò",
+        "price": 30000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815442777.jpg",
+        "model": "menu/item_1751815442845.glb",
+        "qty": 1
+      },
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 4
+      },
+      {
+        "id": 7,
+        "name": "Thịt bò hầm",
+        "price": 40000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815504664.jpg",
+        "model": "menu/item_1751815505182.glb",
+        "qty": 3
+      }
+    ],
+    "total": 392000,
+    "paymentMethod": "vietqr",
+    "createdAt": "2025-07-07T04:05:23.822Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 11,
+    "time": "2025-07-08T00:27:00.000Z",
+    "customerName": "Administrator",
+    "customerUsername": "admin",
+    "staffId": "ADMIN",
+    "specialRequest": "Abc",
+    "items": [
+      {
+        "id": 3,
+        "name": "Gà nguyên con",
+        "price": 97000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815328917.jpg",
+        "model": "menu/item_1751815329609.glb",
+        "qty": 6
+      },
+      {
+        "id": 5,
+        "name": "Mì bò",
+        "price": 30000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815442777.jpg",
+        "model": "menu/item_1751815442845.glb",
+        "qty": 5
+      }
+    ],
+    "total": 732000,
+    "paymentMethod": "momo",
+    "createdAt": "2025-07-07T05:14:17.404Z",
+    "status": "pending",
+    "firstReminderSent": true,
+    "secondReminderSent": true
+  },
+  {
+    "id": 12,
+    "time": "2025-07-25T10:31:00.000Z",
+    "customerName": "d",
+    "customerUsername": "huydung547",
+    "staffId": "f",
+    "specialRequest": "",
+    "items": [
+      {
+        "id": 3,
+        "name": "Gà nguyên con",
+        "price": 97000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815328917.jpg",
+        "model": "menu/item_1751815329609.glb",
+        "qty": 10
+      },
+      {
+        "id": 6,
+        "name": "Salads",
+        "price": 20000,
+        "category": "Món ăn",
+        "image": "menu/item_1751815474333.jpg",
+        "model": "menu/item_1751815475939.glb",
+        "qty": 10
+      }
+    ],
+    "total": 1170000,
+    "paymentMethod": "cod",
+    "createdAt": "2025-07-08T17:17:20.344Z",
     "status": "pending"
   }
 ]

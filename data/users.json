@@ -36,5 +36,175 @@
     "phone": "0381234567",
     "email": "11111@gmail.com",
     "role": "user"
+  },
+  {
+    "id": 5,
+    "username": "phamhungtien1404",
+    "password": "12345678",
+    "fullName": "Tiến Phạm Hùng",
+    "staffId": "24207043",
+    "phone": "378210629",
+    "email": "hungtien10a7@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 6,
+    "username": "abc123",
+    "password": "abc",
+    "fullName": "abc",
+    "staffId": "24207abc",
+    "phone": "abc",
+    "email": "abc@abc.com",
+    "role": "user"
+  },
+  {
+    "id": 7,
+    "username": "ngoclong",
+    "password": "123",
+    "fullName": "long",
+    "staffId": "11111",
+    "phone": "11111",
+    "email": "kk@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 8,
+    "username": "M",
+    "password": "123",
+    "fullName": "TDM",
+    "staffId": "24207099",
+    "phone": "911",
+    "email": "ducmanhtu@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 9,
+    "username": "thanhdat999",
+    "password": "thanhdat999",
+    "fullName": "Dat",
+    "staffId": "24207052",
+    "phone": "0901436559",
+    "email": "24207052@student.hcmus.edu.vn",
+    "role": "user"
+  },
+  {
+    "id": 10,
+    "username": "Hjfgb",
+    "password": "123",
+    "fullName": "Rgbvgh",
+    "staffId": "24207",
+    "phone": "0123456789",
+    "email": "nnn@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 11,
+    "username": "Thuonh",
+    "password": "123",
+    "fullName": "Thuong",
+    "staffId": "24207107",
+    "phone": "62930347492",
+    "email": "bsmdnd@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 12,
+    "username": "Tan",
+    "password": "12345",
+    "fullName": "Tan",
+    "staffId": "24207082",
+    "phone": "09",
+    "email": "dowpuni@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 13,
+    "username": "Uia123",
+    "password": "123456",
+    "fullName": "T",
+    "staffId": "999999",
+    "phone": "0912345678",
+    "email": "uia@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 14,
+    "username": "mmb",
+    "password": "mytbar-xyxzyW-7bizke",
+    "fullName": "mmmb",
+    "staffId": "8910jqka",
+    "phone": "0902020020",
+    "email": "mmb@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 15,
+    "username": "Fat0beo",
+    "password": "memaybeo",
+    "fullName": "Phát Phạm",
+    "staffId": "24207033",
+    "phone": "0328187852",
+    "email": "phatgoin@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 16,
+    "username": "thuandinh64",
+    "password": "123456789",
+    "fullName": "123456789",
+    "staffId": "123456789",
+    "phone": "1234567890",
+    "email": "dinhthuan0@gmail.com.co",
+    "role": "user"
+  },
+  {
+    "id": 17,
+    "username": "Nhong",
+    "password": "asdfghjkl",
+    "fullName": "Lê Võ Thanh Tuyền ",
+    "staffId": "24207048",
+    "phone": "0332625745",
+    "email": "thanhtuyen07062006@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 18,
+    "username": "Abcdef",
+    "password": "123456789",
+    "fullName": "Nnjshdvsjdjd",
+    "staffId": "Jwihebsbdhd",
+    "phone": "0927272872",
+    "email": "nshshsus@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 19,
+    "username": "Thuylinh0408",
+    "password": "123456789@tl",
+    "fullName": "Thuỳ Linh",
+    "staffId": "B24H0132",
+    "phone": "0967830408",
+    "email": "thuylinh408206@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 20,
+    "username": "Tien",
+    "password": "123456",
+    "fullName": "Hùng tiến",
+    "staffId": "24207001",
+    "phone": "0378741471",
+    "email": "pnduy2006@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 21,
+    "username": "huydung547",
+    "password": "conchoduy123",
+    "fullName": "d",
+    "staffId": "f",
+    "phone": "f",
+    "email": "g@gmail.com",
+    "role": "user"
   }
 ]

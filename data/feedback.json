@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "type": "rating",
+    "itemId": 4,
+    "rating": 5,
+    "comment": "",
+    "createdAt": "2025-07-06T17:10:45.284Z"
+  },
+  {
+    "type": "rating",
+    "itemId": 5,
+    "rating": 5,
+    "comment": "",
+    "createdAt": "2025-07-07T03:57:53.542Z"
+  }
+]
