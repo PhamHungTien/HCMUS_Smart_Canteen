@@ -9,6 +9,7 @@ import { sendMail } from './lib/mailer.js';
 const PORT = process.env.PORT || 3001;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(__dirname, '../frontend');
+const staticCache = new Map();
 const MAX_ORDERS_PER_SLOT = 5;
 const SLOT_INTERVAL = 15; // minutes
 
@@ -42,7 +43,11 @@ async function serveStatic(pathname, res) {
   const resolved = routes[pathname] || pathname;
   const filePath = join(PUBLIC_DIR, pathname === '/' ? 'index.html' : normalize(resolved).replace(/^\/+/, ''));
   try {
-    const data = await fs.readFile(filePath);
+    let data = staticCache.get(filePath);
+    if (!data) {
+      data = await fs.readFile(filePath);
+      staticCache.set(filePath, data);
+    }
     res.writeHead(200, { 'Content-Type': contentType(filePath) });
     res.end(data);
     return true;
@@ -362,6 +367,7 @@ async function handler(req, res) {
   if (req.method === 'GET' && url.pathname === '/orders') {
     if (!await isAdmin(req)) { send(res, 403, { error: 'Unauthorized' }); return; }
     const orders = await readJson(ORDERS_FILE);
+    orders.sort((a, b) => new Date(a.time) - new Date(b.time));
     send(res, 200, orders);
     return;
   }
@@ -412,7 +418,9 @@ async function handler(req, res) {
     const user = await authenticate(req);
     if (!user) { send(res, 401, { error: 'Unauthorized' }); return; }
     const orders = await readJson(ORDERS_FILE);
-    const list = orders.filter(o => o.customerUsername === user.username);
+    const list = orders
+      .filter(o => o.customerUsername === user.username)
+      .sort((a, b) => new Date(a.time) - new Date(b.time));
     send(res, 200, list);
     return;
   }

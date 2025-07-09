@@ -165,6 +165,7 @@ const fetchMyOrders = () => {
         headers: { 'Authorization': 'Basic ' + localStorage.getItem('auth') }
     })
     .then(res => res.json())
+    .then(data => data.sort((a, b) => new Date(a.time) - new Date(b.time)))
     .then(data => setMyOrders(data))
     .catch(() => {});
 };

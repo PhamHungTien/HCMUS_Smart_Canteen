@@ -33,16 +33,26 @@ Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng 
 - **Backend**: Node.js 18+ chuẩn ES module, lưu dữ liệu ở thư mục `data/`.
 - **AR**: [`<model-viewer>`](https://modelviewer.dev) cho phép xem mô hình 3D trên cả điện thoại và máy tính.
 
+## Thiết kế giao diện
+Giao diện sử dụng grid linh hoạt và các hiệu ứng chuyển động nhẹ để mang lại trải nghiệm thống nhất trên cả máy tính và di động. Các nút và thẻ món ăn đều có hoạt ảnh, bố cục tự động co giãn với `auto-fit` để tối ưu hiển thị ở mọi kích thước màn hình.
+Chế độ tối có thể bật/tắt trong phần Cài đặt giúp giao diện dễ nhìn trong nhiều môi trường ánh sáng.
+
 ## Cấu trúc thư mục
 - `backend/` – mã nguồn máy chủ và script khởi tạo dữ liệu.
 - `frontend/` – giao diện React cho người dùng và trang quản trị.
 - `data/` – các file JSON được tạo tự động khi chạy lần đầu.
 - `frontend/menu/` – thư mục lưu hình ảnh món ăn, sẽ được tạo tự động khi tải ảnh.
 
+Sau khi chạy server, truy cập các trang:
+- `http://localhost:3001/` – trang thực đơn cho người dùng.
+- `http://localhost:3001/admin` – giao diện quản trị.
+- `http://localhost:3001/login` và `http://localhost:3001/signup` – đăng nhập/đăng ký.
+
 ## Khởi chạy
 Cài Node.js 18 trở lên rồi chạy:
 ```bash
-node backend/index.js
+npm install
+npm start
 ```
 Máy chủ chạy tại `http://localhost:3001`. Tài khoản quản trị mặc định:
 ```
@@ -51,7 +61,10 @@ pass: admin@123
 ```
 Mặc định server sẽ gửi email bằng tài khoản `canteenar@gmail.com` để thông báo
 khi đăng ký và trước giờ nhận món. Bạn có thể thay đổi bằng biến môi trường
-`EMAIL_USER` và `EMAIL_PASS`.
+ `EMAIL_USER` và `EMAIL_PASS`. Thông số cổng có thể tuỳ chỉnh qua biến `PORT`.
+Máy chủ tự cache các tệp tĩnh sau lần truy cập đầu tiên để giảm đọc đĩa và phục vụ nhanh hơn.
+
+Nếu triển khai trên máy chủ khác, đặt `HOST` để link huỷ đơn trong email hoạt động chính xác.
 
 ## API chính
 - `GET /menu` – lấy thực đơn

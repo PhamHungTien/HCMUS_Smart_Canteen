@@ -65,6 +65,7 @@ function AdminApp() {
     fetch('/menu').then(r => r.json()).then(setMenu);
     fetch('/orders', { headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json())
+      .then(data => data.sort((a, b) => new Date(a.time) - new Date(b.time)))
       .then(setOrders);
     fetch('/users', { headers: { Authorization: 'Basic ' + auth } })
       .then(r => r.json())
