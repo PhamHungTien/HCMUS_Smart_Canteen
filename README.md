@@ -1,6 +1,6 @@
-# Smart Canteen
+# Smart Canteen AR
 
-Smart Canteen là hệ thống mô phỏng căng tin trực tuyến sử dụng React cho giao diện và Node.js cho máy chủ. Toàn bộ dữ liệu được lưu ở các file JSON nên rất dễ triển khai và thử nghiệm. 
+Smart Canteen AR là hệ thống mô phỏng căng tin trực tuyến sử dụng React cho giao diện và Node.js cho máy chủ. Toàn bộ dữ liệu được lưu ở các file JSON nên rất dễ triển khai và thử nghiệm.
 
 ## Chức năng chi tiết
 
@@ -76,7 +76,7 @@ Nếu triển khai trên máy chủ khác, đặt `HOST` để link huỷ đơn 
 - `POST /feedback` – gửi góp ý
 - các API quản lý tài khoản: `/change-password`, `/reset-password`, `/users/...`
 
-Smart Canteen là nền tảng mẫu để xây dựng căng tin thông minh. Bạn có thể mở rộng thêm tính năng hoặc tích hợp với hệ thống có sẵn tuỳ nhu cầu.
+Smart Canteen AR là nền tảng mẫu để xây dựng căng tin thông minh. Bạn có thể mở rộng thêm tính năng hoặc tích hợp với hệ thống có sẵn tuỳ nhu cầu.
 
 ## Giải thuật và quy trình hoạt động
 
