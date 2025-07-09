@@ -135,7 +135,7 @@ body.dark-mode {
     --shadow-light: rgba(255,255,255,0.08);
     --shadow-medium: rgba(255,255,255,0.12);
     --shadow-hover: rgba(255,255,255,0.15);
-    background: linear-gradient(135deg, #1a237e 0%, #311b92 100%); /* dark gradient */
+    background: linear-gradient(135deg, #000b1d 0%, #00040e 100%); /* deepest blue-black gradient */
     color: var(--text-color);
     /* Brighten key accents in dark mode */
     --price-accent: #64a8ff; /* lighter blue for prices and cart icon */
@@ -457,10 +457,18 @@ body.dark-mode {
             100% { transform: rotate(360deg); }
         }
 
-        .form-card {
-            padding: 20px; /* increased padding */
-            animation: fadeInUp 0.4s ease;
-        }
+.form-card {
+    padding: 20px; /* increased padding */
+    animation: fadeInUp 0.4s ease;
+}
+
+.form-card .welcome-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-size: 24px;
+}
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
@@ -633,12 +641,14 @@ textarea {
     font-size: 16px;
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-decoration: none;
 }
 
 .btn:hover:not(:disabled) {
     background: #084298; /* darker primary color on hover */
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-decoration: none; /* keep links un-underlined */
 }
 
 .btn:active:not(:disabled) {
