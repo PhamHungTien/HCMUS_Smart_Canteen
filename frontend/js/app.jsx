@@ -713,7 +713,7 @@ return (
             <div className="footer-logo">
                 <img src="img/HCMUS.png" alt="ĐHQG-HCM Logo" />
             </div>
-            <p>&copy; {new Date().getFullYear()} Smart Canteen AR. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Canteen KHTN Nguyễn Văn Cừ. All rights reserved.</p>
             <p>Phát triển bởi: Hồ Sĩ Phú, Phạm Hùng Tiến, Phạm Cao Bằng, Trần Thái Nguyên, Lê Quang Bảo Trung.</p>
         </div>
     </>
