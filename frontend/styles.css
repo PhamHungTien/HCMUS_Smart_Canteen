@@ -633,6 +633,11 @@ textarea {
     font-size: 16px;
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-decoration: none; /* remove underline for anchor buttons */
+}
+
+a.btn:hover {
+    text-decoration: none; /* keep links without underline on hover */
 }
 
 .btn:hover:not(:disabled) {
